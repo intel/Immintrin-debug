@@ -3,7 +3,7 @@ Usage: just include immintrin_dbg.h in debug build only.
 ICC -O -g -xAVX
 GCC -Og -std=c99 -g -lm -Wno-psabi -march=nehalem
 clang -O1 -g -march=haswell -lm
-Please note, that GCC and clang will compile using SSE registers only, so this will sork on any x86 but Quark. ICC may still use ZMM0 register to return _m512 type from functions.
+Please note, that GCC and clang will compile using SSE registers only, so this will цork on any x86 CPU but Quark. ICC may still use ZMM0 register to return _m512 type from functions.
 If compiled with -O3, it will vectorize the debug library which would make debugging harder.
 
 Known bugs:
