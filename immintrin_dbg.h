@@ -27,8 +27,8 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-   Intrinsics guide version: 3.5.4
-   Parser version: 0.23
+   Intrinsics guide version: 3.5.3
+   Parser version: 0.22
 */
 
 #ifndef __IMMINTRIN_DBG_H_
@@ -521,6 +521,55 @@ static inline int64_t Convert_FP64_To_Int64_Truncate_rounding(double control, in
 return (int64_t)control;
 }
 
+static inline double RANGE(double src1, double src2, int opCtl, int signSelCtl)
+{
+  double tmp;
+  double dst;
+  switch (opCtl) {
+    case 0: 
+      tmp = (src1 <= src2) ? src1 : src2; break;
+    case 1: 
+      tmp = (src1 <= src2) ? src2 : src1; break;
+	  case 2: 
+      tmp = (abs(src1) <= abs(src2)) ? src1 : src2; break;
+	  case 3: 
+      tmp = (abs(src1) <= abs(src2)) ? src2 : src1; break;
+  }
+	
+  switch (signSelCtl) {
+    case 0: dst = ((uint64_t)src1 & 0x8000000000000000UL) | ((uint64_t)tmp & 0x7FFFFFFFFFFFFFFFUL); break;
+    case 1: dst = tmp; break;
+    case 2: dst = ((uint64_t)tmp & 0x7FFFFFFFFFFFFFFFUL); break;
+    case 3: dst = (1UL << 63) | ((uint64_t)tmp & 0x7FFFFFFFFFFFFFFFUL); break;
+	}
+	
+	return dst;
+}
+
+static inline double RANGE32(float src1, float src2, int opCtl, int signSelCtl)
+{
+  float tmp;
+  float dst;
+  switch (opCtl) {
+    case 0: 
+      tmp = (src1 <= src2) ? src1 : src2; break;
+    case 1: 
+      tmp = (src1 <= src2) ? src2 : src1; break;
+	  case 2: 
+      tmp = (abs(src1) <= abs(src2)) ? src1 : src2; break;
+	  case 3: 
+      tmp = (abs(src1) <= abs(src2)) ? src2 : src1; break;
+  }
+	
+  switch (signSelCtl) {
+    case 0: dst = ((uint32_t)src1 & 0x80000000UL) | ((uint32_t)tmp & 0x7FFFFFFFUL); break;
+    case 1: dst = tmp; break;
+    case 2: dst = ((uint32_t)tmp & 0x7FFFFFFFUL); break;
+    case 3: dst = (1 << 31) | ((uint32_t)tmp & 0x7FFFFFFFUL); break;
+  }
+	
+	return dst;
+}
 
 /*
  Load 512-bits (composed of 32 packed 16-bit integers) from memory into dst. mem_addr does not need to be aligned on any particular boundary.
@@ -53939,7 +53988,14 @@ static inline __m256d _mm256_mask_range_pd_dbg(__m256d src, __mmask8 k, __m256d 
   double b_vec[4];
   _mm256_storeu_pd((void*)b_vec, b);
   double dst_vec[4];
-return _mm256_loadu_pd((void*)dst_vec);
+  for (int j = 0; j <= 3; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[j] = RANGE(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+    } else {
+      dst_vec[j] = src_vec[j];
+    }
+  }
+  return _mm256_loadu_pd((void*)dst_vec);
 }
 
 #undef _mm256_mask_range_pd
@@ -53959,7 +54015,14 @@ static inline __m256d _mm256_maskz_range_pd_dbg(__mmask8 k, __m256d a, __m256d b
   double b_vec[4];
   _mm256_storeu_pd((void*)b_vec, b);
   double dst_vec[4];
-return _mm256_loadu_pd((void*)dst_vec);
+  for (int j = 0; j <= 3; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[j] = RANGE(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+    } else {
+      dst_vec[j] = 0;
+    }
+  }
+  return _mm256_loadu_pd((void*)dst_vec);
 }
 
 #undef _mm256_maskz_range_pd
@@ -53979,7 +54042,10 @@ static inline __m256d _mm256_range_pd_dbg(__m256d a, __m256d b, int imm8)
   double b_vec[4];
   _mm256_storeu_pd((void*)b_vec, b);
   double dst_vec[4];
-return _mm256_loadu_pd((void*)dst_vec);
+  for (int j = 0; j <= 3; j++) {
+    dst_vec[j] = RANGE(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  }
+  return _mm256_loadu_pd((void*)dst_vec);
 }
 
 #undef _mm256_range_pd
@@ -54001,12 +54067,18 @@ static inline __m512d _mm512_mask_range_pd_dbg(__m512d src, __mmask8 k, __m512d 
   double b_vec[8];
   _mm512_storeu_pd((void*)b_vec, b);
   double dst_vec[8];
-return _mm512_loadu_pd((void*)dst_vec);
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[j] = RANGE(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+    } else {
+      dst_vec[j] = src_vec[j];
+    }
+  }
+  return _mm512_loadu_pd((void*)dst_vec);
 }
 
 #undef _mm512_mask_range_pd
 #define _mm512_mask_range_pd _mm512_mask_range_pd_dbg
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed double-precision (64-bit) floating-point elements in "a" and "b", and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set).
@@ -54017,8 +54089,7 @@ return _mm512_loadu_pd((void*)dst_vec);
         (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
         (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
         _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
-	
-
+*/	
 static inline __m512d _mm512_mask_range_round_pd_dbg(__m512d src, __mmask8 k, __m512d a, __m512d b, int imm8, int rounding)
 {
   double src_vec[8];
@@ -54028,19 +54099,24 @@ static inline __m512d _mm512_mask_range_round_pd_dbg(__m512d src, __mmask8 k, __
   double b_vec[8];
   _mm512_storeu_pd((void*)b_vec, b);
   double dst_vec[8];
-return _mm512_loadu_pd((void*)dst_vec);
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[j] = RANGE(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+    } else {
+      dst_vec[j] = src_vec[j];
+    }
+  }
+  return _mm512_loadu_pd((void*)dst_vec);
 }
 
 #undef _mm512_mask_range_round_pd
 #define _mm512_mask_range_round_pd _mm512_mask_range_round_pd_dbg
-*/
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed double-precision (64-bit) floating-point elements in "a" and "b", and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
-
+*/	
 static inline __m512d _mm512_maskz_range_pd_dbg(__mmask8 k, __m512d a, __m512d b, int imm8)
 {
   double a_vec[8];
@@ -54048,13 +54124,18 @@ static inline __m512d _mm512_maskz_range_pd_dbg(__mmask8 k, __m512d a, __m512d b
   double b_vec[8];
   _mm512_storeu_pd((void*)b_vec, b);
   double dst_vec[8];
-return _mm512_loadu_pd((void*)dst_vec);
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[j] = RANGE(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+    } else {
+      dst_vec[j] = 0;
+    }
+  }
+  return _mm512_loadu_pd((void*)dst_vec);
 }
 
 #undef _mm512_maskz_range_pd
 #define _mm512_maskz_range_pd _mm512_maskz_range_pd_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed double-precision (64-bit) floating-point elements in "a" and "b", and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
@@ -54065,28 +54146,32 @@ return _mm512_loadu_pd((void*)dst_vec);
         (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
         (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
         _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
-	
+*/
 static inline __m512d _mm512_maskz_range_round_pd_dbg(__mmask8 k, __m512d a, __m512d b, int imm8, int rounding)
 {
-  CURRENT_ROUNDING = rounding;
   double a_vec[8];
   _mm512_storeu_pd((void*)a_vec, a);
   double b_vec[8];
   _mm512_storeu_pd((void*)b_vec, b);
   double dst_vec[8];
-return _mm512_loadu_pd((void*)dst_vec);
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[j] = RANGE(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+    } else {
+      dst_vec[j] = 0;
+    }
+  }
+  return _mm512_loadu_pd((void*)dst_vec);
 }
 
 #undef _mm512_maskz_range_round_pd
 #define _mm512_maskz_range_round_pd _mm512_maskz_range_round_pd_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed double-precision (64-bit) floating-point elements in "a" and "b", and store the results in "dst".
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
+*/	
 static inline __m512d _mm512_range_pd_dbg(__m512d a, __m512d b, int imm8)
 {
   double a_vec[8];
@@ -54094,13 +54179,14 @@ static inline __m512d _mm512_range_pd_dbg(__m512d a, __m512d b, int imm8)
   double b_vec[8];
   _mm512_storeu_pd((void*)b_vec, b);
   double dst_vec[8];
-return _mm512_loadu_pd((void*)dst_vec);
+  for (int j = 0; j <= 7; j++) {
+    dst_vec[j] = RANGE(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  }
+  return _mm512_loadu_pd((void*)dst_vec);
 }
 
 #undef _mm512_range_pd
 #define _mm512_range_pd _mm512_range_pd_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed double-precision (64-bit) floating-point elements in "a" and "b", and store the results in "dst".
@@ -54111,28 +54197,28 @@ return _mm512_loadu_pd((void*)dst_vec);
         (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
         (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
         _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
-	
+*/
 static inline __m512d _mm512_range_round_pd_dbg(__m512d a, __m512d b, int imm8, int rounding)
 {
-  CURRENT_ROUNDING = rounding;
   double a_vec[8];
   _mm512_storeu_pd((void*)a_vec, a);
   double b_vec[8];
   _mm512_storeu_pd((void*)b_vec, b);
   double dst_vec[8];
-return _mm512_loadu_pd((void*)dst_vec);
+  for (int j = 0; j <= 7; j++) {
+    dst_vec[j] = RANGE(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  }
+  return _mm512_loadu_pd((void*)dst_vec);
 }
 
 #undef _mm512_range_round_pd
 #define _mm512_range_round_pd _mm512_range_round_pd_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed double-precision (64-bit) floating-point elements in "a" and "b", and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set).
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
+*/
 static inline __m128d _mm_mask_range_pd_dbg(__m128d src, __mmask8 k, __m128d a, __m128d b, int imm8)
 {
   double src_vec[2];
@@ -54142,19 +54228,24 @@ static inline __m128d _mm_mask_range_pd_dbg(__m128d src, __mmask8 k, __m128d a, 
   double b_vec[2];
   _mm_storeu_pd((void*)b_vec, b);
   double dst_vec[2];
-return _mm_loadu_pd((void*)dst_vec);
+  for (int j = 0; j <= 1; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[j] = RANGE(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+    } else {
+      dst_vec[j] = src_vec[j];
+    }
+  }
+  return _mm_loadu_pd((void*)dst_vec);
 }
 
 #undef _mm_mask_range_pd
 #define _mm_mask_range_pd _mm_mask_range_pd_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed double-precision (64-bit) floating-point elements in "a" and "b", and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
+*/
 static inline __m128d _mm_maskz_range_pd_dbg(__mmask8 k, __m128d a, __m128d b, int imm8)
 {
   double a_vec[2];
@@ -54162,19 +54253,24 @@ static inline __m128d _mm_maskz_range_pd_dbg(__mmask8 k, __m128d a, __m128d b, i
   double b_vec[2];
   _mm_storeu_pd((void*)b_vec, b);
   double dst_vec[2];
-return _mm_loadu_pd((void*)dst_vec);
+  for (int j = 0; j <= 1; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[j] = RANGE(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+    } else {
+      dst_vec[j] = 0;
+    }
+  }
+  return _mm_loadu_pd((void*)dst_vec);
 }
 
 #undef _mm_maskz_range_pd
 #define _mm_maskz_range_pd _mm_maskz_range_pd_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed double-precision (64-bit) floating-point elements in "a" and "b", and store the results in "dst".
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
+*/
 static inline __m128d _mm_range_pd_dbg(__m128d a, __m128d b, int imm8)
 {
   double a_vec[2];
@@ -54182,97 +54278,114 @@ static inline __m128d _mm_range_pd_dbg(__m128d a, __m128d b, int imm8)
   double b_vec[2];
   _mm_storeu_pd((void*)b_vec, b);
   double dst_vec[2];
-return _mm_loadu_pd((void*)dst_vec);
+  for (int j = 0; j <= 1; j++) {
+    dst_vec[j] = RANGE(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  }
+  return _mm_loadu_pd((void*)dst_vec);
 }
 
 #undef _mm_range_pd
 #define _mm_range_pd _mm_range_pd_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set).
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
+*/
 static inline __m256 _mm256_mask_range_ps_dbg(__m256 src, __mmask8 k, __m256 a, __m256 b, int imm8)
 {
-  int32_t src_vec[8];
+  float src_vec[8];
   _mm256_storeu_ps((void*)src_vec, src);
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[8];
+  float b_vec[8];
   _mm256_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[8];
-return _mm256_loadu_ps((void*)dst_vec);
+  float dst_vec[8];
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[j] = RANGE32(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+    } else {
+      dst_vec[j] = src_vec[j];
+    }
+  }
+  return _mm256_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm256_mask_range_ps
 #define _mm256_mask_range_ps _mm256_mask_range_ps_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
+*/
 static inline __m256 _mm256_maskz_range_ps_dbg(__mmask8 k, __m256 a, __m256 b, int imm8)
 {
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[8];
+  float b_vec[8];
   _mm256_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[8];
-return _mm256_loadu_ps((void*)dst_vec);
+  float dst_vec[8];
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[j] = RANGE32(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+    } else {
+      dst_vec[j] = 0;
+    }
+  }
+  return _mm256_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm256_maskz_range_ps
 #define _mm256_maskz_range_ps _mm256_maskz_range_ps_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst".
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
+*/
 static inline __m256 _mm256_range_ps_dbg(__m256 a, __m256 b, int imm8)
 {
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[8];
+  float b_vec[8];
   _mm256_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[8];
-return _mm256_loadu_ps((void*)dst_vec);
+  float dst_vec[8];
+  for (int j = 0; j <= 7; j++) {
+    dst_vec[j] = RANGE32(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  }
+  return _mm256_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm256_range_ps
 #define _mm256_range_ps _mm256_range_ps_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set).
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
+*/
 static inline __m512 _mm512_mask_range_ps_dbg(__m512 src, __mmask16 k, __m512 a, __m512 b, int imm8)
 {
-  int32_t src_vec[16];
+  float src_vec[16];
   _mm512_storeu_ps((void*)src_vec, src);
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[16];
+  float b_vec[16];
   _mm512_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[16];
-return _mm512_loadu_ps((void*)dst_vec);
+  float dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[j] = RANGE32(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+    } else {
+      dst_vec[j] = src_vec[j];
+    }
+  }
+  return _mm512_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm512_mask_range_ps
 #define _mm512_mask_range_ps _mm512_mask_range_ps_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set).
@@ -54283,44 +54396,53 @@ return _mm512_loadu_ps((void*)dst_vec);
         (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
         (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
         _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
-	
+*/
 static inline __m512 _mm512_mask_range_round_ps_dbg(__m512 src, __mmask16 k, __m512 a, __m512 b, int imm8, int rounding)
 {
-  CURRENT_ROUNDING = rounding;
-  int32_t src_vec[16];
+  float src_vec[16];
   _mm512_storeu_ps((void*)src_vec, src);
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[16];
+  float b_vec[16];
   _mm512_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[16];
-return _mm512_loadu_ps((void*)dst_vec);
+  float dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[j] = RANGE32(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+    } else {
+      dst_vec[j] = src_vec[j];
+    }
+  }
+  return _mm512_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm512_mask_range_round_ps
 #define _mm512_mask_range_round_ps _mm512_mask_range_round_ps_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
+*/
 static inline __m512 _mm512_maskz_range_ps_dbg(__mmask16 k, __m512 a, __m512 b, int imm8)
 {
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[16];
+  float b_vec[16];
   _mm512_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[16];
-return _mm512_loadu_ps((void*)dst_vec);
+  float dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[j] = RANGE32(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+    } else {
+      dst_vec[j] = 0;
+    }
+  }
+  return _mm512_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm512_maskz_range_ps
 #define _mm512_maskz_range_ps _mm512_maskz_range_ps_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
@@ -54331,42 +54453,48 @@ return _mm512_loadu_ps((void*)dst_vec);
         (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
         (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
         _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
-	
+*/
 static inline __m512 _mm512_maskz_range_round_ps_dbg(__mmask16 k, __m512 a, __m512 b, int imm8, int rounding)
 {
-  CURRENT_ROUNDING = rounding;
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[16];
+  float b_vec[16];
   _mm512_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[16];
-return _mm512_loadu_ps((void*)dst_vec);
+  float dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[j] = RANGE32(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+    } else {
+      dst_vec[j] = 0;
+    }
+  }
+  return _mm512_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm512_maskz_range_round_ps
 #define _mm512_maskz_range_round_ps _mm512_maskz_range_round_ps_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst".
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
+*/
 static inline __m512 _mm512_range_ps_dbg(__m512 a, __m512 b, int imm8)
 {
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[16];
+  float b_vec[16];
   _mm512_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[16];
-return _mm512_loadu_ps((void*)dst_vec);
+  float dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    dst_vec[j] = RANGE32(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  }
+  return _mm512_loadu_ps((void*)dst_vec);
 }
+
 
 #undef _mm512_range_ps
 #define _mm512_range_ps _mm512_range_ps_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst".
@@ -54377,84 +54505,95 @@ return _mm512_loadu_ps((void*)dst_vec);
         (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
         (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
         _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
-	
+*/
 static inline __m512 _mm512_range_round_ps_dbg(__m512 a, __m512 b, int imm8, int rounding)
 {
-  CURRENT_ROUNDING = rounding;
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[16];
+  float b_vec[16];
   _mm512_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[16];
-return _mm512_loadu_ps((void*)dst_vec);
+  float dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    dst_vec[j] = RANGE32(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  }
+  return _mm512_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm512_range_round_ps
 #define _mm512_range_round_ps _mm512_range_round_ps_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set).
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
+*/
 static inline __m128 _mm_mask_range_ps_dbg(__m128 src, __mmask8 k, __m128 a, __m128 b, int imm8)
 {
-  int32_t src_vec[4];
+  float src_vec[4];
   _mm_storeu_ps((void*)src_vec, src);
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[4];
-return _mm_loadu_ps((void*)dst_vec);
+  float dst_vec[4];
+  for (int j = 0; j <= 3; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[j] = RANGE32(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+    } else {
+      dst_vec[j] = src_vec[j];
+    }
+  }
+  return _mm_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm_mask_range_ps
 #define _mm_mask_range_ps _mm_mask_range_ps_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
+*/
 static inline __m128 _mm_maskz_range_ps_dbg(__mmask8 k, __m128 a, __m128 b, int imm8)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[4];
-return _mm_loadu_ps((void*)dst_vec);
+  float dst_vec[4];
+  for (int j = 0; j <= 3; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[j] = RANGE32(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+    } else {
+      dst_vec[j] = 0;
+    }
+  }
+  return _mm_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm_maskz_range_ps
 #define _mm_maskz_range_ps _mm_maskz_range_ps_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst".
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
+*/
 static inline __m128 _mm_range_ps_dbg(__m128 a, __m128 b, int imm8)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[4];
-return _mm_loadu_ps((void*)dst_vec);
+  float dst_vec[4];
+  for (int j = 0; j <= 3; j++) {
+    dst_vec[j] = RANGE(a_vec[j], b_vec[j], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  }
+  return _mm_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm_range_ps
 #define _mm_range_ps _mm_range_ps_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for the lower double-precision (64-bit) floating-point element in "a" and "b", store the result in the lower element of "dst" using writemask "k" (the element is copied from "src" when mask bit 0 is not set), and copy the upper element from "a" to the upper element of "dst".
@@ -54465,10 +54604,9 @@ return _mm_loadu_ps((void*)dst_vec);
         (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
         (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
         _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
-	
+*/
 static inline __m128d _mm_mask_range_round_sd_dbg(__m128d src, __mmask8 k, __m128d a, __m128d b, int imm8, int rounding)
 {
-  CURRENT_ROUNDING = rounding;
   double src_vec[2];
   _mm_storeu_pd((void*)src_vec, src);
   double a_vec[2];
@@ -54476,19 +54614,23 @@ static inline __m128d _mm_mask_range_round_sd_dbg(__m128d src, __mmask8 k, __m12
   double b_vec[2];
   _mm_storeu_pd((void*)b_vec, b);
   double dst_vec[2];
-return _mm_loadu_pd((void*)dst_vec);
+  if (k & ((1 << 0) & 0xff)) {
+    dst_vec[0] = RANGE(a_vec[0], b_vec[0], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  } else {
+    dst_vec[0] = src_vec[0];
+  }
+  dst_vec[1] = a_vec[1];
+  return _mm_loadu_pd((void*)dst_vec);
 }
 
 #undef _mm_mask_range_round_sd
 #define _mm_mask_range_round_sd _mm_mask_range_round_sd_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for the lower double-precision (64-bit) floating-point element in "a" and "b", store the result in the lower element of "dst" using writemask "k" (the element is copied from "src" when mask bit 0 is not set), and copy the upper element from "a" to the upper element of "dst".
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
+*/	
 static inline __m128d _mm_mask_range_sd_dbg(__m128d src, __mmask8 k, __m128d a, __m128d b, int imm8)
 {
   double src_vec[2];
@@ -54498,13 +54640,17 @@ static inline __m128d _mm_mask_range_sd_dbg(__m128d src, __mmask8 k, __m128d a, 
   double b_vec[2];
   _mm_storeu_pd((void*)b_vec, b);
   double dst_vec[2];
-return _mm_loadu_pd((void*)dst_vec);
+  if (k & ((1 << 0) & 0xff)) {
+    dst_vec[0] = RANGE(a_vec[0], b_vec[0], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  } else {
+    dst_vec[0] = src_vec[0];
+  }
+  dst_vec[1] = a_vec[1];
+  return _mm_loadu_pd((void*)dst_vec);
 }
 
 #undef _mm_mask_range_sd
 #define _mm_mask_range_sd _mm_mask_range_sd_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for the lower double-precision (64-bit) floating-point element in "a" and "b", store the result in the lower element of "dst" using zeromask "k" (the element is zeroed out when mask bit 0 is not set), and copy the upper element from "a" to the upper element of "dst".
@@ -54515,28 +54661,31 @@ return _mm_loadu_pd((void*)dst_vec);
         (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
         (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
         _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
-	
+*/
 static inline __m128d _mm_maskz_range_round_sd_dbg(__mmask8 k, __m128d a, __m128d b, int imm8, int rounding)
 {
-  CURRENT_ROUNDING = rounding;
   double a_vec[2];
   _mm_storeu_pd((void*)a_vec, a);
   double b_vec[2];
   _mm_storeu_pd((void*)b_vec, b);
   double dst_vec[2];
-return _mm_loadu_pd((void*)dst_vec);
+  if (k & ((1 << 0) & 0xff)) {
+    dst_vec[0] = RANGE(a_vec[0], b_vec[0], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  } else {
+    dst_vec[0] = 0;
+  }
+  dst_vec[1] = a_vec[1];
+  return _mm_loadu_pd((void*)dst_vec);
 }
 
 #undef _mm_maskz_range_round_sd
 #define _mm_maskz_range_round_sd _mm_maskz_range_round_sd_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for the lower double-precision (64-bit) floating-point element in "a" and "b", store the result in the lower element of "dst" using zeromask "k" (the element is zeroed out when mask bit 0 is not set), and copy the upper element from "a" to the upper element of "dst".
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
+*/
 static inline __m128d _mm_maskz_range_sd_dbg(__mmask8 k, __m128d a, __m128d b, int imm8)
 {
   double a_vec[2];
@@ -54544,13 +54693,17 @@ static inline __m128d _mm_maskz_range_sd_dbg(__mmask8 k, __m128d a, __m128d b, i
   double b_vec[2];
   _mm_storeu_pd((void*)b_vec, b);
   double dst_vec[2];
-return _mm_loadu_pd((void*)dst_vec);
+  if (k & ((1 << 0) & 0xff)) {
+    dst_vec[0] = RANGE(a_vec[0], b_vec[0], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  } else {
+    dst_vec[0] = 0;
+  }
+  dst_vec[1] = a_vec[1];
+  return _mm_loadu_pd((void*)dst_vec);
 }
 
 #undef _mm_maskz_range_sd
 #define _mm_maskz_range_sd _mm_maskz_range_sd_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for the lower double-precision (64-bit) floating-point element in "a" and "b", store the result in the lower element of "dst", and copy the upper element from "a" to the upper element of "dst".
@@ -54561,22 +54714,21 @@ return _mm_loadu_pd((void*)dst_vec);
         (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
         (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
         _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
-	
+*/
 static inline __m128d _mm_range_round_sd_dbg(__m128d a, __m128d b, int imm8, int rounding)
 {
-  CURRENT_ROUNDING = rounding;
   double a_vec[2];
   _mm_storeu_pd((void*)a_vec, a);
   double b_vec[2];
   _mm_storeu_pd((void*)b_vec, b);
   double dst_vec[2];
-return _mm_loadu_pd((void*)dst_vec);
+  dst_vec[0] = RANGE(a_vec[0], b_vec[0], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  dst_vec[1] = a_vec[1];
+  return _mm_loadu_pd((void*)dst_vec);
 }
 
 #undef _mm_range_round_sd
 #define _mm_range_round_sd _mm_range_round_sd_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for the lower single-precision (32-bit) floating-point element in "a" and "b", store the result in the lower element of "dst" using writemask "k" (the element is copied from "src" when mask bit 0 is not set), and copy the upper 3 packed elements from "a" to the upper elements of "dst".
@@ -54587,46 +54739,53 @@ return _mm_loadu_pd((void*)dst_vec);
         (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
         (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
         _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
-	
+*/
 static inline __m128 _mm_mask_range_round_ss_dbg(__m128 src, __mmask8 k, __m128 a, __m128 b, int imm8, int rounding)
 {
-  CURRENT_ROUNDING = rounding;
-  int32_t src_vec[4];
+  float src_vec[4];
   _mm_storeu_ps((void*)src_vec, src);
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
   int32_t dst_vec[4];
-return _mm_loadu_ps((void*)dst_vec);
+  if (k & ((1 << 0) & 0xff)) {
+    dst_vec[0] = RANGE32(a_vec[0], b_vec[0], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  } else {
+    dst_vec[0] = src_vec[0];
+  }
+  dst_vec[1] = a_vec[1];
+  return _mm_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm_mask_range_round_ss
 #define _mm_mask_range_round_ss _mm_mask_range_round_ss_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for the lower single-precision (32-bit) floating-point element in "a" and "b", store the result in the lower element of "dst" using writemask "k" (the element is copied from "src" when mask bit 0 is not set), and copy the upper 3 packed elements from "a" to the upper elements of "dst".
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
+*/
 static inline __m128 _mm_mask_range_ss_dbg(__m128 src, __mmask8 k, __m128 a, __m128 b, int imm8)
 {
-  int32_t src_vec[4];
+  float src_vec[4];
   _mm_storeu_ps((void*)src_vec, src);
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[4];
-return _mm_loadu_ps((void*)dst_vec);
+  float dst_vec[4];
+  if (k & ((1 << 0) & 0xff)) {
+    dst_vec[0] = RANGE32(a_vec[0], b_vec[0], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  } else {
+    dst_vec[0] = src_vec[0];
+  }
+  dst_vec[1] = a_vec[1];
+  return _mm_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm_mask_range_ss
 #define _mm_mask_range_ss _mm_mask_range_ss_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for the lower single-precision (32-bit) floating-point element in "a" and "b", store the result in the lower element of "dst" using zeromask "k" (the element is zeroed out when mask bit 0 is not set), and copy the upper 3 packed elements from "a" to the upper elements of "dst".
@@ -54637,42 +54796,49 @@ return _mm_loadu_ps((void*)dst_vec);
         (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
         (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
         _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
-	
+*/
 static inline __m128 _mm_maskz_range_round_ss_dbg(__mmask8 k, __m128 a, __m128 b, int imm8, int rounding)
 {
-  CURRENT_ROUNDING = rounding;
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[4];
-return _mm_loadu_ps((void*)dst_vec);
+  float dst_vec[4];
+  if (k & ((1 << 0) & 0xff)) {
+    dst_vec[0] = RANGE32(a_vec[0], b_vec[0], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  } else {
+    dst_vec[0] = 0;
+  }
+  dst_vec[1] = a_vec[1];
+  return _mm_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm_maskz_range_round_ss
 #define _mm_maskz_range_round_ss _mm_maskz_range_round_ss_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for the lower single-precision (32-bit) floating-point element in "a" and "b", store the result in the lower element of "dst" using zeromask "k" (the element is zeroed out when mask bit 0 is not set), and copy the upper 3 packed elements from "a" to the upper elements of "dst".
 	imm8[1:0] specifies the operation control: 00 = min, 01 = max, 10 = absolute max, 11 = absolute min.
 	imm8[3:2] specifies the sign control: 00 = sign from a, 01 = sign from compare result, 10 = clear sign bit, 11 = set sign bit.
-	
+*/
 static inline __m128 _mm_maskz_range_ss_dbg(__mmask8 k, __m128 a, __m128 b, int imm8)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[4];
-return _mm_loadu_ps((void*)dst_vec);
+  float dst_vec[4];
+  if (k & ((1 << 0) & 0xff)) {
+    dst_vec[0] = RANGE32(a_vec[0], b_vec[0], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  } else {
+    dst_vec[0] = 0;
+  }
+  dst_vec[1] = a_vec[1];
+  return _mm_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm_maskz_range_ss
 #define _mm_maskz_range_ss _mm_maskz_range_ss_dbg
-*/
-
 
 /*
  Calculate the max, min, absolute max, or absolute min (depending on control in "imm8") for the lower single-precision (32-bit) floating-point element in "a" and "b", store the result in the lower element of "dst", and copy the upper 3 packed elements from "a" to the upper elements of "dst".
@@ -54683,22 +54849,21 @@ return _mm_loadu_ps((void*)dst_vec);
         (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
         (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
         _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
-	
+*/
 static inline __m128 _mm_range_round_ss_dbg(__m128 a, __m128 b, int imm8, int rounding)
 {
-  CURRENT_ROUNDING = rounding;
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[4];
-return _mm_loadu_ps((void*)dst_vec);
+  float dst_vec[4];
+  dst_vec[0] = RANGE32(a_vec[0], b_vec[0], (imm8 & 0x3) >> 0, (imm8 & 0xc) >> 2);
+  dst_vec[1] = a_vec[1];
+  return _mm_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm_range_round_ss
 #define _mm_range_round_ss _mm_range_round_ss_dbg
-*/
-
 
 /*
  Compute the approximate reciprocal of packed double-precision (64-bit) floating-point elements in "a", and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). The maximum relative error for this approximation is less than 2^-14.
@@ -55639,22 +55804,29 @@ static inline __m128d _mm_reduce_round_sd_dbg(__m128d a, __m128d b, int imm8, in
 
 /*
  Extract the reduced argument of the lower single-precision (32-bit) floating-point element in "a" by the number of bits specified by "imm8", store the result in the lower element of "dst" using writemask "k" (the element is copied from "src" when mask bit 0 is not set), and copy the upper 3 packed elements from "b" to the upper elements of "dst".
-
+*/
 static inline __m128 _mm_mask_reduce_ss_dbg(__m128 src, __mmask8 k, __m128 a, __m128 b, int imm8)
 {
-  int32_t src_vec[4];
+  float src_vec[4];
   _mm_storeu_ps((void*)src_vec, src);
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[4];
-return _mm_loadu_ps((void*)dst_vec);
+  float dst_vec[4];
+  if (k & ((1 << 0) & 0xff)) {
+    dst_vec[0] = ReduceArgumentPS(a_vec[0], (imm8 & 0xff) >> 0);
+  } else {
+    dst_vec[0] = src_vec[0];
+  }
+  dst_vec[1] = b_vec[1];
+  dst_vec[2] = b_vec[2];
+  dst_vec[3] = b_vec[3];
+  return _mm_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm_mask_reduce_ss
 #define _mm_mask_reduce_ss _mm_mask_reduce_ss_dbg
-*/
 
 /*
  Extract the reduced argument of the lower single-precision (32-bit) floating-point element in "a" by the number of bits specified by "imm8", store the result in the lower element of "dst" using writemask "k" (the element is copied from "src" when mask bit 0 is not set), and copy the upper 3 packed elements from "b" to the upper elements of "dst".
@@ -55663,39 +55835,53 @@ return _mm_loadu_ps((void*)dst_vec);
         (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
         (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
         _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
+*/
 static inline __m128 _mm_mask_reduce_round_ss_dbg(__m128 src, __mmask8 k, __m128 a, __m128 b, int imm8, int rounding)
 {
-  int32_t src_vec[4];
+  float src_vec[4];
   _mm_storeu_ps((void*)src_vec, src);
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[4];
-return _mm_loadu_ps((void*)dst_vec);
+  float dst_vec[4];
+  if (k & ((1 << 0) & 0xff)) {
+    dst_vec[0] = ReduceArgumentPS(a_vec[0], (imm8 & 0xff) >> 0);
+  } else {
+    dst_vec[0] = src_vec[0];
+  }
+  dst_vec[1] = b_vec[1];
+  dst_vec[2] = b_vec[2];
+  dst_vec[3] = b_vec[3];
+  return _mm_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm_mask_reduce_round_ss
 #define _mm_mask_reduce_round_ss _mm_mask_reduce_round_ss_dbg
-*/
-
 
 /*
  Extract the reduced argument of the lower single-precision (32-bit) floating-point element in "a" by the number of bits specified by "imm8", store the result in the lower element of "dst" using zeromask "k" (the element is zeroed out when mask bit 0 is not set), and copy the upper 3 packed elements from "b" to the upper elements of "dst".
+*/
 static inline __m128 _mm_maskz_reduce_ss_dbg(__mmask8 k, __m128 a, __m128 b, int imm8)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[4];
-return _mm_loadu_ps((void*)dst_vec);
+  float dst_vec[4];
+  if (k & ((1 << 0) & 0xff)) {
+    dst_vec[0] = ReduceArgumentPS(a_vec[0], (imm8 & 0xff) >> 0);
+  } else {
+    dst_vec[0] = 0;
+  }
+  dst_vec[1] = b_vec[1];
+  dst_vec[2] = b_vec[2];
+  dst_vec[3] = b_vec[3];
+  return _mm_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm_maskz_reduce_ss
 #define _mm_maskz_reduce_ss _mm_maskz_reduce_ss_dbg
-*/
-
 
 /*
  Extract the reduced argument of the lower single-precision (32-bit) floating-point element in "a" by the number of bits specified by "imm8", store the result in the lower element of "dst" using zeromask "k" (the element is zeroed out when mask bit 0 is not set), and copy the upper 3 packed elements from "b" to the upper elements of "dst".
@@ -55704,38 +55890,47 @@ return _mm_loadu_ps((void*)dst_vec);
         (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
         (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
         _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
+*/
 static inline __m128 _mm_maskz_reduce_round_ss_dbg(__mmask8 k, __m128 a, __m128 b, int imm8, int rounding)
 {
-  CURRENT_ROUNDING = rounding;
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[4];
-return _mm_loadu_ps((void*)dst_vec);
+  float dst_vec[4];
+  if (k & ((1 << 0) & 0xff)) {
+    dst_vec[0] = ReduceArgumentPS(a_vec[0], (imm8 & 0xff) >> 0);
+  } else {
+    dst_vec[0] = 0;
+  }
+  dst_vec[1] = b_vec[1];
+  dst_vec[2] = b_vec[2];
+  dst_vec[3] = b_vec[3];
+  return _mm_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm_maskz_reduce_round_ss
 #define _mm_maskz_reduce_round_ss _mm_maskz_reduce_round_ss_dbg
-*/
-
 
 /*
  Extract the reduced argument of the lower single-precision (32-bit) floating-point element in "a" by the number of bits specified by "imm8", store the result in the lower element of "dst", and copy the upper 3 packed elements from "b" to the upper elements of "dst".
+*/
 static inline __m128 _mm_reduce_ss_dbg(__m128 a, __m128 b, int imm8)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[4];
-return _mm_loadu_ps((void*)dst_vec);
+  float dst_vec[4];
+  dst_vec[0] = ReduceArgumentPS(a_vec[0], imm8 & 0xff);
+  dst_vec[1] = b_vec[1];
+  dst_vec[2] = b_vec[2];
+  dst_vec[3] = b_vec[3];
+  return _mm_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm_reduce_ss
 #define _mm_reduce_ss _mm_reduce_ss_dbg
-*/
-
 
 /*
  Extract the reduced argument of the lower single-precision (32-bit) floating-point element in "a" by the number of bits specified by "imm8", store the result in the lower element of "dst", and copy the upper 3 packed elements from "b" to the upper elements of "dst".
@@ -55744,21 +55939,23 @@ return _mm_loadu_ps((void*)dst_vec);
         (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
         (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
         _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
+*/
 static inline __m128 _mm_reduce_round_ss_dbg(__m128 a, __m128 b, int imm8, int rounding)
 {
-  CURRENT_ROUNDING = rounding;
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
-  int32_t dst_vec[4];
-return _mm_loadu_ps((void*)dst_vec);
+  float dst_vec[4];
+  dst_vec[0] = ReduceArgumentPS(a_vec[0], imm8 & 0xff);
+  dst_vec[1] = b_vec[1];
+  dst_vec[2] = b_vec[2];
+  dst_vec[3] = b_vec[3];
+  return _mm_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm_reduce_round_ss
 #define _mm_reduce_round_ss _mm_reduce_round_ss_dbg
-*/
-
 
 /*
  Compute the approximate reciprocal square root of packed double-precision (64-bit) floating-point elements in "a", and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). The maximum relative error for this approximation is less than 2^-14.
