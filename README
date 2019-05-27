@@ -8,4 +8,4 @@ If compiled with -O3, it will vectorize the debug library which would make debug
 
 Known bugs:
 ieee754 compatible conversions: to test
-Accuracy of *exp* single precision functions: assume -fast-math
+Accuracy of *exp* single precision functions: assume -ffast-math
