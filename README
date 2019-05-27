@@ -1,9 +1,12 @@
-immintrin_dbg.h is an include file, a wrapper around immintrin.h. It implements most of AVX, AVX2, AVX-512 vector intrinsics to enable source level debug.
-Usage: just include immintrin_dbg.h in debug build only. All functions are automatically generated from intrinsics guide: https://software.intel.com/sites/landingpage/IntrinsicsGuide/ 
+immintrin_dbg.h is an include file, a wrapper around immintrin.h. It implements most of AVX, AVX2, AVX-512 vector intrinsics 
+to enable source level debug.
+Usage: just include immintrin_dbg.h in debug build only. All functions are automatically generated from 
+intrinsics guide: https://software.intel.com/sites/landingpage/IntrinsicsGuide/ 
 $ icc -O -g -xAVX
 $ gcc -Og -std=c99 -g -lm -Wno-psabi -march=nehalem
 $ clang -O1 -g -march=nehalem -lm
-Please note, that GCC and clang will compile using SSE registers only, so this will цork on any x86 CPU but Quark. ICC may still use ZMM0 register to return _m512 type from functions.
+Please note, that GCC and clang will compile using SSE registers only, so this will цork on any x86 CPU but Quark. ICC may still
+use ZMM0 register to return _m512 type from functions.
 If compiled with -O3, it will vectorize the debug library which would make debugging harder.
 
 Known bugs:
