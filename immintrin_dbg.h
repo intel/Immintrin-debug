@@ -582,7 +582,7 @@ static inline __m512i _mm512_loadu_epi16_dbg(void const* mem_addr)
   __m128i dst128[4];
   } dst;
   for (int i = 0; i < 4; i++)
-	  dst.dst128[i] = _mm_load_si128((__m128i*)mem_addr + i);
+	  dst.dst128[i] = _mm_loadu_si128((__m128i*)mem_addr + i);
   return dst.dst512;
 }
 #undef _mm512_loadu_epi16
@@ -599,7 +599,7 @@ static inline __m512d _mm512_loadu_pd_dbg(void const* mem_addr)
   __m128i dst128[4];
   } dst;
   for (int i = 0; i < 4; i++)
-	  dst.dst128[i] = _mm_load_si128((__m128i*)mem_addr + i);
+	  dst.dst128[i] = _mm_loadu_si128((__m128i*)mem_addr + i);
   return dst.dst512;
 }
 #undef _mm512_loadu_pd
@@ -616,7 +616,7 @@ static inline __m512 _mm512_loadu_ps_dbg(void const* mem_addr)
   __m128i dst128[4];
   } dst;
   for (int i = 0; i < 4; i++)
-	  dst.dst128[i] = _mm_load_si128((__m128i*)mem_addr + i);
+	  dst.dst128[i] = _mm_loadu_si128((__m128i*)mem_addr + i);
   return dst.dst512;
 }
 #undef _mm512_loadu_ps
@@ -630,7 +630,7 @@ static inline __m128i _mm_load_epi64_dbg(void const* mem_addr)
   return _mm_load_si128((__m128i*)mem_addr);
 }
 #undef _mm_load_epi64
-#define _mm_load_epi64 _mm512_load_epi64_dbg
+#define _mm_load_epi64 _mm_load_epi64_dbg
 
 /*
  Load 512-bits (composed of 8 packed 64-bit doubles) from memory into dst. mem_addr does not need to be aligned on any particular boundary.
@@ -643,7 +643,7 @@ static inline __m512i _mm512_loadu_si512_dbg(void const* mem_addr)
   __m128i dst128[4];
   } dst;
   for (int i = 0; i < 4; i++)
-	  dst.dst128[i] = _mm_load_si128((__m128i*)mem_addr + i);
+	  dst.dst128[i] = _mm_loadu_si128((__m128i*)mem_addr + i);
   return dst.dst512;
 }
 #undef _mm512_loadu_si512
@@ -660,7 +660,7 @@ static inline __m256i _mm256_loadu_si256_dbg(void const* mem_addr)
   __m128i dst128[2];
   } dst;
   for (int i = 0; i < 2; i++)
-	  dst.dst128[i] = _mm_load_si128((__m128i*)mem_addr + i);
+	  dst.dst128[i] = _mm_loadu_si128((__m128i*)mem_addr + i);
   return dst.dst256;
 }
 #undef _mm256_loadu_si256
@@ -677,7 +677,7 @@ static inline __m256i _mm256_loadu_epi16_dbg(void const* mem_addr)
   __m128i dst128[2];
   } dst;
   for (int i = 0; i < 2; i++)
-	  dst.dst128[i] = _mm_load_si128((__m128i*)mem_addr + i);
+	  dst.dst128[i] = _mm_loadu_si128((__m128i*)mem_addr + i);
   return dst.dst256;
 }
 #undef _mm256_loadu_epi16
@@ -694,7 +694,7 @@ static inline __m256 _mm256_loadu_ps_dbg(void const* mem_addr)
   __m128i dst128[2];
   } dst;
   for (int i = 0; i < 2; i++)
-	  dst.dst128[i] = _mm_load_si128((__m128i*)mem_addr + i);
+	  dst.dst128[i] = _mm_loadu_si128((__m128i*)mem_addr + i);
   return dst.dst256;
 }
 #undef _mm256_loadu_ps
@@ -711,7 +711,7 @@ static inline __m256d _mm256_loadu_pd_dbg(void const* mem_addr)
   __m128i dst128[2];
   } dst;
   for (int i = 0; i < 2; i++)
-	  dst.dst128[i] = _mm_load_si128((__m128i*)mem_addr + i);
+	  dst.dst128[i] = _mm_loadu_si128((__m128i*)mem_addr + i);
   return dst.dst256;
 }
 #undef _mm256_loadu_pd
@@ -729,7 +729,7 @@ static inline void _mm512_storeu_pd_dbg(void *mem_addr, __m512d A)
   } dst;
   dst = (union simd)A;
   for (int i = 0; i < 4; i++)
-	  _mm_store_si128((__m128i*)mem_addr + i, dst.dst128[i]);
+	  _mm_storeu_si128((__m128i*)mem_addr + i, dst.dst128[i]);
 }
 #undef _mm512_storeu_pd
 #define _mm512_storeu_pd _mm512_storeu_pd_dbg
@@ -763,7 +763,7 @@ static inline void _mm512_storeu_ps_dbg(void *mem_addr, __m512 A)
   } dst;
   dst = (union simd)A;
   for (int i = 0; i < 4; i++)
-	  _mm_store_si128((__m128i*)mem_addr + i, dst.dst128[i]);
+	  _mm_storeu_si128((__m128i*)mem_addr + i, dst.dst128[i]);
 }
 #undef _mm512_storeu_ps
 #define _mm512_storeu_ps _mm512_storeu_ps_dbg
@@ -780,7 +780,7 @@ static inline void _mm512_storeu_si512_dbg(void *mem_addr, __m512i A)
   } dst;
   dst = (union simd)A;
   for (int i = 0; i < 4; i++)
-	  _mm_store_si128((__m128i*)mem_addr + i, dst.dst128[i]);
+	  _mm_storeu_si128((__m128i*)mem_addr + i, dst.dst128[i]);
 }
 #undef _mm512_storeu_si512
 #define _mm512_storeu_si512 _mm512_storeu_si512_dbg
@@ -816,7 +816,7 @@ static inline void _mm256_storeu_si256_dbg(__m256i *mem_addr, __m256i A)
   } dst;
   dst = (union simd)A;
   for (int i = 0; i < 2; i++)
-	  _mm_store_si128((__m128i*)mem_addr + i, dst.dst128[i]);
+	  _mm_storeu_si128((__m128i*)mem_addr + i, dst.dst128[i]);
 }
 #undef _mm256_storeu_si256
 #define _mm256_storeu_si256 _mm256_storeu_si256_dbg 
@@ -851,7 +851,7 @@ static inline void _mm256_storeu_pd_dbg(double *mem_addr, __m256d A)
   } dst;
   dst = (union simd)A;
   for (int i = 0; i < 2; i++)
-	  _mm_store_si128((__m128i*)mem_addr + i, dst.dst128[i]);
+	  _mm_storeu_si128((__m128i*)mem_addr + i, dst.dst128[i]);
 }
 #undef _mm256_storeu_pd
 #define _mm256_storeu_pd _mm256_storeu_pd_dbg 
@@ -869,7 +869,7 @@ static inline void _mm256_storeu_ps_dbg(float *mem_addr, __m256 A)
   } dst;
   dst = (union simd)A;
   for (int i = 0; i < 2; i++)
-	  _mm_store_si128((__m128i*)mem_addr + i, dst.dst128[i]);
+	  _mm_storeu_si128((__m128i*)mem_addr + i, dst.dst128[i]);
 }
 #undef _mm256_storeu_ps
 #define _mm256_storeu_ps _mm256_storeu_ps_dbg 
@@ -883,7 +883,7 @@ static inline void _mm_store_epi64_dbg(void *mem_addr, __m128i A)
   _mm_store_si128((__m128i*)mem_addr, A);
 }
 #undef _mm_store_epi64
-#define _mm_store_epi64 _mm256_storeu_epi64_dbg 
+#define _mm_store_epi64 _mm_storeu_epi64_dbg 
 
 /*
  Store 512-bits (composed of 8 packed 64-bit integers) from a into memory. mem_addr must be aligned on a 64-byte boundary or a general-protection exception may be generated.
@@ -1890,7 +1890,7 @@ static inline __m512i _mm512_mask_popcnt_epi8_dbg(__m512i src, __mmask64 k, __m5
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = POPCNT(a_vec[j]);
     } else {
       dst_vec[j] = src_vec[j];
@@ -1912,7 +1912,7 @@ static inline __m512i _mm512_maskz_popcnt_epi8_dbg(__mmask64 k, __m512i a)
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = POPCNT(a_vec[j]);
     } else {
       dst_vec[j] = 0;
@@ -2213,7 +2213,7 @@ static inline __m512i _mm512_maskz_expand_epi8_dbg(__mmask64 k, __m512i a)
   int8_t dst_vec[64];
   int m = 0;
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = a_vec[(m)/8];
       m = m + 8;
     } else {
@@ -2239,7 +2239,7 @@ static inline __m512i _mm512_mask_expand_epi8_dbg(__m512i src, __mmask64 k, __m5
   int8_t dst_vec[64];
   int m = 0;
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = a_vec[(m)/8];
       m = m + 8;
     } else {
@@ -6852,16 +6852,16 @@ static inline __m128 _mm512_mask_extractf32x4_ps_dbg(__m128 src, __mmask8 k, __m
   int32_t dst_vec[4];
   switch ((imm8 & 0xff) >> 0) {
     case 0:
-    _mm_storeu_ps(tmp_vec, (__m128)a_vec[0]);
+    _mm_storeu_ps((void*)tmp_vec, (__m128)a_vec[0]);
 break;
     case 1:
-    _mm_storeu_ps(tmp_vec, (__m128)a_vec[1]);
+    _mm_storeu_ps((void*)tmp_vec, (__m128)a_vec[1]);
 break;
     case 2:
-    _mm_storeu_ps(tmp_vec, (__m128)a_vec[2]);
+    _mm_storeu_ps((void*)tmp_vec, (__m128)a_vec[2]);
 break;
     case 3:
-    _mm_storeu_ps(tmp_vec, (__m128)a_vec[3]);
+    _mm_storeu_ps((void*)tmp_vec, (__m128)a_vec[3]);
 break;
   }
   for (int j = 0; j <= 3; j++) {
@@ -6889,16 +6889,16 @@ static inline __m128 _mm512_maskz_extractf32x4_ps_dbg(__mmask8 k, __m512 a, int 
   int32_t dst_vec[4];
   switch ((imm8 & 0xff) >> 0) {
     case 0:
-    _mm_storeu_ps(tmp_vec, (__m128)a_vec[0]);
+    _mm_storeu_ps((void*)tmp_vec, (__m128)a_vec[0]);
 break;
     case 1:
-    _mm_storeu_ps(tmp_vec, (__m128)a_vec[1]);
+    _mm_storeu_ps((void*)tmp_vec, (__m128)a_vec[1]);
 break;
     case 2:
-    _mm_storeu_ps(tmp_vec, (__m128)a_vec[2]);
+    _mm_storeu_ps((void*)tmp_vec, (__m128)a_vec[2]);
 break;
     case 3:
-    _mm_storeu_ps(tmp_vec, (__m128)a_vec[3]);
+    _mm_storeu_ps((void*)tmp_vec, (__m128)a_vec[3]);
 break;
   }
   for (int j = 0; j <= 3; j++) {
@@ -6951,10 +6951,10 @@ static inline __m256d _mm512_mask_extractf64x4_pd_dbg(__m256d src, __mmask8 k, _
   int64_t dst_vec[4];
   switch ((imm8 & 0xff) >> 0) {
     case 0:
-    _mm256_storeu_pd(tmp_vec, (__m256d)a_vec[0]);
+    _mm256_storeu_pd((void*)tmp_vec, (__m256d)a_vec[0]);
 break;
     case 1:
-    _mm256_storeu_pd(tmp_vec, (__m256d)a_vec[1]);
+    _mm256_storeu_pd((void*)tmp_vec, (__m256d)a_vec[1]);
 break;
   }
   for (int j = 0; j <= 3; j++) {
@@ -6970,7 +6970,6 @@ break;
 #undef _mm512_mask_extractf64x4_pd
 #define _mm512_mask_extractf64x4_pd _mm512_mask_extractf64x4_pd_dbg
 
-
 /*
  Extract 256 bits (composed of 4 packed double-precision (64-bit) floating-point elements) from "a", selected with "imm8", and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
 */
@@ -6982,10 +6981,10 @@ static inline __m256d _mm512_maskz_extractf64x4_pd_dbg(__mmask8 k, __m512d a, in
   int64_t dst_vec[4];
   switch ((imm8 & 0xff) >> 0) {
     case 0:
-    _mm256_storeu_pd(tmp_vec, a_vec[0]);
+    _mm256_storeu_pd((void*)tmp_vec, a_vec[0]);
 break;
     case 1:
-    _mm256_storeu_pd(tmp_vec, a_vec[1]);
+    _mm256_storeu_pd((void*)tmp_vec, a_vec[1]);
 break;
   }
   for (int j = 0; j <= 3; j++) {
@@ -7044,16 +7043,16 @@ static inline __m128i _mm512_mask_extracti32x4_epi32_dbg(__m128i src, __mmask8 k
   int32_t dst_vec[4];
   switch ((imm8 & 0xff) >> 0) {
     case 0:
-    _mm_storeu_ps(tmp_vec, (__m128)a_vec[0]);
+    _mm_storeu_ps((void*)tmp_vec, (__m128)a_vec[0]);
 break;
     case 1:
-    _mm_storeu_ps(tmp_vec, (__m128)a_vec[1]);
+    _mm_storeu_ps((void*)tmp_vec, (__m128)a_vec[1]);
 break;
     case 2:
-    _mm_storeu_ps(tmp_vec, (__m128)a_vec[2]);
+    _mm_storeu_ps((void*)tmp_vec, (__m128)a_vec[2]);
 break;
     case 3:
-    _mm_storeu_ps(tmp_vec, (__m128)a_vec[3]);
+    _mm_storeu_ps((void*)tmp_vec, (__m128)a_vec[3]);
 break;
   }
   for (int j = 0; j <= 3; j++) {
@@ -7081,16 +7080,16 @@ static inline __m128i _mm512_maskz_extracti32x4_epi32_dbg(__mmask8 k, __m512i a,
   int32_t dst_vec[4];
   switch ((imm8 & 0xff) >> 0) {
     case 0:
-    _mm_storeu_ps(tmp_vec, (__m128)a_vec[0]);
+    _mm_storeu_ps((void*)tmp_vec, (__m128)a_vec[0]);
 break;
     case 1:
-    _mm_storeu_ps(tmp_vec, (__m128)a_vec[1]);
+    _mm_storeu_ps((void*)tmp_vec, (__m128)a_vec[1]);
 break;
     case 2:
-    _mm_storeu_ps(tmp_vec, (__m128)a_vec[2]);
+    _mm_storeu_ps((void*)tmp_vec, (__m128)a_vec[2]);
 break;
     case 3:
-    _mm_storeu_ps(tmp_vec, (__m128)a_vec[3]);
+    _mm_storeu_ps((void*)tmp_vec, (__m128)a_vec[3]);
 break;
   }
   for (int j = 0; j <= 3; j++) {
@@ -7143,10 +7142,10 @@ static inline __m256i _mm512_mask_extracti64x4_epi64_dbg(__m256i src, __mmask8 k
   int64_t dst_vec[4];
   switch ((imm8 & 0xff) >> 0) {
     case 0:
-    _mm256_storeu_pd(tmp_vec, a_vec[0]);
+    _mm256_storeu_pd((void*)tmp_vec, a_vec[0]);
 break;
     case 1:
-    _mm256_storeu_pd(tmp_vec, a_vec[1]);
+    _mm256_storeu_pd((void*)tmp_vec, a_vec[1]);
 break;
   }
   for (int j = 0; j <= 3; j++) {
@@ -7174,10 +7173,10 @@ static inline __m256i _mm512_maskz_extracti64x4_epi64_dbg(__mmask8 k, __m512i a,
   int64_t dst_vec[4];
   switch ((imm8 & 0xff) >> 0) {
     case 0:
-    _mm256_storeu_pd(tmp_vec, a_vec[0]);
+    _mm256_storeu_pd((void*)tmp_vec, a_vec[0]);
 break;
     case 1:
-    _mm256_storeu_pd(tmp_vec, a_vec[1]);
+    _mm256_storeu_pd((void*)tmp_vec, a_vec[1]);
 break;
   }
   for (int j = 0; j <= 3; j++) {
@@ -18803,7 +18802,7 @@ static inline int64_t _mm512_mask_reduce_and_epi64_dbg(__mmask8 k, __m512i a)
   int64_t a_vec[8];
   _mm512_storeu_si512((void*)a_vec, a);
   int64_t dst;
-  dst = 0xFFFFFFFFFFFFFFFF;
+  dst = 0xFFFFFFFFFFFFFFFFL;
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst = dst & a_vec[j];
@@ -30884,7 +30883,7 @@ static inline __m512i _mm512_mask_mov_epi8_dbg(__m512i src, __mmask64 k, __m512i
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = a_vec[j];
     } else {
       dst_vec[j] = src_vec[j];
@@ -30907,7 +30906,7 @@ static inline __m512i _mm512_maskz_mov_epi8_dbg(__mmask64 k, __m512i a)
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = a_vec[j];
     } else {
       dst_vec[j] = 0;
@@ -31590,7 +31589,7 @@ static inline __m512i _mm512_mask_abs_epi8_dbg(__m512i src, __mmask64 k, __m512i
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = abs(a_vec[j]);
     } else {
       dst_vec[j] = src_vec[j];
@@ -31612,7 +31611,7 @@ static inline __m512i _mm512_maskz_abs_epi8_dbg(__mmask64 k, __m512i a)
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = abs(a_vec[j]);
     } else {
       dst_vec[j] = 0;
@@ -32130,7 +32129,7 @@ static inline __m512i _mm512_mask_add_epi8_dbg(__m512i src, __mmask64 k, __m512i
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = a_vec[j] + b_vec[j];
     } else {
       dst_vec[j] = src_vec[j];
@@ -32154,7 +32153,7 @@ static inline __m512i _mm512_maskz_add_epi8_dbg(__mmask64 k, __m512i a, __m512i 
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = a_vec[j] + b_vec[j];
     } else {
       dst_vec[j] = 0;
@@ -32501,7 +32500,7 @@ static inline __m512i _mm512_mask_adds_epi8_dbg(__m512i src, __mmask64 k, __m512
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = Saturate_To_Int8( a_vec[j] + b_vec[j] );
     } else {
       dst_vec[j] = src_vec[j];
@@ -32526,7 +32525,7 @@ static inline __m512i _mm512_maskz_adds_epi8_dbg(__mmask64 k, __m512i a, __m512i
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = Saturate_To_Int8( a_vec[j] + b_vec[j] );
     } else {
       dst_vec[j] = 0;
@@ -32847,7 +32846,7 @@ static inline __m512i _mm512_mask_adds_epu8_dbg(__m512i src, __mmask64 k, __m512
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = Saturate_To_UnsignedInt8( a_vec[j] + b_vec[j] );
     } else {
       dst_vec[j] = src_vec[j];
@@ -32872,7 +32871,7 @@ static inline __m512i _mm512_maskz_adds_epu8_dbg(__mmask64 k, __m512i a, __m512i
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = Saturate_To_UnsignedInt8( a_vec[j] + b_vec[j] );
     } else {
       dst_vec[j] = 0;
@@ -33762,7 +33761,7 @@ static inline __m512i _mm512_mask_avg_epu8_dbg(__m512i src, __mmask64 k, __m512i
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = (a_vec[j] + b_vec[j] + 1) >> 1;
     } else {
       dst_vec[j] = src_vec[j];
@@ -33786,7 +33785,7 @@ static inline __m512i _mm512_maskz_avg_epu8_dbg(__mmask64 k, __m512i a, __m512i 
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = (a_vec[j] + b_vec[j] + 1) >> 1;
     } else {
       dst_vec[j] = 0;
@@ -34057,7 +34056,7 @@ static inline __m512i _mm512_mask_blend_epi8_dbg(__mmask64 k, __m512i a, __m512i
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = b_vec[j];
     } else {
       dst_vec[j] = a_vec[j];
@@ -34379,7 +34378,7 @@ static inline __m512i _mm512_mask_broadcastb_epi8_dbg(__m512i src, __mmask64 k, 
   _mm_storeu_si128((void*)a_vec, a);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = a_vec[0];
     } else {
       dst_vec[j] = src_vec[j];
@@ -34401,7 +34400,7 @@ static inline __m512i _mm512_mask_set1_epi8_dbg(__m512i src, __mmask64 k, char a
   _mm512_storeu_si512((void*)src_vec, src);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = a;
     } else {
       dst_vec[j] = src_vec[j];
@@ -34423,7 +34422,7 @@ static inline __m512i _mm512_maskz_broadcastb_epi8_dbg(__mmask64 k, __m128i a)
   _mm_storeu_si128((void*)a_vec, a);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = a_vec[0];
     } else {
       dst_vec[j] = 0;
@@ -34443,7 +34442,7 @@ static inline __m512i _mm512_maskz_set1_epi8_dbg(__mmask64 k, char a)
 {
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = a;
     } else {
       dst_vec[j] = 0;
@@ -35640,7 +35639,7 @@ static inline __mmask64 _mm512_mask_cmpeq_epi8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask64 k;
   for (int j = 0; j <= 63; j++) {
-    if (k1 & ((1 << j) & 0xffffffffffffffff)) {
+    if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
@@ -35664,7 +35663,7 @@ static inline __mmask64 _mm512_mask_cmpge_epi8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask64 k;
   for (int j = 0; j <= 63; j++) {
-    if (k1 & ((1 << j) & 0xffffffffffffffff)) {
+    if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
@@ -35688,7 +35687,7 @@ static inline __mmask64 _mm512_mask_cmpgt_epi8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask64 k;
   for (int j = 0; j <= 63; j++) {
-    if (k1 & ((1 << j) & 0xffffffffffffffff)) {
+    if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
@@ -35712,7 +35711,7 @@ static inline __mmask64 _mm512_mask_cmple_epi8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask64 k;
   for (int j = 0; j <= 63; j++) {
-    if (k1 & ((1 << j) & 0xffffffffffffffff)) {
+    if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
@@ -35736,7 +35735,7 @@ static inline __mmask64 _mm512_mask_cmplt_epi8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask64 k;
   for (int j = 0; j <= 63; j++) {
-    if (k1 & ((1 << j) & 0xffffffffffffffff)) {
+    if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
@@ -35760,7 +35759,7 @@ static inline __mmask64 _mm512_mask_cmpneq_epi8_mask_dbg(__mmask64 k1, __m512i a
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask64 k;
   for (int j = 0; j <= 63; j++) {
-    if (k1 & ((1 << j) & 0xffffffffffffffff)) {
+    if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
@@ -37488,7 +37487,7 @@ static inline __mmask64 _mm512_mask_cmpeq_epu8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask64 k;
   for (int j = 0; j <= 63; j++) {
-    if (k1 & ((1 << j) & 0xffffffffffffffff)) {
+    if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
@@ -37512,7 +37511,7 @@ static inline __mmask64 _mm512_mask_cmpge_epu8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask64 k;
   for (int j = 0; j <= 63; j++) {
-    if (k1 & ((1 << j) & 0xffffffffffffffff)) {
+    if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
@@ -37536,7 +37535,7 @@ static inline __mmask64 _mm512_mask_cmpgt_epu8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask64 k;
   for (int j = 0; j <= 63; j++) {
-    if (k1 & ((1 << j) & 0xffffffffffffffff)) {
+    if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
@@ -37560,7 +37559,7 @@ static inline __mmask64 _mm512_mask_cmple_epu8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask64 k;
   for (int j = 0; j <= 63; j++) {
-    if (k1 & ((1 << j) & 0xffffffffffffffff)) {
+    if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
@@ -37584,7 +37583,7 @@ static inline __mmask64 _mm512_mask_cmplt_epu8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask64 k;
   for (int j = 0; j <= 63; j++) {
-    if (k1 & ((1 << j) & 0xffffffffffffffff)) {
+    if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
@@ -37608,7 +37607,7 @@ static inline __mmask64 _mm512_mask_cmpneq_epu8_mask_dbg(__mmask64 k1, __m512i a
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask64 k;
   for (int j = 0; j <= 63; j++) {
-    if (k1 & ((1 << j) & 0xffffffffffffffff)) {
+    if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
@@ -41150,7 +41149,7 @@ static inline __m512i _mm512_mask_max_epi8_dbg(__m512i src, __mmask64 k, __m512i
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       if (a_vec[j] > b_vec[j]) {
         dst_vec[j] = a_vec[j];
       } else {
@@ -41178,7 +41177,7 @@ static inline __m512i _mm512_maskz_max_epi8_dbg(__mmask64 k, __m512i a, __m512i 
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       if (a_vec[j] > b_vec[j]) {
         dst_vec[j] = a_vec[j];
       } else {
@@ -41833,7 +41832,7 @@ static inline __m512i _mm512_mask_max_epu8_dbg(__m512i src, __mmask64 k, __m512i
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       if (a_vec[j] > b_vec[j]) {
         dst_vec[j] = a_vec[j];
       } else {
@@ -41862,7 +41861,7 @@ static inline __m512i _mm512_maskz_max_epu8_dbg(__mmask64 k, __m512i a, __m512i 
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       if (a_vec[j] > b_vec[j]) {
         dst_vec[j] = a_vec[j];
       } else {
@@ -42521,7 +42520,7 @@ static inline __m512i _mm512_mask_min_epi8_dbg(__m512i src, __mmask64 k, __m512i
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       if (a_vec[j] < b_vec[j]) {
         dst_vec[j] = a_vec[j];
       } else {
@@ -42550,7 +42549,7 @@ static inline __m512i _mm512_maskz_min_epi8_dbg(__mmask64 k, __m512i a, __m512i 
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       if (a_vec[j] < b_vec[j]) {
         dst_vec[j] = a_vec[j];
       } else {
@@ -43209,7 +43208,7 @@ static inline __m512i _mm512_mask_min_epu8_dbg(__m512i src, __mmask64 k, __m512i
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       if (a_vec[j] < b_vec[j]) {
         dst_vec[j] = a_vec[j];
       } else {
@@ -43238,7 +43237,7 @@ static inline __m512i _mm512_maskz_min_epu8_dbg(__mmask64 k, __m512i a, __m512i 
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       if (a_vec[j] < b_vec[j]) {
         dst_vec[j] = a_vec[j];
       } else {
@@ -44120,7 +44119,7 @@ static inline __m512i _mm512_movm_epi8_dbg(__mmask64 k)
 {
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = 0xFF;
     } else {
       dst_vec[j] = 0;
@@ -44221,7 +44220,7 @@ static inline __m256i _mm256_movm_epi64_dbg(__mmask8 k)
   int64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = 0xFFFFFFFFffffffff;
+      dst_vec[j] = 0xFFFFFFFFFFFFFFFFL;
     } else {
       dst_vec[j] = 0;
     }
@@ -44241,7 +44240,7 @@ static inline __m512i _mm512_movm_epi64_dbg(__mmask8 k)
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = 0xFFFFFFFFffffffff;
+      dst_vec[j] = 0xFFFFFFFFFFFFFFFFL;
     } else {
       dst_vec[j] = 0;
     }
@@ -44261,7 +44260,7 @@ static inline __m128i _mm_movm_epi64_dbg(__mmask8 k)
   int64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = 0xFFFFFFFFffffffff;
+      dst_vec[j] = 0xFFFFFFFFFFFFFFFFL;
     } else {
       dst_vec[j] = 0;
     }
@@ -51892,7 +51891,7 @@ static inline __m512i _mm512_mask_sub_epi8_dbg(__m512i src, __mmask64 k, __m512i
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = a_vec[j] - b_vec[j];
     } else {
       dst_vec[j] = src_vec[j];
@@ -51916,7 +51915,7 @@ static inline __m512i _mm512_maskz_sub_epi8_dbg(__mmask64 k, __m512i a, __m512i 
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = a_vec[j] - b_vec[j];
     } else {
       dst_vec[j] = 0;
@@ -52262,7 +52261,7 @@ static inline __m512i _mm512_mask_subs_epi8_dbg(__m512i src, __mmask64 k, __m512
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = Saturate_To_Int8(a_vec[j] - b_vec[j]);
     } else {
       dst_vec[j] = src_vec[j];
@@ -52286,7 +52285,7 @@ static inline __m512i _mm512_maskz_subs_epi8_dbg(__mmask64 k, __m512i a, __m512i
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = Saturate_To_Int8(a_vec[j] - b_vec[j]);
     } else {
       dst_vec[j] = 0;
@@ -52602,7 +52601,7 @@ static inline __m512i _mm512_mask_subs_epu8_dbg(__m512i src, __mmask64 k, __m512
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = Saturate_To_UnsignedInt8(a_vec[j] - b_vec[j]);
     } else {
       dst_vec[j] = src_vec[j];
@@ -52626,7 +52625,7 @@ static inline __m512i _mm512_maskz_subs_epu8_dbg(__mmask64 k, __m512i a, __m512i
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    if (k & ((1 << j) & 0xffffffffffffffff)) {
+    if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       dst_vec[j] = Saturate_To_UnsignedInt8(a_vec[j] - b_vec[j]);
     } else {
       dst_vec[j] = 0;
@@ -53104,7 +53103,7 @@ static inline __mmask64 _mm512_mask_test_epi8_mask_dbg(__mmask64 k1, __m512i a, 
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask64 k;
   for (int j = 0; j <= 63; j++) {
-    if (k1 & ((1 << j) & 0xffffffffffffffff)) {
+    if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (((a_vec[j] & b_vec[j]) != 0) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
@@ -53464,7 +53463,7 @@ static inline __mmask64 _mm512_mask_testn_epi8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask64 k;
   for (int j = 0; j <= 63; j++) {
-    if (k1 & ((1 << j) & 0xffffffffffffffff)) {
+    if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (((a_vec[j] & b_vec[j]) == 0) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
@@ -57562,7 +57561,7 @@ static inline __m256i _mm256_cmpeq_epi64_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)b_vec, b);
   int64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
-    dst_vec[j] = ( a_vec[j] == b_vec[j] ) ? 0xFFFFFFFFFFFFFFFF : 0;
+    dst_vec[j] = ( a_vec[j] == b_vec[j] ) ? 0xFFFFFFFFFFFFFFFFL : 0;
   }
   return _mm256_loadu_si256((void*)dst_vec);
 }
@@ -57642,7 +57641,7 @@ static inline __m256i _mm256_cmpgt_epi64_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)b_vec, b);
   int64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
-    dst_vec[j] = ( a_vec[j] > b_vec[j] ) ? 0xFFFFFFFFFFFFFFFF : 0;
+    dst_vec[j] = ( a_vec[j] > b_vec[j] ) ? 0xFFFFFFFFFFFFFFFFL : 0;
   }
   return _mm256_loadu_si256((void*)dst_vec);
 }
@@ -61159,7 +61158,7 @@ static inline __m128i _mm_cmpeq_epi64_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)b_vec, b);
   int64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
-    dst_vec[j] = ( a_vec[j] == b_vec[j] ) ? 0xFFFFFFFFFFFFFFFF : 0;
+    dst_vec[j] = ( a_vec[j] == b_vec[j] ) ? 0xFFFFFFFFFFFFFFFFL : 0;
   }
 return _mm_loadu_si128((void*)dst_vec);
 }
@@ -61701,7 +61700,7 @@ static inline __m128i _mm_cmpgt_epi64_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)b_vec, b);
   int64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
-    dst_vec[j] = ( a_vec[j] > b_vec[j] ) ? 0xFFFFFFFFFFFFFFFF : 0;
+    dst_vec[j] = ( a_vec[j] > b_vec[j] ) ? 0xFFFFFFFFFFFFFFFFLL : 0;
   }
 return _mm_loadu_si128((void*)dst_vec);
 }
