@@ -61708,6 +61708,36 @@ return _mm_loadu_si128((void*)dst_vec);
 #undef _mm_cmpgt_epi64
 #define _mm_cmpgt_epi64 _mm_cmpgt_epi64_dbg
 
+/*
+ Shuffle 8-bit integers in "a" within 128-bit lanes according to shuffle control mask in the corresponding 8-bit element of "b", and store the results in "dst".
+*/
+static inline __m256i _mm256_shuffle_epi8_dbg(__m256i a, __m256i b)
+{
+  int8_t a_vec[32];
+  _mm256_storeu_si256((void*)a_vec, a);
+  int8_t b_vec[32];
+  _mm256_storeu_si256((void*)b_vec, b);
+  int8_t dst_vec[32];
+  for (int j = 0; j <= 15; j++) {
+    if ((b_vec[j] & 0x80) >> 7) {
+      dst_vec[j] = 0;
+    } else {
+      index = b_vec[j] & 0xf;
+      dst_vec[j] = a_vec[index];
+    }
+    if ((b_vec[j + 16] & 0x80) >> 7) {
+      dst_vec[j + 16] = 0;
+    } else {
+      index = b_vec[j + 16] & 0xf;
+      dst_vec[j + 16] = a_vec[index + 16];
+    }
+  }
+  return _mm256_loadu_si256((void*)dst_vec);
+}
+
+#undef _mm256_shuffle_epi8
+#define _mm256_shuffle_epi8 _mm256_shuffle_epi8_dbg
+
 #undef MIN
 #undef MAX
 #undef NEG
