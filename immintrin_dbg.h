@@ -35,6 +35,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define __IMMINTRIN_DBG_H_
 
 #include <inttypes.h>
+#include <climits.h>
+#include <float.h>
 #include "/usr/include/math.h"
 #include <stdlib.h>
 
@@ -2705,7 +2707,6 @@ static inline __m128d _mm_maskz_add_sd_dbg(__mmask8 k, __m128d a, __m128d b)
 
 #undef _mm_maskz_add_sd
 #define _mm_maskz_add_sd _mm_maskz_add_sd_dbg
-
 
 /*
  Add the lower single-precision (32-bit) floating-point element in "a" and "b", store the result in the lower element of "dst", and copy the upper 3 packed elements from "a" to the upper elements of "dst".
@@ -18709,6 +18710,23 @@ return dst;
 #undef _mm512_mask_reduce_add_epi32
 #define _mm512_mask_reduce_add_epi32 _mm512_mask_reduce_add_epi32_dbg
 
+/*
+ Reduce the packed 32-bit integers in "a" by addition. Returns the sum of all active elements in "a".
+*/
+static inline int _mm512_reduce_add_epi32_dbg(__m512i a)
+{
+  int32_t a_vec[16];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int dst;
+  dst = 0;
+  for (int j = 0; j <= 15; j++) {
+    dst = dst + a_vec[j];
+  }
+return dst;
+}
+
+#undef _mm512_reduce_add_epi32
+#define _mm512_reduce_add_epi32 _mm512_reduce_add_epi32_dbg
 
 /*
  Reduce the packed 64-bit integers in "a" by addition using mask "k". Returns the sum of all active elements in "a".
@@ -18860,8 +18878,7 @@ static inline float _mm512_reduce_add_ps_dbg(__m512 a)
 {
   float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
-  float dst;
-  dst = 0;
+  float dst = 0;
   for (int j = 0; j <= 15; j++) {
     dst = dst + a_vec[j];
   }
@@ -18870,7 +18887,6 @@ return dst;
 
 #undef _mm512_reduce_add_ps
 #define _mm512_reduce_add_ps _mm512_reduce_add_ps_dbg
-
 
 /*
  Broadcast double-precision (64-bit) floating-point value "a" to all elements of "dst".
@@ -35493,7 +35509,7 @@ static inline __mmask32 _mm256_mask_cmpneq_epi8_mask_dbg(__mmask32 k1, __m256i a
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
@@ -35517,7 +35533,7 @@ static inline __mmask64 _mm512_cmpeq_epi8_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
   }
@@ -35527,6 +35543,61 @@ static inline __mmask64 _mm512_cmpeq_epi8_mask_dbg(__m512i a, __m512i b)
 #undef _mm512_cmpeq_epi8_mask
 #define _mm512_cmpeq_epi8_mask _mm512_cmpeq_epi8_mask_dbg
 
+/*
+ Compare packed 32-bit integers in "a" and "b" for equality, and store the results in mask vector "k".
+*/
+static inline __mmask16 _mm512_cmpeq_epi32_mask_dbg(__m512i a, __m512i b)
+{
+  int32_t a_vec[16];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int32_t b_vec[16];
+  _mm512_storeu_si512((void*)b_vec, b);
+  __mmask16 k = 0;
+  for (int j = 0; j <= 15; j++) {
+    k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
+  }
+  return k;
+}
+
+#undef _mm512_cmpeq_epi32_mask
+#define _mm512_cmpeq_epi32_mask _mm512_cmpeq_epi32_mask_dbg
+/*
+ Compare packed 32-bit integers in "a" and "b" for greater-than-or-equal, and store the results in mask vector "k".
+*/
+static inline __mmask16 _mm512_cmpge_epi32_mask_dbg(__m512i a, __m512i b)
+{
+  int32_t a_vec[16];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int32_t b_vec[16];
+  _mm512_storeu_si512((void*)b_vec, b);
+  __mmask16 k = 0;
+  for (int j = 0; j <= 15; j++) {
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
+  }
+  return k;
+}
+
+#undef _mm512_cmpge_epi32_mask
+#define _mm512_cmpge_epi32_mask _mm512_cmpge_epi32_mask_dbg
+
+/*
+ Compare packed 32-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
+*/
+static inline __mmask16 _mm512_cmpgt_epi32_mask_dbg(__m512i a, __m512i b)
+{
+  int32_t a_vec[16];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int32_t b_vec[16];
+  _mm512_storeu_si512((void*)b_vec, b);
+  __mmask16 k = 0;
+  for (int j = 0; j <= 15; j++) {
+    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+  }
+  return k;
+}
+
+#undef _mm512_cmpgt_epi32_mask
+#define _mm512_cmpgt_epi32_mask _mm512_cmpgt_epi32_mask_dbg
 
 /*
  Compare packed 8-bit integers in "a" and "b" for greater-than-or-equal, and store the results in mask vector "k".
@@ -61737,6 +61808,240 @@ static inline __m256i _mm256_shuffle_epi8_dbg(__m256i a, __m256i b)
 
 #undef _mm256_shuffle_epi8
 #define _mm256_shuffle_epi8 _mm256_shuffle_epi8_dbg
+
+/*
+ Add packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst".
+*/
+static inline __m512 _mm512_add_ps_dbg(__m512 a, __m512 b)
+{
+  float a_vec[16];
+  _mm512_storeu_ps((void*)a_vec, a);
+  float b_vec[16];
+  _mm512_storeu_ps((void*)b_vec, b);
+  float dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    dst_vec[j] = a_vec[j] + b_vec[j];
+  }
+  return _mm512_loadu_ps((void*)dst_vec);
+}
+
+#undef _mm512_add_ps
+#define _mm512_add_ps _mm512_add_ps_dbg
+
+/*
+ Add packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst".
+	(_MM_FROUND_TO_NEAREST_INT |_MM_FROUND_NO_EXC) // round to nearest, and suppress exceptions
+        (_MM_FROUND_TO_NEG_INF |_MM_FROUND_NO_EXC)     // round down, and suppress exceptions
+        (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
+        (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
+        _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
+*/
+static inline __m512 _mm512_add_round_ps_dbg(__m512 a, __m512 b, int rounding)
+{
+  float a_vec[16];
+  _mm512_storeu_ps((void*)a_vec, a);
+  float b_vec[16];
+  _mm512_storeu_ps((void*)b_vec, b);
+  float dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    dst_vec[j] = a_vec[j] + b_vec[j];
+  }
+  return _mm512_loadu_ps((void*)dst_vec);
+}
+
+#undef _mm512_add_round_ps
+#define _mm512_add_round_ps _mm512_add_round_ps_dbg
+
+
+/*
+ Add packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set).
+*/
+static inline __m512 _mm512_mask_add_ps_dbg(__m512 src, __mmask16 k, __m512 a, __m512 b)
+{
+  float src_vec[16];
+  _mm512_storeu_ps((void*)src_vec, src);
+  float a_vec[16];
+  _mm512_storeu_ps((void*)a_vec, a);
+  float b_vec[16];
+  _mm512_storeu_ps((void*)b_vec, b);
+  float dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[j] = a_vec[j] + b_vec[j];
+    } else {
+      dst_vec[j] = src_vec[j];
+    }
+  }
+  return _mm512_loadu_ps((void*)dst_vec);
+}
+
+#undef _mm512_mask_add_ps
+#define _mm512_mask_add_ps _mm512_mask_add_ps_dbg
+
+/*
+ Add packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set).
+	(_MM_FROUND_TO_NEAREST_INT |_MM_FROUND_NO_EXC) // round to nearest, and suppress exceptions
+        (_MM_FROUND_TO_NEG_INF |_MM_FROUND_NO_EXC)     // round down, and suppress exceptions
+        (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
+        (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
+        _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
+*/
+static inline __m512 _mm512_mask_add_round_ps_dbg(__m512 src, __mmask16 k, __m512 a, __m512 b, int rounding)
+{
+  float src_vec[16];
+  _mm512_storeu_ps((void*)src_vec, src);
+  float a_vec[16];
+  _mm512_storeu_ps((void*)a_vec, a);
+  float b_vec[16];
+  _mm512_storeu_ps((void*)b_vec, b);
+  float dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[j] = a_vec[j] + b_vec[j];
+    } else {
+      dst_vec[j] = src_vec[j];
+    }
+  }
+  return _mm512_loadu_ps((void*)dst_vec);
+}
+
+#undef _mm512_mask_add_round_ps
+#define _mm512_mask_add_round_ps _mm512_mask_add_round_ps_dbg
+
+
+/*
+ Add packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
+*/
+static inline __m512 _mm512_maskz_add_ps_dbg(__mmask16 k, __m512 a, __m512 b)
+{
+  float a_vec[16];
+  _mm512_storeu_ps((void*)a_vec, a);
+  float b_vec[16];
+  _mm512_storeu_ps((void*)b_vec, b);
+  float dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[j] = a_vec[j] + b_vec[j];
+    } else {
+      dst_vec[j] = 0;
+    }
+  }
+  return _mm512_loadu_ps((void*)dst_vec);
+}
+
+#undef _mm512_maskz_add_ps
+#define _mm512_maskz_add_ps _mm512_maskz_add_ps_dbg
+
+/*
+ Add packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
+	(_MM_FROUND_TO_NEAREST_INT |_MM_FROUND_NO_EXC) // round to nearest, and suppress exceptions
+        (_MM_FROUND_TO_NEG_INF |_MM_FROUND_NO_EXC)     // round down, and suppress exceptions
+        (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
+        (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
+        _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
+*/
+static inline __m512 _mm512_maskz_add_round_ps_dbg(__mmask16 k, __m512 a, __m512 b, int rounding)
+{
+  float a_vec[16];
+  _mm512_storeu_ps((void*)a_vec, a);
+  float b_vec[16];
+  _mm512_storeu_ps((void*)b_vec, b);
+  float dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[j] = a_vec[j] + b_vec[j];
+    } else {
+      dst_vec[j] = 0;
+    }
+  }
+  return _mm512_loadu_ps((void*)dst_vec);
+}
+
+#undef _mm512_maskz_add_round_ps
+#define _mm512_maskz_add_round_ps _mm512_maskz_add_round_ps_dbg
+
+/*
+ Multiply packed single-precision (32-bit) floating-point elements in "a" and "b", add the intermediate result to packed elements in "c", and store the results in "dst".
+
+*/
+static inline __m512 _mm512_fmadd_ps_dbg(__m512 a, __m512 b, __m512 c)
+{
+  float a_vec[16];
+  _mm512_storeu_ps((void*)a_vec, a);
+  float b_vec[16];
+  _mm512_storeu_ps((void*)b_vec, b);
+  float c_vec[16];
+  _mm512_storeu_ps((void*)c_vec, c);
+  float dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    dst_vec[j] = (a_vec[j] * b_vec[j]) + c_vec[j];
+  }
+  return _mm512_loadu_ps((void*)dst_vec);
+}
+
+#undef _mm512_fmadd_ps
+#define _mm512_fmadd_ps _mm512_fmadd_ps_dbg
+
+
+/*
+ Multiply packed single-precision (32-bit) floating-point elements in "a" and "b", add the intermediate result to packed elements in "c", and store the results in "dst".
+	(_MM_FROUND_TO_NEAREST_INT |_MM_FROUND_NO_EXC) // round to nearest, and suppress exceptions
+        (_MM_FROUND_TO_NEG_INF |_MM_FROUND_NO_EXC)     // round down, and suppress exceptions
+        (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
+        (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
+        _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
+*/
+static inline __m512 _mm512_fmadd_round_ps_dbg(__m512 a, __m512 b, __m512 c, int rounding)
+{
+  float a_vec[16];
+  _mm512_storeu_ps((void*)a_vec, a);
+  float b_vec[16];
+  _mm512_storeu_ps((void*)b_vec, b);
+  float c_vec[16];
+  _mm512_storeu_ps((void*)c_vec, c);
+  float dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    dst_vec[j] = (a_vec[j] * b_vec[j]) + c_vec[j];
+  }
+  return _mm512_loadu_ps((void*)dst_vec);
+}
+
+#undef _mm512_fmadd_round_ps
+#define _mm512_fmadd_round_ps _mm512_fmadd_round_ps_dbg
+
+/*
+ Reduce the packed 32-bit integers in "a" by maximum. Returns the maximum of all elements in "a".
+*/
+static inline int _mm512_reduce_max_epi32_dbg(__m512i a)
+{
+  int32_t a_vec[16];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int max = LONG_MIN;
+  for (int j = 0; j <= 15; j++) {
+    max = MAX(max, a_vec[j]);
+  }
+return max;
+}
+
+#undef _mm512_reduce_max_epi32
+#define _mm512_reduce_max_epi32 _mm512_reduce_max_epi32_dbg
+
+/*
+ Reduce the packed single-precision (32-bit) floating-point elements in "a" by maximum. Returns the maximum of all elements in "a".
+*/
+static inline float _mm512_reduce_max_ps_dbg(__m512 a)
+{
+  float a_vec[16];
+  _mm512_storeu_ps((void*)a_vec, a);
+  float max = FLT_MIN;
+  for (int j = 0; j <= 15; j++) {
+    max = MAX(max, a_vec[j]);
+  }
+return max;
+}
+
+#undef _mm512_reduce_max_ps
+#define _mm512_reduce_max_ps _mm512_reduce_max_ps_dbg
 
 #undef MIN
 #undef MAX
