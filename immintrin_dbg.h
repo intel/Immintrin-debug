@@ -35,7 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define __IMMINTRIN_DBG_H_
 
 #include <inttypes.h>
-#include <climits.h>
+#include <limits.h>
 #include <float.h>
 #include "/usr/include/math.h"
 #include <stdlib.h>
@@ -61789,6 +61789,7 @@ static inline __m256i _mm256_shuffle_epi8_dbg(__m256i a, __m256i b)
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
   int8_t dst_vec[32];
+  int index;
   for (int j = 0; j <= 15; j++) {
     if ((b_vec[j] & 0x80) >> 7) {
       dst_vec[j] = 0;
@@ -61908,58 +61909,6 @@ static inline __m512 _mm512_mask_add_round_ps_dbg(__m512 src, __mmask16 k, __m51
 #undef _mm512_mask_add_round_ps
 #define _mm512_mask_add_round_ps _mm512_mask_add_round_ps_dbg
 
-
-/*
- Add packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
-*/
-static inline __m512 _mm512_maskz_add_ps_dbg(__mmask16 k, __m512 a, __m512 b)
-{
-  float a_vec[16];
-  _mm512_storeu_ps((void*)a_vec, a);
-  float b_vec[16];
-  _mm512_storeu_ps((void*)b_vec, b);
-  float dst_vec[16];
-  for (int j = 0; j <= 15; j++) {
-    if (k & ((1 << j) & 0xffff)) {
-      dst_vec[j] = a_vec[j] + b_vec[j];
-    } else {
-      dst_vec[j] = 0;
-    }
-  }
-  return _mm512_loadu_ps((void*)dst_vec);
-}
-
-#undef _mm512_maskz_add_ps
-#define _mm512_maskz_add_ps _mm512_maskz_add_ps_dbg
-
-/*
- Add packed single-precision (32-bit) floating-point elements in "a" and "b", and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
-	(_MM_FROUND_TO_NEAREST_INT |_MM_FROUND_NO_EXC) // round to nearest, and suppress exceptions
-        (_MM_FROUND_TO_NEG_INF |_MM_FROUND_NO_EXC)     // round down, and suppress exceptions
-        (_MM_FROUND_TO_POS_INF |_MM_FROUND_NO_EXC)     // round up, and suppress exceptions
-        (_MM_FROUND_TO_ZERO |_MM_FROUND_NO_EXC)        // truncate, and suppress exceptions
-        _MM_FROUND_CUR_DIRECTION // use MXCSR.RC; see _MM_SET_ROUNDING_MODE
-*/
-static inline __m512 _mm512_maskz_add_round_ps_dbg(__mmask16 k, __m512 a, __m512 b, int rounding)
-{
-  float a_vec[16];
-  _mm512_storeu_ps((void*)a_vec, a);
-  float b_vec[16];
-  _mm512_storeu_ps((void*)b_vec, b);
-  float dst_vec[16];
-  for (int j = 0; j <= 15; j++) {
-    if (k & ((1 << j) & 0xffff)) {
-      dst_vec[j] = a_vec[j] + b_vec[j];
-    } else {
-      dst_vec[j] = 0;
-    }
-  }
-  return _mm512_loadu_ps((void*)dst_vec);
-}
-
-#undef _mm512_maskz_add_round_ps
-#define _mm512_maskz_add_round_ps _mm512_maskz_add_round_ps_dbg
-
 /*
  Multiply packed single-precision (32-bit) floating-point elements in "a" and "b", add the intermediate result to packed elements in "c", and store the results in "dst".
 
@@ -62016,7 +61965,7 @@ static inline int _mm512_reduce_max_epi32_dbg(__m512i a)
 {
   int32_t a_vec[16];
   _mm512_storeu_si512((void*)a_vec, a);
-  int max = LONG_MIN;
+  long int max = LONG_MIN;
   for (int j = 0; j <= 15; j++) {
     max = MAX(max, a_vec[j]);
   }
@@ -62042,6 +61991,112 @@ return max;
 
 #undef _mm512_reduce_max_ps
 #define _mm512_reduce_max_ps _mm512_reduce_max_ps_dbg
+
+/*
+ Shift packed 16-bit integers in "a" right by "imm8" while shifting in sign bits, and store the results in "dst".
+*/
+static inline __m256i _mm256_srai_epi16_dbg(__m256i a, int imm8)
+{
+  int16_t a_vec[16];
+  _mm256_storeu_si256((void*)a_vec, a);
+  int16_t dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    if (imm8 & 0xff > 15) {
+      dst_vec[j] = (a_vec[j] < 0) ? 0xFFFF : 0;
+    } else {
+      dst_vec[j] = (a_vec[j] >> (imm8 & 0xff)) | ((a_vec[j] < 0) ? (0xFFFF << (16 - (imm8 & 0xff))) : 0);
+    }
+  }
+  return _mm256_loadu_si256((void*)dst_vec);
+}
+
+#undef _mm256_srai_epi16
+#define _mm256_srai_epi16 _mm256_srai_epi16_dbg
+
+/*
+ Shift packed 32-bit integers in "a" right by "imm8" while shifting in sign bits, and store the results in "dst".
+*/
+static inline __m256i _mm256_srai_epi32_dbg(__m256i a, int imm8)
+{
+  int32_t a_vec[8];
+  _mm256_storeu_si256((void*)a_vec, a);
+  int32_t dst_vec[8];
+  for (int j = 0; j <= 7; j++) {
+    if ((imm8 & 0xff) > 31) {
+      dst_vec[j] = (a_vec[j] < 0) ? 0xFFFFFFFFL : 0;
+    } else {
+      dst_vec[j] = (a_vec[j] >> (imm8 & 0xff)) | ((a_vec[j] < 0) ? (0xFFFFFFFFL << (32 - (imm8 & 0xff))) : 0);
+    }
+  }
+  return _mm256_loadu_si256((void*)dst_vec);
+}
+
+#undef _mm256_srai_epi32
+#define _mm256_srai_epi32 _mm256_srai_epi32_dbg
+
+static inline __m512i _mm512_sra_epi16_dbg(__m512i a, __m128i count)
+{
+  int16_t a_vec[32];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int64_t count_vec[2];
+  _mm_storeu_si128((void*)count_vec, count);
+  int16_t dst_vec[32];
+  for (int j = 0; j <= 31; j++) {
+    if (count_vec[0] > 15) {
+      dst_vec[j] = (a_vec[j] < 0) ? 0xFFFF : 0;
+    } else {
+      dst_vec[j] = (a_vec[j] >> count_vec[0]) | ((a_vec[j] < 0) ? (0xFFFF << (16 - count_vec[0])) : 0);
+    }
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_sra_epi16
+#define _mm512_sra_epi16 _mm512_sra_epi16_dbg
+
+static inline __m512i _mm512_srai_epi16_dbg(__m512i a, int imm8)
+{
+  int16_t a_vec[32];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int16_t dst_vec[32];
+  for (int j = 0; j <= 31; j++) {
+    if (imm8 & 0xff > 15) {
+      dst_vec[j] = (a_vec[j] < 0) ? 0xFFFF : 0;
+    } else {
+      dst_vec[j] = (a_vec[j] >> (imm8 & 0xff)) | ((a_vec[j] < 0) ? (0xFFFF << (16 - (imm8 & 0xff))) : 0);
+    }
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_srai_epi16
+#define _mm512_srai_epi16 _mm512_srai_epi16_dbg
+
+/*
+ Shift packed 32-bit integers in "a" right by "imm8" while shifting in sign bits, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
+*/
+static inline __m512i _mm512_maskz_srai_epi32_dbg (__mmask16 k, __m512i a, unsigned int imm8)
+{
+  int32_t a_vec[8];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int32_t dst_vec[8];
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      if ((imm8 & 0xff) > 31) {
+        dst_vec[j] = (a_vec[j] < 0) ? 0xFFFFFFFFL : 0;
+      } else {
+        dst_vec[j] = (a_vec[j] >> (imm8 & 0xff)) | ((a_vec[j] < 0) ? (0xFFFFFFFFL << (32 - (imm8 & 0xff))) : 0);
+      }
+    } else {
+        dst_vec[j] = 0;
+    }
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_maskz_srai_epi32
+#define _mm512_maskz_srai_epi32 _mm512_maskz_srai_epi32_dbg
+
 
 #undef MIN
 #undef MAX
