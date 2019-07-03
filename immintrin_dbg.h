@@ -62097,6 +62097,1111 @@ static inline __m512i _mm512_maskz_srai_epi32_dbg (__mmask16 k, __m512i a, unsig
 #undef _mm512_maskz_srai_epi32
 #define _mm512_maskz_srai_epi32 _mm512_maskz_srai_epi32_dbg
 
+/*
+ Contiguously store the active 16-bit integers in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m512i _mm512_maskz_compress_epi16_dbg(__mmask32 k, __m512i a)
+{
+  int16_t a_vec[32];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int16_t dst_vec[32];
+  int m = 0;
+  for (int j = 0; j <= 31; j++) {
+    if (k & ((1 << j) & 0xffffffff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 31; j++)
+    dst_vec[j] = 0;
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_maskz_compress_epi16
+#define _mm512_maskz_compress_epi16 _mm512_maskz_compress_epi16_dbg
+
+
+/*
+ Contiguously store the active 16-bit integers in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m512i _mm512_mask_compress_epi16_dbg(__m512i src, __mmask32 k, __m512i a)
+{
+  int16_t src_vec[32];
+  _mm512_storeu_si512((void*)src_vec, src);
+  int16_t a_vec[32];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int16_t dst_vec[32];
+  int m = 0;
+  for (int j = 0; j <= 31; j++) {
+    if (k & ((1 << j) & 0xffffffff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 31; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_mask_compress_epi16
+#define _mm512_mask_compress_epi16 _mm512_mask_compress_epi16_dbg
+
+
+/*
+ Contiguously store the active 16-bit integers in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m256i _mm256_maskz_compress_epi16_dbg(__mmask16 k, __m256i a)
+{
+  int16_t a_vec[16];
+  _mm256_storeu_si256((void*)a_vec, a);
+  int16_t dst_vec[16];
+  int m = 0;
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 15; j++)
+    dst_vec[j] = 0;
+  return _mm256_loadu_si256((void*)dst_vec);
+}
+
+#undef _mm256_maskz_compress_epi16
+#define _mm256_maskz_compress_epi16 _mm256_maskz_compress_epi16_dbg
+
+
+/*
+ Contiguously store the active 16-bit integers in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m256i _mm256_mask_compress_epi16_dbg(__m256i src, __mmask16 k, __m256i a)
+{
+  int16_t src_vec[16];
+  _mm256_storeu_si256((void*)src_vec, src);
+  int16_t a_vec[16];
+  _mm256_storeu_si256((void*)a_vec, a);
+  int16_t dst_vec[16];
+  int m = 0;
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 15; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm256_loadu_si256((void*)dst_vec);
+}
+
+#undef _mm256_mask_compress_epi16
+#define _mm256_mask_compress_epi16 _mm256_mask_compress_epi16_dbg
+
+
+/*
+ Contiguously store the active 16-bit integers in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m128i _mm_maskz_compress_epi16_dbg(__mmask8 k, __m128i a)
+{
+  int16_t a_vec[8];
+  _mm_storeu_si128((void*)a_vec, a);
+  int16_t dst_vec[8];
+  int m = 0;
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 7; j++)
+    dst_vec[j] = 0;
+  return _mm_loadu_si128((void*)dst_vec);
+}
+
+#undef _mm_maskz_compress_epi16
+#define _mm_maskz_compress_epi16 _mm_maskz_compress_epi16_dbg
+
+
+/*
+ Contiguously store the active 16-bit integers in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m128i _mm_mask_compress_epi16_dbg(__m128i src, __mmask8 k, __m128i a)
+{
+  int16_t src_vec[8];
+  _mm_storeu_si128((void*)src_vec, src);
+  int16_t a_vec[8];
+  _mm_storeu_si128((void*)a_vec, a);
+  int16_t dst_vec[8];
+  int m = 0;
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 7; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm_loadu_si128((void*)dst_vec);
+}
+
+#undef _mm_mask_compress_epi16
+#define _mm_mask_compress_epi16 _mm_mask_compress_epi16_dbg
+
+
+/*
+ Contiguously store the active 8-bit integers in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m512i _mm512_maskz_compress_epi8_dbg(__mmask64 k, __m512i a)
+{
+  int8_t a_vec[64];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int8_t dst_vec[64];
+  int m = 0;
+  for (int j = 0; j <= 63; j++) {
+    if (k & ((1 << j) & 0xffffffffffffffffUL)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 63; j++)
+    dst_vec[j] = 0;
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_maskz_compress_epi8
+#define _mm512_maskz_compress_epi8 _mm512_maskz_compress_epi8_dbg
+
+
+/*
+ Contiguously store the active 8-bit integers in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m512i _mm512_mask_compress_epi8_dbg(__m512i src, __mmask64 k, __m512i a)
+{
+  int8_t src_vec[64];
+  _mm512_storeu_si512((void*)src_vec, src);
+  int8_t a_vec[64];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int8_t dst_vec[64];
+  int m = 0;
+  for (int j = 0; j <= 63; j++) {
+    if (k & ((1 << j) & 0xffffffffffffffffUL)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 63; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_mask_compress_epi8
+#define _mm512_mask_compress_epi8 _mm512_mask_compress_epi8_dbg
+
+/*
+ Contiguously store the active 8-bit integers in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m256i _mm256_maskz_compress_epi8_dbg(__mmask32 k, __m256i a)
+{
+  int8_t a_vec[32];
+  _mm256_storeu_si256((void*)a_vec, a);
+  int8_t dst_vec[32];
+  int m = 0;
+  for (int j = 0; j <= 31; j++) {
+    if (k & ((1 << j) & 0xffffffff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 31; j++)
+    dst_vec[j] = 0;
+  return _mm256_loadu_si256((void*)dst_vec);
+}
+
+#undef _mm256_maskz_compress_epi8
+#define _mm256_maskz_compress_epi8 _mm256_maskz_compress_epi8_dbg
+
+/*
+ Contiguously store the active 8-bit integers in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m256i _mm256_mask_compress_epi8_dbg(__m256i src, __mmask32 k, __m256i a)
+{
+  int8_t src_vec[32];
+  _mm256_storeu_si256((void*)src_vec, src);
+  int8_t a_vec[32];
+  _mm256_storeu_si256((void*)a_vec, a);
+  int8_t dst_vec[32];
+  int m = 0;
+  for (int j = 0; j <= 31; j++) {
+    if (k & ((1 << j) & 0xffffffff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 31; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm256_loadu_si256((void*)dst_vec);
+}
+
+#undef _mm256_mask_compress_epi8
+#define _mm256_mask_compress_epi8 _mm256_mask_compress_epi8_dbg
+
+
+/*
+ Contiguously store the active 8-bit integers in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m128i _mm_maskz_compress_epi8_dbg(__mmask16 k, __m128i a)
+{
+  int8_t a_vec[16];
+  _mm_storeu_si128((void*)a_vec, a);
+  int8_t dst_vec[16];
+  int m = 0;
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 15; j++)
+    dst_vec[j] = 0;
+  return _mm_loadu_si128((void*)dst_vec);
+}
+
+#undef _mm_maskz_compress_epi8
+#define _mm_maskz_compress_epi8 _mm_maskz_compress_epi8_dbg
+
+
+/*
+ Contiguously store the active 8-bit integers in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m128i _mm_mask_compress_epi8_dbg(__m128i src, __mmask16 k, __m128i a)
+{
+  int8_t src_vec[16];
+  _mm_storeu_si128((void*)src_vec, src);
+  int8_t a_vec[16];
+  _mm_storeu_si128((void*)a_vec, a);
+  int8_t dst_vec[16];
+  int m = 0;
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 15; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm_loadu_si128((void*)dst_vec);
+}
+
+#undef _mm_mask_compress_epi8
+#define _mm_mask_compress_epi8 _mm_mask_compress_epi8_dbg
+
+
+/*
+ Contiguously store the active double-precision (64-bit) floating-point elements in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m512d _mm512_mask_compress_pd_dbg(__m512d src, __mmask8 k, __m512d a)
+{
+  double src_vec[7];
+  _mm512_storeu_pd((void*)src_vec, src);
+  double a_vec[7];
+  _mm512_storeu_pd((void*)a_vec, a);
+  double dst_vec[7];
+  int m = 0;
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 7; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm512_loadu_pd((void*)dst_vec);
+}
+
+#undef _mm512_mask_compress_pd
+#define _mm512_mask_compress_pd _mm512_mask_compress_pd_dbg
+
+
+/*
+ Contiguously store the active double-precision (64-bit) floating-point elements in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m512d _mm512_maskz_compress_pd_dbg(__mmask8 k, __m512d a)
+{
+  double a_vec[8];
+  _mm512_storeu_pd((void*)a_vec, a);
+  double dst_vec[8];
+  int m = 0;
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 7; j++)
+    dst_vec[j] = 0;
+  return _mm512_loadu_pd((void*)dst_vec);;
+}
+
+#undef _mm512_maskz_compress_pd
+#define _mm512_maskz_compress_pd _mm512_maskz_compress_pd_dbg
+
+
+/*
+ Contiguously store the active single-precision (32-bit) floating-point elements in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m512 _mm512_mask_compress_ps_dbg(__m512 src, __mmask16 k, __m512 a)
+{
+  float src_vec[16];
+  _mm512_storeu_ps((void*)src_vec, src);
+  float a_vec[16];
+  _mm512_storeu_ps((void*)a_vec, a);
+  float dst_vec[16];
+  int m = 0;
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 15; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm512_loadu_ps((void*)dst_vec);
+}
+
+#undef _mm512_mask_compress_ps
+#define _mm512_mask_compress_ps _mm512_mask_compress_ps_dbg
+
+
+/*
+ Contiguously store the active single-precision (32-bit) floating-point elements in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m512 _mm512_maskz_compress_ps_dbg(__mmask16 k, __m512 a)
+{
+  float a_vec[16];
+  _mm512_storeu_ps((void*)a_vec, a);
+  float dst_vec[16];
+  int m = 0;
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 15; j++)
+    dst_vec[j] = 0;
+  return _mm512_loadu_ps((void*)dst_vec);
+}
+
+#undef _mm512_maskz_compress_ps
+#define _mm512_maskz_compress_ps _mm512_maskz_compress_ps_dbg
+
+
+/*
+ Contiguously store the active 32-bit integers in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m512i _mm512_mask_compress_epi32_dbg(__m512i src, __mmask16 k, __m512i a)
+{
+  int32_t src_vec[16];
+  _mm512_storeu_si512((void*)src_vec, src);
+  int32_t a_vec[16];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int32_t dst_vec[16];
+  int m = 0;
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 15; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_mask_compress_epi32
+#define _mm512_mask_compress_epi32 _mm512_mask_compress_epi32_dbg
+
+
+/*
+ Contiguously store the active 32-bit integers in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m512i _mm512_maskz_compress_epi32_dbg(__mmask16 k, __m512i a)
+{
+  int32_t a_vec[16];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int32_t dst_vec[16];
+  int m = 0;
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 15; j++)
+    dst_vec[j] = 0;
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_maskz_compress_epi32
+#define _mm512_maskz_compress_epi32 _mm512_maskz_compress_epi32_dbg
+
+
+/*
+ Contiguously store the active 64-bit integers in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m512i _mm512_mask_compress_epi64_dbg(__m512i src, __mmask8 k, __m512i a)
+{
+  int64_t src_vec[8];
+  _mm512_storeu_si512((void*)src_vec, src);
+  int64_t a_vec[8];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int64_t dst_vec[8];
+  int m = 0;
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 7; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_mask_compress_epi64
+#define _mm512_mask_compress_epi64 _mm512_mask_compress_epi64_dbg
+
+
+/*
+ Contiguously store the active 64-bit integers in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m512i _mm512_maskz_compress_epi64_dbg(__mmask8 k, __m512i a)
+{
+  int64_t a_vec[8];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int64_t dst_vec[8];
+  int m = 0;
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 7; j++)
+    dst_vec[j] = 0;
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_maskz_compress_epi64
+#define _mm512_maskz_compress_epi64 _mm512_maskz_compress_epi64_dbg
+
+
+/*
+ Contiguously store the active double-precision (64-bit) floating-point elements in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m256d _mm256_mask_compress_pd_dbg(__m256d src, __mmask8 k, __m256d a)
+{
+  double src_vec[4];
+  _mm256_storeu_pd((void*)src_vec, src);
+  double a_vec[4];
+  _mm256_storeu_pd((void*)a_vec, a);
+  double dst_vec[4];
+  int m = 0;
+  for (int j = 0; j <= 3; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 3; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm256_loadu_pd((void*)dst_vec);
+}
+
+#undef _mm256_mask_compress_pd
+#define _mm256_mask_compress_pd _mm256_mask_compress_pd_dbg
+
+
+/*
+ Contiguously store the active double-precision (64-bit) floating-point elements in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m256d _mm256_maskz_compress_pd_dbg(__mmask8 k, __m256d a)
+{
+  double a_vec[4];
+  _mm256_storeu_pd((void*)a_vec, a);
+  double dst_vec[4];
+  int m = 0;
+  for (int j = 0; j <= 3; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 3; j++)
+    dst_vec[j] = 0;
+  return _mm256_loadu_pd((void*)dst_vec);
+}
+
+#undef _mm256_maskz_compress_pd
+#define _mm256_maskz_compress_pd _mm256_maskz_compress_pd_dbg
+
+
+/*
+ Contiguously store the active double-precision (64-bit) floating-point elements in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m128d _mm_mask_compress_pd_dbg(__m128d src, __mmask8 k, __m128d a)
+{
+  double src_vec[2];
+  _mm_storeu_pd((void*)src_vec, src);
+  double a_vec[2];
+  _mm_storeu_pd((void*)a_vec, a);
+  double dst_vec[2];
+  int m = 0;
+  for (int j = 0; j <= 1; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 1; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm_loadu_pd((void*)dst_vec);
+}
+
+#undef _mm_mask_compress_pd
+#define _mm_mask_compress_pd _mm_mask_compress_pd_dbg
+
+
+/*
+ Contiguously store the active double-precision (64-bit) floating-point elements in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m128d _mm_maskz_compress_pd_dbg(__mmask8 k, __m128d a)
+{
+  double a_vec[2];
+  _mm_storeu_pd((void*)a_vec, a);
+  double dst_vec[2];
+  int m = 0;
+  for (int j = 0; j <= 1; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 1; j++)
+    dst_vec[j] = 0;
+  return _mm_loadu_pd((void*)dst_vec);
+}
+
+#undef _mm_maskz_compress_pd
+#define _mm_maskz_compress_pd _mm_maskz_compress_pd_dbg
+
+
+/*
+ Contiguously store the active single-precision (32-bit) floating-point elements in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m256 _mm256_mask_compress_ps_dbg(__m256 src, __mmask8 k, __m256 a)
+{
+  float src_vec[8];
+  _mm256_storeu_ps((void*)src_vec, src);
+  float a_vec[8];
+  _mm256_storeu_ps((void*)a_vec, a);
+  float dst_vec[8];
+  int m = 0;
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 7; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm256_loadu_ps((void*)dst_vec);
+}
+
+#undef _mm256_mask_compress_ps
+#define _mm256_mask_compress_ps _mm256_mask_compress_ps_dbg
+
+
+/*
+ Contiguously store the active single-precision (32-bit) floating-point elements in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m256 _mm256_maskz_compress_ps_dbg(__mmask8 k, __m256 a)
+{
+  float a_vec[8];
+  _mm256_storeu_ps((void*)a_vec, a);
+  float dst_vec[8];
+  int m = 0;
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 7; j++)
+    dst_vec[j] = 0;
+  return _mm256_loadu_ps((void*)dst_vec);
+}
+
+#undef _mm256_maskz_compress_ps
+#define _mm256_maskz_compress_ps _mm256_maskz_compress_ps_dbg
+
+
+/*
+ Contiguously store the active single-precision (32-bit) floating-point elements in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m128 _mm_mask_compress_ps_dbg(__m128 src, __mmask8 k, __m128 a)
+{
+  float src_vec[4];
+  _mm_storeu_ps((void*)src_vec, src);
+  float a_vec[4];
+  _mm_storeu_ps((void*)a_vec, a);
+  float dst_vec[4];
+  int m = 0;
+  for (int j = 0; j <= 3; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 3; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm_loadu_ps((void*)dst_vec);
+}
+
+#undef _mm_mask_compress_ps
+#define _mm_mask_compress_ps _mm_mask_compress_ps_dbg
+
+
+/*
+ Contiguously store the active single-precision (32-bit) floating-point elements in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m128 _mm_maskz_compress_ps_dbg(__mmask8 k, __m128 a)
+{
+  float a_vec[4];
+  _mm_storeu_ps((void*)a_vec, a);
+  float dst_vec[4];
+  int m = 0;
+  for (int j = 0; j <= 3; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 3; j++)
+    dst_vec[j] = 0;
+  return _mm_loadu_ps((void*)dst_vec);
+}
+
+#undef _mm_maskz_compress_ps
+#define _mm_maskz_compress_ps _mm_maskz_compress_ps_dbg
+
+
+/*
+ Contiguously store the active 32-bit integers in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m256i _mm256_mask_compress_epi32_dbg(__m256i src, __mmask8 k, __m256i a)
+{
+  int32_t src_vec[8];
+  _mm256_storeu_si256((void*)src_vec, src);
+  int32_t a_vec[8];
+  _mm256_storeu_si256((void*)a_vec, a);
+  int32_t dst_vec[8];
+  int m = 0;
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 7; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm256_loadu_si256((void*)dst_vec);
+}
+
+#undef _mm256_mask_compress_epi32
+#define _mm256_mask_compress_epi32 _mm256_mask_compress_epi32_dbg
+
+
+/*
+ Contiguously store the active 32-bit integers in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m256i _mm256_maskz_compress_epi32_dbg(__mmask8 k, __m256i a)
+{
+  int32_t a_vec[8];
+  _mm256_storeu_si256((void*)a_vec, a);
+  int32_t dst_vec[8];
+  int m = 0;
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 7; j++)
+    dst_vec[j] = 0;
+  return _mm256_loadu_si256((void*)dst_vec);
+}
+
+#undef _mm256_maskz_compress_epi32
+#define _mm256_maskz_compress_epi32 _mm256_maskz_compress_epi32_dbg
+
+
+/*
+ Contiguously store the active 32-bit integers in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m128i _mm_mask_compress_epi32_dbg(__m128i src, __mmask8 k, __m128i a)
+{
+  int32_t src_vec[4];
+  _mm_storeu_si128((void*)src_vec, src);
+  int32_t a_vec[4];
+  _mm_storeu_si128((void*)a_vec, a);
+  int32_t dst_vec[4];
+  int m = 0;
+  for (int j = 0; j <= 3; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 3; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm_loadu_si128((void*)dst_vec);
+}
+
+#undef _mm_mask_compress_epi32
+#define _mm_mask_compress_epi32 _mm_mask_compress_epi32_dbg
+
+
+/*
+ Contiguously store the active 32-bit integers in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m128i _mm_maskz_compress_epi32_dbg(__mmask8 k, __m128i a)
+{
+  int32_t a_vec[4];
+  _mm_storeu_si128((void*)a_vec, a);
+  int32_t dst_vec[4];
+  int m = 0;
+  for (int j = 0; j <= 3; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 3; j++)
+    dst_vec[j] = 0;
+  return _mm_loadu_si128((void*)dst_vec);
+}
+
+#undef _mm_maskz_compress_epi32
+#define _mm_maskz_compress_epi32 _mm_maskz_compress_epi32_dbg
+
+
+/*
+ Contiguously store the active 64-bit integers in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m256i _mm256_mask_compress_epi64_dbg(__m256i src, __mmask8 k, __m256i a)
+{
+  int64_t src_vec[4];
+  _mm256_storeu_si256((void*)src_vec, src);
+  int64_t a_vec[4];
+  _mm256_storeu_si256((void*)a_vec, a);
+  int64_t dst_vec[4];
+  int m = 0;
+  for (int j = 0; j <= 3; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 3; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm256_loadu_si256((void*)dst_vec);
+}
+
+#undef _mm256_mask_compress_epi64
+#define _mm256_mask_compress_epi64 _mm256_mask_compress_epi64_dbg
+
+
+/*
+ Contiguously store the active 64-bit integers in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m256i _mm256_maskz_compress_epi64_dbg(__mmask8 k, __m256i a)
+{
+  int64_t a_vec[4];
+  _mm256_storeu_si256((void*)a_vec, a);
+  int64_t dst_vec[4];
+  int m = 0;
+  for (int j = 0; j <= 3; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 3; j++)
+    dst_vec[j] = 0;
+  return _mm256_loadu_si256((void*)dst_vec);
+}
+
+#undef _mm256_maskz_compress_epi64
+#define _mm256_maskz_compress_epi64 _mm256_maskz_compress_epi64_dbg
+
+
+/*
+ Contiguously store the active 64-bit integers in "a" (those with their respective bit set in writemask "k") to "dst", and pass through the remaining elements from "src".
+*/
+static inline __m128i _mm_mask_compress_epi64_dbg(__m128i src, __mmask8 k, __m128i a)
+{
+  int64_t src_vec[2];
+  _mm_storeu_si128((void*)src_vec, src);
+  int64_t a_vec[2];
+  _mm_storeu_si128((void*)a_vec, a);
+  int64_t dst_vec[2];
+  int m = 0;
+  for (int j = 0; j <= 1; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 1; j++)
+    dst_vec[j] = src_vec[j];
+  return _mm_loadu_si128((void*)dst_vec);
+}
+
+#undef _mm_mask_compress_epi64
+#define _mm_mask_compress_epi64 _mm_mask_compress_epi64_dbg
+
+
+/*
+ Contiguously store the active 64-bit integers in "a" (those with their respective bit set in zeromask "k") to "dst", and set the remaining elements to zero.
+*/
+static inline __m128i _mm_maskz_compress_epi64_dbg(__mmask8 k, __m128i a)
+{
+  int64_t a_vec[2];
+  _mm_storeu_si128((void*)a_vec, a);
+  int64_t dst_vec[2];
+  int m = 0;
+  for (int j = 0; j <= 1; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[m] = a_vec[j];
+      m = m + 1;
+    }
+  }
+  for (int j = m; j <= 1; j++)
+    dst_vec[j] = 0;
+  return _mm_loadu_si128((void*)dst_vec);
+}
+
+#undef _mm_maskz_compress_epi64
+#define _mm_maskz_compress_epi64 _mm_maskz_compress_epi64_dbg
+
+sstatic inline __m256 _mm256_castpd_ps_dbg(__m256d a)
+{
+  return (__m256)a;
+}
+#undef _mm256_castpd_ps
+#define _mm256_castpd_ps _mm256_castpd_ps_dbg
+static inline __m256d _mm256_castps_pd_dbg(__m256 a)
+{
+  return (__m256d)a;
+}
+#undef _mm256_castps_pd
+#define _mm256_castps_pd _mm256_castps_pd_dbg
+static inline __m256i _mm256_castps_si256_dbg(__m256 a)
+{
+  return (__m256i)a;
+}
+#undef _mm256_castps_si256
+#define _mm256_castps_si256 _mm256_castps_si256_dbg
+static inline __m256i _mm256_castpd_si256_dbg(__m256d a)
+{
+  return (__m256i)a;
+}
+#undef _mm256_castpd_si256
+#define _mm256_castpd_si256 _mm256_castpd_si256_dbg
+static inline __m256 _mm256_castsi256_ps_dbg(__m256i a)
+{
+  return (__m256)a;
+}
+#undef _mm256_castsi256_ps
+#define _mm256_castsi256_ps _mm256_castsi256_ps_dbg
+static inline __m256d _mm256_castsi256_pd_dbg(__m256i a)
+{
+  return (__m256d)a;
+}
+#undef _mm256_castsi256_pd
+#define _mm256_castsi256_pd _mm256_castsi256_pd_dbg
+static inline __m128 _mm256_castps256_ps128_dbg(__m256 a)
+{
+  __m128 b[2];
+  _mm256_storeu_ps((void*)b, a);
+  return b[0];
+}
+#undef _mm256_castps256_ps128
+#define _mm256_castps256_ps128 _mm256_castps256_ps128_dbg
+static inline __m128d _mm256_castpd256_pd128_dbg(__m256d a)
+{
+  __m128d b[2];
+  _mm256_storeu_pd((void*)b, a);
+  return b[0];
+}
+#undef _mm256_castpd256_pd128
+#define _mm256_castpd256_pd128 _mm256_castpd256_pd128_dbg
+static inline __m128i _mm256_castsi256_si128_dbg(__m256i a)
+{
+  __m128i b[2];
+  _mm256_storeu_si256((__m256i*)b, a);
+  return b[0];
+}
+#undef _mm256_castsi256_si128
+#define _mm256_castsi256_si128 _mm256_castsi256_si128_dbg
+static inline __m256 _mm256_castps128_ps256_dbg(__m128 a)
+{
+  __m128 b[2];
+  b[0] = a;
+  return _mm256_loadu_ps(b);
+}
+#undef _mm256_castps128_ps256
+#define _mm256_castps128_ps256 _mm256_castps128_ps256_dbg
+static inline __m256d _mm256_castpd128_pd256_dbg(__m128d a)
+{
+  __m128d b[2];
+  b[0] = a;
+  return _mm256_loadu_pd(b);
+}
+#undef _mm256_castpd128_pd256
+#define _mm256_castpd128_pd256 _mm256_castpd128_pd256_dbg
+static inline __m256i _mm256_castsi128_si256_dbg(__m128i a)
+{
+  __m128i b[2];
+  b[0] = a;
+  return _mm256_loadu_si256(b);
+}
+#undef _mm256_castsi128_si256
+#define _mm256_castsi128_si256 _mm256_castsi128_si256_dbg
+static inline __m512d _mm512_castpd256_pd512_dbg(__m256d a)
+{
+  __m256d b[2];
+  b[0] = a;
+  return _mm512_loadu_pd(b);
+}
+#undef _mm512_castpd256_pd512
+#define _mm512_castpd256_pd512 _mm512_castpd256_pd512_dbg
+static inline __m128d _mm512_castpd512_pd128_dbg(__m512d a)
+{
+  __m128d b[4];
+  _mm512_storeu_pd((__m512d*)b, a);
+  return b[0];
+}
+#undef _mm512_castpd512_pd128
+#define _mm512_castpd512_pd128 _mm512_castpd512_pd128_dbg
+static inline __m128 _mm512_castps512_ps128_dbg(__m512 a)
+{
+  __m128 b[4];
+  _mm512_storeu_ps((__m512*)b, a);
+  return b[0];
+}
+#undef _mm512_castps512_ps128
+#define _mm512_castps512_ps128 _mm512_castps512_ps128_dbg
+static inline __m256d _mm512_castpd512_pd256_dbg(__m512d a)
+{
+  __m256d b[2];
+  _mm512_storeu_pd((__m512d*)b, a);
+  return b[0];
+}
+#undef _mm512_castpd512_pd256
+#define _mm512_castpd512_pd256 _mm512_castpd512_pd256_dbg
+static inline __m512 _mm512_castpd_ps_dbg(__m512d a)
+{
+  return (__m512)a;
+}
+#undef _mm512_castpd_ps
+#define _mm512_castpd_ps _mm512_castpd_ps_dbg
+static inline __m512i _mm512_castpd_si512_dbg(__m512d a)
+{
+  return (__m512i)a;
+}
+#undef _mm512_castpd_si512
+#define _mm512_castpd_si512 _mm512_castpd_si512_dbg
+static inline __m512 _mm512_castps128_ps512_dbg(__m128 a)
+{
+  __m128 b[4];
+  b[0] = a;
+  return _mm512_loadu_ps(b);
+}
+#undef _mm512_castps128_ps512
+#define _mm512_castps128_ps512 _mm512_castps128_ps512_dbg
+static inline __m512 _mm512_castps256_ps512_dbg(__m256 a)
+{
+  __m256 b[2];
+  b[0] = a;
+  return _mm512_loadu_ps(b);
+}
+#undef _mm512_castps256_ps512
+#define _mm512_castps256_ps512 _mm512_castps256_ps512_dbg
+static inline __m256 _mm512_castps512_ps256_dbg(__m512 a)
+{
+  __m256 b[2];
+  _mm512_storeu_ps((__m512*)b, a);
+  return b[0];
+}
+#undef _mm512_castps512_ps256
+#define _mm512_castps512_ps256 _mm512_castps512_ps256_dbg
+static inline __m512d _mm512_castps_pd_dbg(__m512 a)
+{
+  return (__m512d)a;
+}
+#undef _mm512_castps_pd
+#define _mm512_castps_pd _mm512_castps_pd_dbg
+static inline __m512i _mm512_castps_si512_dbg(__m512 a)
+{
+  return (__m512i)a;
+}
+#undef _mm512_castps_si512
+#define _mm512_castps_si512 _mm512_castps_si512_dbg
+static inline __m512i _mm512_castsi128_si512_dbg(__m128i a)
+{
+  __m128i b[4];
+  b[0] = a;
+  return _mm512_loadu_si512(b);
+}
+#undef _mm512_castsi128_si512
+#define _mm512_castsi128_si512 _mm512_castsi128_si512_dbg
+static inline __m512i _mm512_castsi256_si512_dbg(__m256i a)
+{
+  __m256i b[2];
+  b[0] = a;
+  return _mm512_loadu_si512(b);
+}
+#undef _mm512_castsi256_si512
+#define _mm512_castsi256_si512 _mm512_castsi256_si512_dbg
+static inline __m512d _mm512_castsi512_pd_dbg(__m512i a)
+{
+  return (__m512d)a;
+}
+#undef _mm512_castsi512_pd
+#define _mm512_castsi512_pd _mm512_castsi512_pd_dbg
+static inline __m512 _mm512_castsi512_ps_dbg(__m512i a)
+{
+  return (__m512)a;
+}
+#undef _mm512_castsi512_ps
+#define _mm512_castsi512_ps _mm512_castsi512_ps_dbg
+static inline __m128i _mm512_castsi512_si128_dbg(__m512i a)
+{
+  __m128i b[4];
+  _mm512_storeu_si512((__m512i*)b, a);
+  return b[0];
+}
+#undef _mm512_castsi512_si128
+#define _mm512_castsi512_si128 _mm512_castsi512_si128_dbg
+static inline __m256i _mm512_castsi512_si256_dbg(__m512i a)
+{
+  __m256i b[2];
+  _mm512_storeu_si512((__m512i*)b, a);
+  return b[0];
+}
+#undef _mm512_castsi512_si256
+#define _mm512_castsi512_si256 _mm512_castsi512_si256_dbg
 
 #undef MIN
 #undef MAX
