@@ -28,7 +28,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
    Intrinsics guide version: 3.5.4
-   Parser version: 0.23
+   Parser version: 0.24
 */
 
 #ifndef __IMMINTRIN_DBG_H_
@@ -574,6 +574,17 @@ static inline double RANGE32(float src1, float src2, int opCtl, int signSelCtl)
 }
 
 /*
+ Store 128-bits (composed of 8 packed 16-bit integers) from "a" into memory.
+                "mem_addr" does not need to be aligned on any particular boundary.
+*/
+static inline void _mm_storeu_epi16_dbg(void *mem_addr, __m128i A)
+{
+  _mm_storeu_si128((__m128i*)mem_addr, A);
+}
+#undef _mm_storeu_epi16
+#define _mm_storeu_epi16 _mm_storeu_epi16_dbg 
+
+/*
  Load 512-bits (composed of 32 packed 16-bit integers) from memory into dst. mem_addr does not need to be aligned on any particular boundary.
 */
 static inline __m512i _mm512_loadu_epi16_dbg(void const* mem_addr)
@@ -771,6 +782,17 @@ static inline void _mm512_storeu_ps_dbg(void *mem_addr, __m512 A)
 #define _mm512_storeu_ps _mm512_storeu_ps_dbg
 
 /*
+ Store 512-bits (composed of 32 packed 16-bit integers) from "a" into memory.
+  "mem_addr" does not need to be aligned on any particular boundary..
+*/
+static inline void _mm512_storeu_epi16(void *mem_addr, __m512i A)
+{
+  _mm512_storeu_ps(mem_addr, (__m512)A);
+}
+#undef _mm512_storeu_epi16
+#define _mm512_storeu_epi16 _mm512_storeu_epi16_dbg
+
+/*
  Store 512-bits (composed of 8 packed double-precision (64-bit) floating-point elements) from a into memory. mem_addr does not need to be aligned on any particular boundary.
 */
 static inline void _mm512_storeu_si512_dbg(void *mem_addr, __m512i A)
@@ -824,11 +846,22 @@ static inline void _mm256_storeu_si256_dbg(__m256i *mem_addr, __m256i A)
 #define _mm256_storeu_si256 _mm256_storeu_si256_dbg 
 
 /*
+ Store 256-bits (composed of 16 packed 16-bit integers) from "a" into memory.
+                "mem_addr" does not need to be aligned on any particular boundary.
+*/
+static inline void _mm256_storeu_epi16_dbg(__m256i *mem_addr, __m256i A)
+{
+	  _mm256_storeu_si256(mem_addr, A);
+}
+#undef _mm256_storeu_epi16
+#define _mm256_storeu_epi16 _mm256_storeu_epi16_dbg 
+
+/*
  Store packed 32-bit integers from a into memory using writemask k. mem_addr does not need to be aligned on any particular boundary.
 */
 static inline void _mm256_mask_storeu_epi32_dbg (void* mem_addr, __mmask16 k, __m256i a)
 {
-  int32_t a_vec[16];
+  int32_t a_vec[8];
   _mm256_storeu_si256((void*)a_vec, a);
   int32_t *dst_vec = (int32_t*)mem_addr;
   for (int j = 0; j <= 7; j++) {
@@ -839,6 +872,57 @@ static inline void _mm256_mask_storeu_epi32_dbg (void* mem_addr, __mmask16 k, __
 }
 #undef _mm256_mask_storeu_epi32
 #define _mm256_mask_storeu_epi32 _mm256_mask_storeu_epi32_dbg
+
+/*
+ Store packed 32-bit integers from a into memory using writemask k. mem_addr does not need to be aligned on any particular boundary.
+*/
+static inline void _mm_mask_storeu_epi32_dbg (void* mem_addr, __mmask16 k, __m128i a)
+{
+  int32_t a_vec[4];
+  _mm_storeu_si128((void*)a_vec, a);
+  int32_t *dst_vec = (int32_t*)mem_addr;
+  for (int j = 0; j <= 3; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[j] = a_vec[j];
+    }
+  }
+}
+#undef _mm_mask_storeu_epi32
+#define _mm_mask_storeu_epi32 _mm_mask_storeu_epi32_dbg
+
+/*
+ Store packed 8-bit integers from a into memory using writemask k. mem_addr does not need to be aligned on any particular boundary.
+*/
+static inline void _mm_mask_storeu_epi8_dbg (void* mem_addr, __mmask16 k, __m128i a)
+{
+  int8_t a_vec[16];
+  _mm_storeu_si128((void*)a_vec, a);
+  int8_t *dst_vec = (int8_t*)mem_addr;
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[j] = a_vec[j];
+    }
+  }
+}
+#undef _mm_mask_storeu_epi8
+#define _mm_mask_storeu_epi8 _mm_mask_storeu_epi8_dbg
+
+/*
+ Store packed 16-bit integers from a into memory using writemask k. mem_addr does not need to be aligned on any particular boundary.
+*/
+static inline void _mm256_mask_storeu_epi16_dbg (void* mem_addr, __mmask16 k, __m256i a)
+{
+  int16_t a_vec[16];
+  _mm256_storeu_si256((void*)a_vec, a);
+  int16_t *dst_vec = (int16_t*)mem_addr;
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[j] = a_vec[j];
+    }
+  }
+}
+#undef _mm256_mask_storeu_epi16
+#define _mm256_mask_storeu_epi16 _mm256_mask_storeu_epi16_dbg
 
 /*
  Store 256-bits of integer data from a into memory. mem_addr does not need to be aligned on any particular boundary.
@@ -1015,6 +1099,13 @@ static inline __m256i _mm256_maskz_loadu_epi16_dbg (__mmask16 k, void const* mem
 }
 #undef _mm256_maskz_loadu_epi16
 #define _mm256_maskz_loadu_epi16 _mm256_maskz_loadu_epi16_dbg
+
+static inline __m128i _mm_loadu_epi16_dbg(void const* mem_addr)
+{
+  return _mm_loadu_si128((__m128i*)mem_addr);
+}
+#undef _mm_loadu_epi16
+#define _mm_loadu_epi16 _mm_loadu_epi16_dbg
 
 /*
  Broadcast 32-bit integer "a" to all elements of "dst".
@@ -2066,8 +2157,8 @@ static inline __m512i _mm512_maskz_expand_epi16_dbg(__mmask32 k, __m512i a)
   int m = 0;
   for (int j = 0; j <= 31; j++) {
     if (k & ((1 << j) & 0xffffffff)) {
-      dst_vec[j] = a_vec[(m)/16];
-      m = m + 16;
+      dst_vec[j] = a_vec[m];
+      m = m + 1;
     } else {
       dst_vec[j] = 0;
     }
@@ -2092,8 +2183,8 @@ static inline __m512i _mm512_mask_expand_epi16_dbg(__m512i src, __mmask32 k, __m
   int m = 0;
   for (int j = 0; j <= 31; j++) {
     if (k & ((1 << j) & 0xffffffff)) {
-      dst_vec[j] = a_vec[(m)/16];
-      m = m + 16;
+      dst_vec[j] = a_vec[m];
+      m = m + 1;
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -2116,8 +2207,8 @@ static inline __m256i _mm256_maskz_expand_epi16_dbg(__mmask16 k, __m256i a)
   int m = 0;
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
-      dst_vec[j] = a_vec[(m)/16];
-      m = m + 16;
+      dst_vec[j] = a_vec[m];
+      m = m + 1;
     } else {
       dst_vec[j] = 0;
     }
@@ -2142,8 +2233,8 @@ static inline __m256i _mm256_mask_expand_epi16_dbg(__m256i src, __mmask16 k, __m
   int m = 0;
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
-      dst_vec[j] = a_vec[(m)/16];
-      m = m + 16;
+      dst_vec[j] = a_vec[m];
+      m = m + 1;
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -2166,8 +2257,8 @@ static inline __m128i _mm_maskz_expand_epi16_dbg(__mmask8 k, __m128i a)
   int m = 0;
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[(m)/16];
-      m = m + 16;
+      dst_vec[j] = a_vec[m];
+      m = m + 1;
     } else {
       dst_vec[j] = 0;
     }
@@ -2192,8 +2283,8 @@ static inline __m128i _mm_mask_expand_epi16_dbg(__m128i src, __mmask8 k, __m128i
   int m = 0;
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[(m)/16];
-      m = m + 16;
+      dst_vec[j] = a_vec[m];
+      m = m + 1;
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -2216,8 +2307,8 @@ static inline __m512i _mm512_maskz_expand_epi8_dbg(__mmask64 k, __m512i a)
   int m = 0;
   for (int j = 0; j <= 63; j++) {
     if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
-      dst_vec[j] = a_vec[(m)/8];
-      m = m + 8;
+      dst_vec[j] = a_vec[m];
+      m = m + 1;
     } else {
       dst_vec[j] = 0;
     }
@@ -2242,8 +2333,8 @@ static inline __m512i _mm512_mask_expand_epi8_dbg(__m512i src, __mmask64 k, __m5
   int m = 0;
   for (int j = 0; j <= 63; j++) {
     if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
-      dst_vec[j] = a_vec[(m)/8];
-      m = m + 8;
+      dst_vec[j] = a_vec[m];
+      m = m + 1;
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -2266,8 +2357,8 @@ static inline __m256i _mm256_maskz_expand_epi8_dbg(__mmask32 k, __m256i a)
   int m = 0;
   for (int j = 0; j <= 31; j++) {
     if (k & ((1 << j) & 0xffffffff)) {
-      dst_vec[j] = a_vec[(m)/8];
-      m = m + 8;
+      dst_vec[j] = a_vec[m];
+      m = m + 1;
     } else {
       dst_vec[j] = 0;
     }
@@ -2292,8 +2383,8 @@ static inline __m256i _mm256_mask_expand_epi8_dbg(__m256i src, __mmask32 k, __m2
   int m = 0;
   for (int j = 0; j <= 31; j++) {
     if (k & ((1 << j) & 0xffffffff)) {
-      dst_vec[j] = a_vec[(m)/8];
-      m = m + 8;
+      dst_vec[j] = a_vec[m];
+      m = m + 1;
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -2316,8 +2407,8 @@ static inline __m128i _mm_maskz_expand_epi8_dbg(__mmask16 k, __m128i a)
   int m = 0;
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
-      dst_vec[j] = a_vec[(m)/8];
-      m = m + 8;
+      dst_vec[j] = a_vec[m];
+      m = m + 1;
     } else {
       dst_vec[j] = 0;
     }
@@ -2342,8 +2433,8 @@ static inline __m128i _mm_mask_expand_epi8_dbg(__m128i src, __mmask16 k, __m128i
   int m = 0;
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
-      dst_vec[j] = a_vec[(m)/8];
-      m = m + 8;
+      dst_vec[j] = a_vec[m];
+      m = m + 1;
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -2367,7 +2458,6 @@ static inline __mmask16 _mm512_kandn_dbg(__mmask16 a, __mmask16 b)
 
 #undef _mm512_kandn
 #define _mm512_kandn _mm512_kandn_dbg
-
 
 /*
  Compute the bitwise AND of 16-bit masks "a" and "b", and store the result in "k".
@@ -5764,11 +5854,6 @@ return dst;
 
 #undef _mm_cvttsd_i64
 #define _mm_cvttsd_i64 _mm_cvttsd_i64_dbg
-
-
-
-
-
 
 /*
  Convert the lower single-precision (32-bit) floating-point element in "a" to a 32-bit integer with truncation, and store the result in "dst".
@@ -11732,7 +11817,6 @@ static inline __m128 _mm_min_round_ss_dbg(__m128 a, __m128 b, int sae)
 #undef _mm_min_round_ss
 #define _mm_min_round_ss _mm_min_round_ss_dbg
 
-
 /*
  Move packed double-precision (64-bit) floating-point elements from "a" into "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -11760,9 +11844,9 @@ static inline __m512d _mm512_maskz_mov_pd_dbg(__mmask8 k, __m512d a)
 */
 static inline __m512 _mm512_maskz_mov_ps_dbg(__mmask16 k, __m512 a)
 {
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[16];
+  float dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
       dst_vec[j] = a_vec[j];
@@ -11776,15 +11860,14 @@ static inline __m512 _mm512_maskz_mov_ps_dbg(__mmask16 k, __m512 a)
 #undef _mm512_maskz_mov_ps
 #define _mm512_maskz_mov_ps _mm512_maskz_mov_ps_dbg
 
-
 /*
  Move packed 32-bit integers from "a" into "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
 static inline __m512i _mm512_maskz_mov_epi32_dbg(__mmask16 k, __m512i a)
 {
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_si512((void*)a_vec, a);
-  int32_t dst_vec[16];
+  float dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
       dst_vec[j] = a_vec[j];
@@ -11819,7 +11902,6 @@ static inline __m512i _mm512_maskz_mov_epi64_dbg(__mmask8 k, __m512i a)
 
 #undef _mm512_maskz_mov_epi64
 #define _mm512_maskz_mov_epi64 _mm512_maskz_mov_epi64_dbg
-
 
 /*
  Move the lower double-precision (64-bit) floating-point element from "b" to the lower element of "dst" using writemask "k" (the element is copied from "src" when mask bit 0 is not set), and copy the upper element from "a" to the upper element of "dst".
@@ -13584,8 +13666,8 @@ static inline __m512i _mm512_mask_expand_epi32_dbg(__m512i src, __mmask16 k, __m
   int m = 0;
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
-      dst_vec[j] = a_vec[(m)/32];
-      m = m + 32;
+      dst_vec[j] = a_vec[m];
+      m = m + 1;
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -13608,8 +13690,8 @@ static inline __m512i _mm512_maskz_expand_epi32_dbg(__mmask16 k, __m512i a)
   int m = 0;
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
-      dst_vec[j] = a_vec[(m)/32];
-      m = m + 32;
+      dst_vec[j] = a_vec[m];
+      m = m + 1;
     } else {
       dst_vec[j] = 0;
     }
@@ -13634,8 +13716,8 @@ static inline __m512i _mm512_mask_expand_epi64_dbg(__m512i src, __mmask8 k, __m5
   int m = 0;
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[(m)/64];
-      m = m + 64;
+      dst_vec[j] = a_vec[m];
+      m = m + 1;
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -13658,8 +13740,8 @@ static inline __m512i _mm512_maskz_expand_epi64_dbg(__mmask8 k, __m512i a)
   int m = 0;
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[(m)/64];
-      m = m + 64;
+      dst_vec[j] = a_vec[m];
+      m = m + 1;
     } else {
       dst_vec[j] = 0;
     }
@@ -30429,11 +30511,11 @@ static inline __m128d _mm_maskz_mov_pd_dbg(__mmask8 k, __m128d a)
 */
 static inline __m256 _mm256_mask_mov_ps_dbg(__m256 src, __mmask8 k, __m256 a)
 {
-  int32_t src_vec[8];
+  float src_vec[8];
   _mm256_storeu_ps((void*)src_vec, src);
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[8];
+  float dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = a_vec[j];
@@ -30447,15 +30529,14 @@ static inline __m256 _mm256_mask_mov_ps_dbg(__m256 src, __mmask8 k, __m256 a)
 #undef _mm256_mask_mov_ps
 #define _mm256_mask_mov_ps _mm256_mask_mov_ps_dbg
 
-
 /*
  Move packed single-precision (32-bit) floating-point elements from "a" into "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
 static inline __m256 _mm256_maskz_mov_ps_dbg(__mmask8 k, __m256 a)
 {
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[8];
+  float dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = a_vec[j];
@@ -30475,11 +30556,11 @@ static inline __m256 _mm256_maskz_mov_ps_dbg(__mmask8 k, __m256 a)
 */
 static inline __m128 _mm_mask_mov_ps_dbg(__m128 src, __mmask8 k, __m128 a)
 {
-  int32_t src_vec[4];
+  float src_vec[4];
   _mm_storeu_ps((void*)src_vec, src);
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[4];
+  float dst_vec[4];
   for (int j = 0; j <= 3; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = a_vec[j];
@@ -30493,15 +30574,14 @@ static inline __m128 _mm_mask_mov_ps_dbg(__m128 src, __mmask8 k, __m128 a)
 #undef _mm_mask_mov_ps
 #define _mm_mask_mov_ps _mm_mask_mov_ps_dbg
 
-
 /*
  Move packed single-precision (32-bit) floating-point elements from "a" into "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
 static inline __m128 _mm_maskz_mov_ps_dbg(__mmask8 k, __m128 a)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[4];
+  float dst_vec[4];
   for (int j = 0; j <= 3; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = a_vec[j];
@@ -35523,6 +35603,22 @@ static inline __mmask32 _mm256_mask_cmpneq_epi8_mask_dbg(__mmask32 k1, __m256i a
 #undef _mm256_mask_cmpneq_epi8_mask
 #define _mm256_mask_cmpneq_epi8_mask _mm256_mask_cmpneq_epi8_mask_dbg
 
+/*
+ Set each bit of mask register "k" based on the most significant bit of the corresponding packed 8-bit integer in "a"..
+*/
+static inline __mmask64 _mm512_movepi8_mask_dbg(__m512i a)
+{
+  int8_t a_vec[64];
+  _mm512_storeu_si512((void*)a_vec, a);
+  __mmask64 k = 0;
+  for (int j = 0; j <= 63; j++) {
+    k |= (( a_vec[j] & 0x80 ) ? 1 : 0) << j;
+  }
+  return k;
+}
+
+#undef _mm512_movepi8_mask
+#define _mm512_movepi8_mask _mm512_movepi8_mask_dbg
 
 /*
  Compare packed 8-bit integers in "a" and "b" for equality, and store the results in mask vector "k".
@@ -58142,7 +58238,7 @@ static inline __m256i _mm256_inserti128_si256_dbg(__m256i a, __m128i b, const in
   _mm_storeu_si128((void*)b_vec, b);
   __m128i dst_vec[2];
   _mm256_storeu_si256((void*)&dst_vec[0], a_vec[0]);
-  switch ((imm8 & 0x3) >> 0) {
+  switch (imm8 & 0x3) {
     case 0:
     dst_vec[0] = b_vec[0];
 break;
@@ -58156,6 +58252,30 @@ break;
 #undef _mm256_inserti128_si256
 #define _mm256_inserti128_si256 _mm256_inserti128_si256_dbg
 
+/*
+ Copy "a" to "dst", then insert 256 bits (composed of 8 packed 32-bit integers) from "b" into "dst" at the location specified by "imm8".
+*/
+static inline __m512i _mm512_inserti32x8_dbg(__m512i a, __m256i b, const int imm8)
+{
+  __m512i a_vec[1];
+  _mm512_storeu_si512((void*)a_vec, a);
+  __m256i b_vec[1];
+  _mm256_storeu_si256((void*)b_vec, b);
+  __m256i dst_vec[2];
+  _mm512_storeu_si512((void*)&dst_vec[0], a_vec[0]);
+  switch (imm8 & 0x3) {
+    case 0:
+    dst_vec[0] = b_vec[0];
+break;
+    case 1:
+    dst_vec[1] = b_vec[0];
+break;
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_inserti32x8
+#define _mm512_inserti32x8 _mm512_inserti32x8_dbg
 
 /*
  Multiply packed signed 16-bit integers in "a" and "b", producing intermediate signed 32-bit integers. Horizontally add adjacent pairs of intermediate 32-bit integers, and pack the results in "dst".
@@ -60050,6 +60170,28 @@ static inline __m128d _mm_permute_pd_dbg(__m128d a, int imm8)
 
 #undef _mm_permute_pd
 #define _mm_permute_pd _mm_permute_pd_dbg
+
+/*
+ Shuffle 32-bit integers in "a" across lanes using the corresponding index in "idx", and store the results in "dst". Note that this intrinsic shuffles across 128-bit lanes.
+*/
+static inline __m512i _mm512_permutexvar_epi32_dbg(__m512i idx, __m512i a)
+{
+  int32_t a_vec[16];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int32_t idx_vec[16];
+  _mm512_storeu_si512((void*)idx_vec, idx);
+
+  int32_t dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    int id = idx_vec[j] & 0xf;
+    dst_vec[j] = a[id];
+  }
+  
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_permutexvar_epi32
+#define _mm512_permutexvar_epi32 _mm512_permutexvar_epi32_dbg
 
 /*
  Copy "a" to "dst", then insert 128 bits (composed of 4 packed single-precision (32-bit) floating-point elements) from "b" into "dst" at the location specified by "imm8".
@@ -62994,7 +63136,7 @@ static inline __m128i _mm_maskz_compress_epi64_dbg(__mmask8 k, __m128i a)
 #undef _mm_maskz_compress_epi64
 #define _mm_maskz_compress_epi64 _mm_maskz_compress_epi64_dbg
 
-sstatic inline __m256 _mm256_castpd_ps_dbg(__m256d a)
+static inline __m256 _mm256_castpd_ps_dbg(__m256d a)
 {
   return (__m256)a;
 }
@@ -63202,6 +63344,177 @@ static inline __m256i _mm512_castsi512_si256_dbg(__m512i a)
 }
 #undef _mm512_castsi512_si256
 #define _mm512_castsi512_si256 _mm512_castsi512_si256_dbg
+
+/*
+ Load contiguous active 32-bit integers from unaligned memory at "mem_addr" (those with their respective bit set in mask "k"), and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
+*/
+static inline __m512i _mm512_maskz_expandloadu_epi32_dbg(__mmask16 k, void const* mem_addr)
+{
+  return _mm512_maskz_expand_epi32(k, _mm512_loadu_si512(mem_addr));
+}
+
+#undef _mm512_maskz_expandloadu_epi32
+#define _mm512_maskz_expandloadu_epi32 _mm512_maskz_expandloadu_epi32_dbg
+
+/*
+ Load contiguous active 32-bit integers from unaligned memory at "mem_addr" (those with their respective bit set in mask "k"), and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set).
+*/
+static inline __m512i _mm512_mask_expandloadu_epi32_dbg(__m512i src, __mmask16 k, void const* mem_addr)
+{
+  return _mm512_mask_expand_epi32(src, k, _mm512_loadu_si512(mem_addr));
+}
+
+#undef _mm512_mask_expandloadu_epi32
+#define _mm512_mask_expandloadu_epi32 _mm512_mask_expandloadu_epi32_dbg
+
+/*
+ Move packed double-precision (64-bit) floating-point elements from "a" to "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set).
+*/
+static inline __m512d _mm512_mask_mov_pd_dbg(__m512d src, __mmask8 k, __m512d a)
+{
+  double src_vec[8];
+  _mm512_storeu_pd((void*)src_vec, src);
+  double a_vec[8];
+  _mm512_storeu_pd((void*)a_vec, a);
+  double dst_vec[8];
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[j] = a_vec[j];
+    } else {
+      dst_vec[j] = src_vec[j];
+    }
+  }
+  return _mm512_loadu_pd((void*)dst_vec);
+}
+
+#undef _mm512_mask_mov_pd
+#define _mm512_mask_mov_pd _mm512_mask_mov_pd_dbg
+
+/*
+ Move packed single-precision (32-bit) floating-point elements from "a" to "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set).
+*/
+static inline __m512 _mm512_mask_mov_ps_dbg(__m512 src, __mmask16 k, __m512 a)
+{
+  float src_vec[16];
+  _mm512_storeu_ps((void*)src_vec, src);
+  float a_vec[16];
+  _mm512_storeu_ps((void*)a_vec, a);
+  float dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[j] = a_vec[j];
+    } else {
+      dst_vec[j] = src_vec[j];
+    }
+  }
+  return _mm512_loadu_ps((void*)dst_vec);
+}
+
+#undef _mm512_mask_mov_ps
+#define _mm512_mask_mov_ps _mm512_mask_mov_ps_dbg
+
+/*
+ Move packed 32-bit integers from "a" to "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set).
+*/
+static inline __m512i _mm512_mask_mov_epi32_dbg(__m512i src, __mmask16 k, __m512i a)
+{
+  int32_t src_vec[16];
+  _mm512_storeu_si512((void*)src_vec, src);
+  int32_t a_vec[16];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int32_t dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[j] = a_vec[j];
+    } else {
+      dst_vec[j] = src_vec[j];
+    }
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_mask_mov_epi32
+#define _mm512_mask_mov_epi32 _mm512_mask_mov_epi32_dbg
+
+/*
+ Move packed 64-bit integers from "a" to "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set).
+*/
+static inline __m512i _mm512_mask_mov_epi64_dbg(__m512i src, __mmask8 k, __m512i a)
+{
+  int64_t src_vec[8];
+  _mm512_storeu_si512((void*)src_vec, src);
+  int64_t a_vec[8];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int64_t dst_vec[8];
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[j] = a_vec[j];
+    } else {
+      dst_vec[j] = src_vec[j];
+    }
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_mask_mov_epi64
+#define _mm512_mask_mov_epi64 _mm512_mask_mov_epi64_dbg
+
+/*
+ Load packed single-precision (32-bit) floating-point elements from memory into "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). "mem_addr" does not need to be aligned on any particular boundary.
+*/
+static inline __m512 _mm512_maskz_loadu_ps_dbg (__mmask16 k, void const* mem_addr)
+{
+  return _mm512_maskz_mov_ps(k, _mm512_loadu_ps(mem_addr));
+}
+#undef _mm512_maskz_loadu_ps
+#define _mm512_maskz_loadu_ps _mm512_maskz_loadu_ps_dbg
+
+/*
+ Load packed 16-bit integers from memory into "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). "mem_addr" does not need to be aligned on any particular boundary..
+*/
+static inline __m128i _mm_maskz_loadu_epi16_dbg (__mmask8 k, void const* mem_addr)
+{
+  return (__m128i)_mm_maskz_mov_ps(k, _mm_loadu_ps(mem_addr));
+}
+#undef _mm_maskz_loadu_epi16
+#define _mm_maskz_loadu_epi16 _mm_maskz_loadu_epi16_dbg
+
+/*
+ Load packed 16-bit integers from memory into "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). "mem_addr" does not need to be aligned on any particular boundary.
+*/
+static inline __m256i _mm256_mask_loadu_epi16_dbg (__m256i src, __mmask16 k, void const* mem_addr)
+{
+  return _mm256_mask_mov_epi16(src, k, _mm256_loadu_epi16(mem_addr));
+}
+#undef _mm256_mask_loadu_epi16
+#define _mm256_mask_loadu_epi16 _mm256_mask_loadu_epi16_dbg
+
+
+/*
+ Unpack and interleave 16-bit integers from the high half of each 128-bit lane in "a" and "b", and store the results in "dst".
+*/
+static inline __m512i _mm512_unpackhi_epi16_dbg(__m512i a, __m512i b)
+{
+  int16_t a_vec[32];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int16_t b_vec[32];
+  _mm512_storeu_si512((void*)b_vec, b);
+  int16_t dst_vec[32];
+
+  int counter = 4;
+  for (int j = 0; j <= 30 ; j += 2) {
+    dst_vec[j] = a_vec[counter];
+    dst_vec[j + 1] = b_vec[counter];
+    counter++;
+    if (counter % 8 == 0) counter += 4;
+  }
+
+  return _mm512_loadu_epi16((void*)dst_vec);
+}
+
+#undef _mm512_unpackhi_epi16
+#define _mm512_unpackhi_epi16 _mm512_unpackhi_epi16_dbg
+
 
 #undef MIN
 #undef MAX
