@@ -28,7 +28,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
    Intrinsics guide version: 3.5.4
-   Parser version: 0.24
+   Parser version: 0.23
 */
 
 #ifndef __IMMINTRIN_DBG_H_
@@ -41,7 +41,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdlib.h>
 
 /* Include intrinsics library */
+#if defined __GNUC__
+#include <x86intrin.h>
+#else
 #include <immintrin.h>
+#endif /* GCC */
 
 #define SELECT2 _mm256_extractf32x4_ps_dbg
 #define SELECT4 _mm_extract_epi32_dbg
@@ -785,7 +789,7 @@ static inline void _mm512_storeu_ps_dbg(void *mem_addr, __m512 A)
  Store 512-bits (composed of 32 packed 16-bit integers) from "a" into memory.
   "mem_addr" does not need to be aligned on any particular boundary..
 */
-static inline void _mm512_storeu_epi16(void *mem_addr, __m512i A)
+static inline void _mm512_storeu_epi16_dbg(void *mem_addr, __m512i A)
 {
   _mm512_storeu_ps(mem_addr, (__m512)A);
 }
@@ -849,7 +853,7 @@ static inline void _mm256_storeu_si256_dbg(__m256i *mem_addr, __m256i A)
  Store 256-bits (composed of 16 packed 16-bit integers) from "a" into memory.
                 "mem_addr" does not need to be aligned on any particular boundary.
 */
-static inline void _mm256_storeu_epi16_dbg(__m256i *mem_addr, __m256i A)
+static inline void _mm256_storeu_epi16_dbg(void *mem_addr, __m256i A)
 {
 	  _mm256_storeu_si256(mem_addr, A);
 }
@@ -964,12 +968,14 @@ static inline void _mm256_storeu_ps_dbg(float *mem_addr, __m256 A)
  Store 128-bits of integer data from a into memory. mem_addr does not need to be aligned on any particular boundary.
 
 */
-static inline void _mm_store_epi64_dbg(void *mem_addr, __m128i A)
+static inline void _mm_storeu_epi64_dbg(void *mem_addr, __m128i A)
 {
-  _mm_store_si128((__m128i*)mem_addr, A);
+  _mm_storeu_si128((__m128i*)mem_addr, A);
 }
+#undef _mm_storeu_epi64
 #undef _mm_store_epi64
 #define _mm_store_epi64 _mm_storeu_epi64_dbg 
+#define _mm_storeu_epi64 _mm_storeu_epi64_dbg 
 
 /*
  Store 512-bits (composed of 8 packed 64-bit integers) from a into memory. mem_addr must be aligned on a 64-byte boundary or a general-protection exception may be generated.
@@ -27118,18 +27124,17 @@ static inline __m128 _mm_maskz_expand_ps_dbg(__mmask8 k, __m128 a)
 #undef _mm_maskz_expand_ps
 #define _mm_maskz_expand_ps _mm_maskz_expand_ps_dbg
 
-
 /*
  Extract 128 bits (composed of 4 packed single-precision (32-bit) floating-point elements) from "a", selected with "imm8", and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
 static inline __m128 _mm256_mask_extractf32x4_ps_dbg(__m128 src, __mmask8 k, __m256 a, int imm8)
 {
-  int32_t tmp_vec[4];
-  int32_t src_vec[4];
+  float tmp_vec[4];
+  float src_vec[4];
   _mm_storeu_ps((void*)src_vec, src);
   __m128 a_vec[2];
   _mm256_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[4];
+  float dst_vec[4];
   switch ((imm8 & 0xff) >> 0) {
     case 0:
     _mm_storeu_ps(tmp_vec, (__m128)a_vec[0]);
@@ -27157,10 +27162,10 @@ break;
 */
 static inline __m128 _mm256_maskz_extractf32x4_ps_dbg(__mmask8 k, __m256 a, int imm8)
 {
-  int32_t tmp_vec[4];
+  float tmp_vec[4];
   __m128 a_vec[2];
   _mm256_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[4];
+  float dst_vec[4];
   switch ((imm8 & 0xff) >> 0) {
     case 0:
     _mm_storeu_ps(tmp_vec, (__m128)a_vec[0]);
@@ -27211,12 +27216,12 @@ break;
 */
 static inline __m256 _mm512_mask_extractf32x8_ps_dbg(__m256 src, __mmask8 k, __m512 a, int imm8)
 {
-  int32_t tmp_vec[4];
-  int32_t src_vec[8];
+  float tmp_vec[4];
+  float src_vec[8];
   _mm256_storeu_ps((void*)src_vec, src);
   __m256 a_vec[2];
   _mm512_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[8];
+  float dst_vec[8];
   switch ((imm8 & 0xff) >> 0) {
     case 0:
     _mm256_storeu_ps(tmp_vec, (__m256)a_vec[0]);
@@ -27244,10 +27249,10 @@ break;
 */
 static inline __m256 _mm512_maskz_extractf32x8_ps_dbg(__mmask8 k, __m512 a, int imm8)
 {
-  int32_t tmp_vec[4];
+  float tmp_vec[4];
   __m256 a_vec[2];
   _mm512_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[8];
+  float dst_vec[8];
   switch ((imm8 & 0xff) >> 0) {
     case 0:
     _mm256_storeu_ps(tmp_vec, (__m256)a_vec[0]);
@@ -27275,12 +27280,12 @@ break;
 */
 static inline __m128d _mm256_mask_extractf64x2_pd_dbg(__m128d src, __mmask8 k, __m256d a, int imm8)
 {
-  int64_t tmp_vec[2];
-  int64_t src_vec[2];
+  double tmp_vec[2];
+  double src_vec[2];
   _mm_storeu_pd((void*)src_vec, src);
   __m128d a_vec[2];
   _mm256_storeu_pd((void*)a_vec, a);
-  int64_t dst_vec[2];
+  double dst_vec[2];
   switch ((imm8 & 0xff) >> 0) {
     case 0:
     _mm_storeu_pd(tmp_vec, a_vec[0]);
@@ -27308,10 +27313,10 @@ break;
 */
 static inline __m128d _mm256_maskz_extractf64x2_pd_dbg(__mmask8 k, __m256d a, int imm8)
 {
-  int64_t tmp_vec[2];
+  double tmp_vec[2];
   __m128d a_vec[2];
   _mm256_storeu_pd((void*)a_vec, a);
-  int64_t dst_vec[2];
+  double dst_vec[2];
   switch ((imm8 & 0xff) >> 0) {
     case 0:
     _mm_storeu_pd(tmp_vec, a_vec[0]);
@@ -27368,12 +27373,12 @@ break;
 */
 static inline __m128d _mm512_mask_extractf64x2_pd_dbg(__m128d src, __mmask8 k, __m512d a, int imm8)
 {
-  int64_t tmp_vec[2];
-  int64_t src_vec[2];
+  double tmp_vec[2];
+  double src_vec[2];
   _mm_storeu_pd((void*)src_vec, src);
   __m128d a_vec[4];
   _mm512_storeu_pd((void*)a_vec, a);
-  int64_t dst_vec[2];
+  double dst_vec[2];
   switch ((imm8 & 0xff) >> 0) {
     case 0:
     _mm_storeu_pd(tmp_vec, a_vec[0]);
@@ -27407,10 +27412,10 @@ break;
 */
 static inline __m128d _mm512_maskz_extractf64x2_pd_dbg(__mmask8 k, __m512d a, int imm8)
 {
-  int64_t tmp_vec[2];
+  double tmp_vec[2];
   __m128d a_vec[4];
   _mm512_storeu_pd((void*)a_vec, a);
-  int64_t dst_vec[2];
+  double dst_vec[2];
   switch ((imm8 & 0xff) >> 0) {
     case 0:
     _mm_storeu_pd(tmp_vec, a_vec[0]);
