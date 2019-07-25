@@ -1228,7 +1228,7 @@ static inline __m512i _mm512_ternarylogic_epi32_dbg(__m512i a, __m512i b, __m512
   for (int j = 0; j <= 15; j++) {
     for (int h = 0; h < 32; h++) {
       int index = ((((a_vec[j] & (1UL << h)) >> h) << 2) | (((b_vec[j] & (1UL << h)) >> h) << 1) | ((c_vec[j] & (1UL << h)) >> h)) & 0x7;
-      dst_vec[j] = (dst_vec[j] & ~(1UL << h)) | (((imm8 & (1UL << index) >> index)) << h);
+      dst_vec[j] = (dst_vec[j] & ~(1UL << h)) | ((((imm8 & (1UL << index)) >> index)) << h);
     }
   }
   return _mm512_loadu_epi16((void*)dst_vec);
@@ -1253,7 +1253,7 @@ static inline __m512i _mm512_mask_ternarylogic_epi32_dbg(__m512i src, __mmask16 
     if (k & (1UL << j)) {
       for (int h = 0; h < 32; h++) {
         int index = ((((src_vec[j] & (1UL << h)) >> h) << 2) | (((a_vec[j] & (1UL << h)) >> h) << 1) | ((b_vec[j] & (1UL << h)) >> h)) & 0x7;
-        dst_vec[j] = (dst_vec[j] & ~(1UL << h)) | (((imm8 & (1UL << index) >> index)) << h);
+        dst_vec[j] = (dst_vec[j] & ~(1UL << h)) | ((((imm8 & (1UL << index)) >> index)) << h);
       }
     } else {
       dst_vec[j] = src_vec[j];
@@ -1281,7 +1281,7 @@ static inline __m512i _mm512_maskz_ternarylogic_epi32_dbg(__mmask16 k, __m512i a
     if (k & (1UL << j)) {
       for (int h = 0; h < 32; h++) {
         int index = ((((a_vec[j] & (1UL << h)) >> h) << 2) | (((b_vec[j] & (1UL << h)) >> h) << 1) | ((c_vec[j] & (1UL << h)) >> h)) & 0x7;
-        dst_vec[j] = (dst_vec[j] & ~(1UL << h)) | (((imm8 & (1UL << index) >> index)) << h);
+        dst_vec[j] = (dst_vec[j] & ~(1UL << h)) | ((((imm8 & (1UL << index)) >> index)) << h);
       }
     } else {
       dst_vec[j] = 0;
