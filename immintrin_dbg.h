@@ -116,12 +116,16 @@ static inline uint8_t Saturate_To_UnsignedInt8(int8_t control)
 {
 return control;
 }
-static inline int16_t Saturate_To_Int16(int16_t control)
+static inline int16_t Saturate_To_Int16(int32_t control)
 {
+if (control > INT16_MAX) return INT8_MAX;
+if (control < INT16_MIN) return INT16_MIN;
 return control;
 }
-static inline int8_t Saturate_To_Int8(int8_t control)
+static inline int8_t Saturate_To_Int8(int16_t control)
 {
+if (control > INT8_MAX) return INT8_MAX;
+if (control < INT8_MIN) return INT8_MIN;
 return control;
 }
 static inline double ReduceArgumentPD(double src1, uint8_t imm8)
@@ -1218,13 +1222,15 @@ static inline __m128i _mm_minpos_epu16_dbg(__m128i a)
 */
 static inline __m512i _mm512_ternarylogic_epi32_dbg(__m512i a, __m512i b, __m512i c, int imm8)
 {
-  uint32_t a_vec[32];
+  uint32_t a_vec[16];
   _mm512_store_epi64((void*)a_vec, a);
-  uint32_t b_vec[32];
+  uint32_t b_vec[16];
   _mm512_store_epi64((void*)b_vec, b);
-  uint32_t c_vec[32];
+  uint32_t c_vec[16];
   _mm512_store_epi64((void*)c_vec, c);
-  uint32_t dst_vec[64];
+  uint32_t dst_vec[16];
+  _mm512_store_epi64((void*)dst_vec, _mm512_setzero_epi32_dbg());
+
   for (int j = 0; j <= 15; j++) {
     for (int h = 0; h < 32; h++) {
       int index = ((((a_vec[j] & (1UL << h)) >> h) << 2) | (((b_vec[j] & (1UL << h)) >> h) << 1) | ((c_vec[j] & (1UL << h)) >> h)) & 0x7;
@@ -1243,12 +1249,12 @@ static inline __m512i _mm512_ternarylogic_epi32_dbg(__m512i a, __m512i b, __m512
 static inline __m512i _mm512_mask_ternarylogic_epi32_dbg(__m512i src, __mmask16 k, __m512i a, __m512i b, int imm8)
 {
   uint32_t src_vec[32];
-  _mm512_store_epi64((void*)src_vec, src);
+  _mm512_store_epi32((void*)src_vec, src);
   uint32_t a_vec[32];
-  _mm512_store_epi64((void*)a_vec, a);
+  _mm512_store_epi32((void*)a_vec, a);
   uint32_t b_vec[32];
-  _mm512_store_epi64((void*)b_vec, b);
-  uint32_t dst_vec[64];
+  _mm512_store_epi32((void*)b_vec, b);
+  uint32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     if (k & (1UL << j)) {
       for (int h = 0; h < 32; h++) {
@@ -7804,7 +7810,7 @@ static inline __m128 _mm_maskz_fmadd_ss_dbg(__mmask8 k, __m128 a, __m128 b, __m1
 
 
 /*
- Multiply packed double-precision (64-bit) floating-point elements in "a" and "b", alternatively add and subtract packed elements in "c" to/from the intermediate result, and store the results in "dst". 
+ Multiply packed double-precision (64-bit) floating-point elements in "a" and "b", al/ernatively add and subtract packed elements in "c" to/from the intermediate result, and store the results in "dst". 
 	
 */
 static inline __m512d _mm512_fmaddsub_pd_dbg(__m512d a, __m512d b, __m512d c)
@@ -32531,7 +32537,7 @@ static inline __m256i _mm256_mask_adds_epi8_dbg(__m256i src, __mmask32 k, __m256
   int8_t dst_vec[32];
   for (int j = 0; j <= 31; j++) {
     if (k & ((1 << j) & 0xffffffff)) {
-      dst_vec[j] = Saturate_To_Int8( a_vec[j] + b_vec[j] );
+      dst_vec[j] = Saturate_To_Int8((int16_t) a_vec[j] + b_vec[j] );
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -32556,7 +32562,7 @@ static inline __m256i _mm256_maskz_adds_epi8_dbg(__mmask32 k, __m256i a, __m256i
   int8_t dst_vec[32];
   for (int j = 0; j <= 31; j++) {
     if (k & ((1 << j) & 0xffffffff)) {
-      dst_vec[j] = Saturate_To_Int8( a_vec[j] + b_vec[j] );
+      dst_vec[j] = Saturate_To_Int8((int16_t) a_vec[j] + b_vec[j] );
     } else {
       dst_vec[j] = 0;
     }
@@ -32579,7 +32585,7 @@ static inline __m512i _mm512_adds_epi8_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    dst_vec[j] = Saturate_To_Int8( a_vec[j] + b_vec[j] );
+    dst_vec[j] = Saturate_To_Int8((int16_t) a_vec[j] + b_vec[j] );
   }
   return _mm512_loadu_si512((void*)dst_vec);
 }
@@ -32602,7 +32608,7 @@ static inline __m512i _mm512_mask_adds_epi8_dbg(__m512i src, __mmask64 k, __m512
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
     if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
-      dst_vec[j] = Saturate_To_Int8( a_vec[j] + b_vec[j] );
+      dst_vec[j] = Saturate_To_Int8((int16_t) a_vec[j] + b_vec[j] );
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -32627,7 +32633,7 @@ static inline __m512i _mm512_maskz_adds_epi8_dbg(__mmask64 k, __m512i a, __m512i
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
     if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
-      dst_vec[j] = Saturate_To_Int8( a_vec[j] + b_vec[j] );
+      dst_vec[j] = Saturate_To_Int8((int16_t) a_vec[j] + b_vec[j] );
     } else {
       dst_vec[j] = 0;
     }
@@ -32653,7 +32659,7 @@ static inline __m128i _mm_mask_adds_epi8_dbg(__m128i src, __mmask16 k, __m128i a
   int8_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
-      dst_vec[j] = Saturate_To_Int8( a_vec[j] + b_vec[j] );
+      dst_vec[j] = Saturate_To_Int8((int16_t) a_vec[j] + b_vec[j] );
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -32678,7 +32684,7 @@ static inline __m128i _mm_maskz_adds_epi8_dbg(__mmask16 k, __m128i a, __m128i b)
   int8_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
-      dst_vec[j] = Saturate_To_Int8( a_vec[j] + b_vec[j] );
+      dst_vec[j] = Saturate_To_Int8((int16_t) a_vec[j] + b_vec[j] );
     } else {
       dst_vec[j] = 0;
     }
@@ -52384,7 +52390,7 @@ static inline __m256i _mm256_mask_subs_epi8_dbg(__m256i src, __mmask32 k, __m256
   int8_t dst_vec[32];
   for (int j = 0; j <= 31; j++) {
     if (k & ((1 << j) & 0xffffffff)) {
-      dst_vec[j] = Saturate_To_Int8(a_vec[j] - b_vec[j]);
+      dst_vec[j] = Saturate_To_Int8((int16_t)a_vec[j] - b_vec[j]);
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -52408,7 +52414,7 @@ static inline __m256i _mm256_maskz_subs_epi8_dbg(__mmask32 k, __m256i a, __m256i
   int8_t dst_vec[32];
   for (int j = 0; j <= 31; j++) {
     if (k & ((1 << j) & 0xffffffff)) {
-      dst_vec[j] = Saturate_To_Int8(a_vec[j] - b_vec[j]);
+      dst_vec[j] = Saturate_To_Int8((int16_t)a_vec[j] - b_vec[j]);
     } else {
       dst_vec[j] = 0;
     }
@@ -52434,7 +52440,7 @@ static inline __m512i _mm512_mask_subs_epi8_dbg(__m512i src, __mmask64 k, __m512
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
     if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
-      dst_vec[j] = Saturate_To_Int8(a_vec[j] - b_vec[j]);
+      dst_vec[j] = Saturate_To_Int8((int16_t)a_vec[j] - b_vec[j]);
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -52458,7 +52464,7 @@ static inline __m512i _mm512_maskz_subs_epi8_dbg(__mmask64 k, __m512i a, __m512i
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
     if (k & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
-      dst_vec[j] = Saturate_To_Int8(a_vec[j] - b_vec[j]);
+      dst_vec[j] = Saturate_To_Int8((int16_t)a_vec[j] - b_vec[j]);
     } else {
       dst_vec[j] = 0;
     }
@@ -52481,7 +52487,7 @@ static inline __m512i _mm512_subs_epi8_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)b_vec, b);
   int8_t dst_vec[64];
   for (int j = 0; j <= 63; j++) {
-    dst_vec[j] = Saturate_To_Int8(a_vec[j] - b_vec[j]);
+    dst_vec[j] = Saturate_To_Int8((int16_t)a_vec[j] - b_vec[j]);
   }
   return _mm512_loadu_si512((void*)dst_vec);
 }
@@ -52504,7 +52510,7 @@ static inline __m128i _mm_mask_subs_epi8_dbg(__m128i src, __mmask16 k, __m128i a
   int8_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
-      dst_vec[j] = Saturate_To_Int8(a_vec[j] - b_vec[j]);
+      dst_vec[j] = Saturate_To_Int8((int16_t)a_vec[j] - b_vec[j]);
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -52528,7 +52534,7 @@ static inline __m128i _mm_maskz_subs_epi8_dbg(__mmask16 k, __m128i a, __m128i b)
   int8_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
-      dst_vec[j] = Saturate_To_Int8(a_vec[j] - b_vec[j]);
+      dst_vec[j] = Saturate_To_Int8((int16_t)a_vec[j] - b_vec[j]);
     } else {
       dst_vec[j] = 0;
     }
@@ -57185,7 +57191,7 @@ static inline __m256i _mm256_adds_epi8_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)b_vec, b);
   int8_t dst_vec[32];
   for (int j = 0; j <= 31; j++) {
-    dst_vec[j] = Saturate_To_Int8( a_vec[j] + b_vec[j] );
+    dst_vec[j] = Saturate_To_Int8((int16_t) a_vec[j] + b_vec[j] );
   }
   return _mm256_loadu_si256((void*)dst_vec);
 }
@@ -59254,7 +59260,7 @@ static inline __m256i _mm256_subs_epi8_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)b_vec, b);
   int8_t dst_vec[32];
   for (int j = 0; j <= 31; j++) {
-    dst_vec[j] = Saturate_To_Int8(a_vec[j] - b_vec[j]);
+    dst_vec[j] = Saturate_To_Int8((int16_t)a_vec[j] - b_vec[j]);
   }
   return _mm256_loadu_si256((void*)dst_vec);
 }
