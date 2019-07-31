@@ -111,12 +111,12 @@ return control;
 }
 static inline uint16_t Saturate_To_UnsignedInt16(int32_t control)
 {
-if (control > INT16_MAX) return INT16_MAX;
+if (control > UINT16_MAX) return UINT16_MAX;
 return control;
 }
 static inline uint8_t Saturate_To_UnsignedInt8(int16_t control)
 {
-if (control > INT8_MAX) return INT8_MAX;
+if (control > UINT8_MAX) return UINT8_MAX;
 return control;
 }
 static inline int16_t Saturate_To_Int16(int32_t control)
@@ -201,12 +201,12 @@ return control;
 }
 static inline int8_t Saturate_UnsignedInt16_To_Int8(uint16_t control)
 {
-if (control > INT8_MAX) return INT8_MAX;
+if (control > UINT8_MAX) return UINT8_MAX;
 return control;
 }
 static inline int16_t Saturate_UnsignedInt64_To_Int16(uint64_t control)
 {
-if (control > INT16_MAX) return INT16_MAX;
+if (control > UINT16_MAX) return UINT16_MAX;
 return control;
 }
 static inline int8_t Saturate_Int16_To_Int8(int16_t control)
@@ -217,12 +217,12 @@ return control;
 }
 static inline int8_t Saturate_UnsignedInt32_To_Int8(uint32_t control)
 {
-if (control > INT8_MAX) return INT8_MAX;
+if (control > UINT8_MAX) return UINT8_MAX;
 return control;
 }
 static inline int8_t Saturate_UnsignedInt64_To_Int8(uint64_t control)
 {
-if (control > INT8_MAX) return INT8_MAX;
+if (control > UINT8_MAX) return UINT8_MAX;
 return control;
 }
 static inline int32_t Convert_FP64_To_IntegerTruncate(double control)
@@ -243,12 +243,12 @@ return (uint32_t)control;
 }
 static inline int16_t Saturate_UnsignedInt32_To_Int16(uint32_t control)
 {
-if (control > INT16_MAX) return INT16_MAX;
+if (control > UINT16_MAX) return UINT16_MAX;
 return control;
 }
 static inline int32_t Saturate_UnsignedInt64_To_Int32(uint64_t control)
 {
-if (control > INT32_MAX) return INT32_MAX;
+if (control > UINT32_MAX) return UINT32_MAX;
 return control;
 }
 static inline double ConvertUnsignedIntegerTo_FP64(uint32_t control)
@@ -2480,7 +2480,6 @@ static inline __m128i _mm_mask_expand_epi8_dbg(__m128i src, __mmask16 k, __m128i
 #undef _mm_mask_expand_epi8
 #define _mm_mask_expand_epi8 _mm_mask_expand_epi8_dbg
 
-
 /*
  Compute the bitwise NOT of 16-bit masks "a" and then AND with "b", and store the result in "k".
 */
@@ -3605,7 +3604,6 @@ static inline __m256i _mm512_cvt_roundpd_epi32_dbg(__m512d a, int rounding)
 #undef _mm512_cvt_roundpd_epi32
 #define _mm512_cvt_roundpd_epi32 _mm512_cvt_roundpd_epi32_dbg
 
-
 /*
  Convert packed double-precision (64-bit) floating-point elements in "a" to packed 32-bit integers, and store the results in "dst".
 */
@@ -4043,7 +4041,6 @@ static inline __m512i _mm512_cvt_roundps_epi32_dbg(__m512 a, int rounding)
 #undef _mm512_cvt_roundps_epi32
 #define _mm512_cvt_roundps_epi32 _mm512_cvt_roundps_epi32_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 32-bit integers, and store the results in "dst".
 */
@@ -4142,7 +4139,6 @@ static inline __m512i _mm512_maskz_cvt_roundps_epi32_dbg(__mmask16 k, __m512 a, 
 
 #undef _mm512_maskz_cvt_roundps_epi32
 #define _mm512_maskz_cvt_roundps_epi32 _mm512_maskz_cvt_roundps_epi32_dbg
-
 
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 32-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
@@ -4565,7 +4561,6 @@ return dst;
 #undef _mm_cvtsd_i64
 #define _mm_cvtsd_i64 _mm_cvtsd_i64_dbg
 
-
 /*
  Convert the lower double-precision (64-bit) floating-point element in "b" to a single-precision (32-bit) floating-point element, store the result in the lower element of "dst", and copy the upper 3 packed elements from "a" to the upper elements of "dst".
 	(_MM_FROUND_TO_NEAREST_INT |_MM_FROUND_NO_EXC) // round to nearest, and suppress exceptions
@@ -4801,9 +4796,9 @@ static inline __m128d _mm_cvti64_sd_dbg(__m128d a, int64_t b)
 */
 static inline __m128 _mm_cvt_roundi32_ss_dbg(__m128 a, int b, int rounding)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[4];
+  float dst_vec[4];
   dst_vec[0] = Convert_Int32_To_FP32_rounding(b, rounding);
   dst_vec[1] = a_vec[1];
   dst_vec[2] = a_vec[2];
@@ -4826,9 +4821,9 @@ static inline __m128 _mm_cvt_roundi32_ss_dbg(__m128 a, int b, int rounding)
 */
 static inline __m128 _mm_cvt_roundi64_ss_dbg(__m128 a, int64_t b, int rounding)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[4];
+  float dst_vec[4];
   dst_vec[0] = Convert_Int64_To_FP32_rounding(b, rounding);
   dst_vec[1] = a_vec[1];
   dst_vec[2] = a_vec[2];
@@ -4851,9 +4846,9 @@ static inline __m128 _mm_cvt_roundi64_ss_dbg(__m128 a, int64_t b, int rounding)
 */
 static inline __m128 _mm_cvt_roundsi32_ss_dbg(__m128 a, int b, int rounding)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[4];
+  float dst_vec[4];
   dst_vec[0] = Convert_Int32_To_FP32_rounding(b, rounding);
   dst_vec[1] = a_vec[1];
   dst_vec[2] = a_vec[2];
@@ -4876,9 +4871,9 @@ static inline __m128 _mm_cvt_roundsi32_ss_dbg(__m128 a, int b, int rounding)
 */
 static inline __m128 _mm_cvt_roundsi64_ss_dbg(__m128 a, int64_t b, int rounding)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[4];
+  float dst_vec[4];
   dst_vec[0] = Convert_Int64_To_FP32_rounding(b, rounding);
   dst_vec[1] = a_vec[1];
   dst_vec[2] = a_vec[2];
@@ -4895,9 +4890,9 @@ static inline __m128 _mm_cvt_roundsi64_ss_dbg(__m128 a, int64_t b, int rounding)
 */
 static inline __m128 _mm_cvti32_ss_dbg(__m128 a, int b)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[4];
+  float dst_vec[4];
   dst_vec[0] = Convert_Int32_To_FP32(b);
   dst_vec[1] = a_vec[1];
   dst_vec[2] = a_vec[2];
@@ -4914,9 +4909,9 @@ static inline __m128 _mm_cvti32_ss_dbg(__m128 a, int b)
 */
 static inline __m128 _mm_cvti64_ss_dbg(__m128 a, int64_t b)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[4];
+  float dst_vec[4];
   dst_vec[0] = Convert_Int64_To_FP32(b);
   dst_vec[1] = a_vec[1];
   dst_vec[2] = a_vec[2];
@@ -4926,7 +4921,6 @@ static inline __m128 _mm_cvti64_ss_dbg(__m128 a, int64_t b)
 
 #undef _mm_cvti64_ss
 #define _mm_cvti64_ss _mm_cvti64_ss_dbg
-
 
 /*
  Convert the lower single-precision (32-bit) floating-point element in "b" to a double-precision (64-bit) floating-point element, store the result in the lower element of "dst", and copy the upper element from "a" to the upper element of "dst". 
@@ -4941,7 +4935,7 @@ static inline __m128d _mm_cvt_roundss_sd_dbg(__m128d a, __m128 b, int rounding)
 {
   double a_vec[2];
   _mm_storeu_pd((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
   double dst_vec[2];
   dst_vec[0] = Convert_FP32_To_FP64_rounding(b_vec[0], rounding);
@@ -4970,7 +4964,7 @@ static inline __m128d _mm_mask_cvt_roundss_sd_dbg(__m128d src, __mmask8 k, __m12
   _mm_storeu_pd((void*)src_vec, src);
   double a_vec[2];
   _mm_storeu_pd((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
   double dst_vec[2];
   if (k & ((1 << 0) & 0xff)) {
@@ -4987,7 +4981,6 @@ static inline __m128d _mm_mask_cvt_roundss_sd_dbg(__m128d src, __mmask8 k, __m12
 #undef _mm_mask_cvt_roundss_sd
 #define _mm_mask_cvt_roundss_sd _mm_mask_cvt_roundss_sd_dbg
 
-
 /*
  Convert the lower single-precision (32-bit) floating-point element in "b" to a double-precision (64-bit) floating-point element, store the result in the lower element of "dst" using writemask "k" (the element is copied from "src" when mask bit 0 is not set), and copy the upper element from "a" to the upper element of "dst".
 	
@@ -4998,7 +4991,7 @@ static inline __m128d _mm_mask_cvtss_sd_dbg(__m128d src, __mmask8 k, __m128d a, 
   _mm_storeu_pd((void*)src_vec, src);
   double a_vec[2];
   _mm_storeu_pd((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
   double dst_vec[2];
   if (k & ((1 << 0) & 0xff)) {
@@ -5029,7 +5022,7 @@ static inline __m128d _mm_maskz_cvt_roundss_sd_dbg(__mmask8 k, __m128d a, __m128
 {
   double a_vec[2];
   _mm_storeu_pd((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
   double dst_vec[2];
   if (k & ((1 << 0) & 0xff)) {
@@ -5054,7 +5047,7 @@ static inline __m128d _mm_maskz_cvtss_sd_dbg(__mmask8 k, __m128d a, __m128 b)
 {
   double a_vec[2];
   _mm_storeu_pd((void*)a_vec, a);
-  int32_t b_vec[4];
+  float b_vec[4];
   _mm_storeu_ps((void*)b_vec, b);
   double dst_vec[2];
   if (k & ((1 << 0) & 0xff)) {
@@ -5083,7 +5076,7 @@ static inline __m128d _mm_maskz_cvtss_sd_dbg(__mmask8 k, __m128d a, __m128 b)
 */
 static inline int _mm_cvt_roundss_i32_dbg(__m128 a, int rounding)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int dst;
   dst = Convert_FP32_To_Int32_rounding(a_vec[0], rounding);
@@ -5105,7 +5098,7 @@ return dst;
 */
 static inline int64_t _mm_cvt_roundss_i64_dbg(__m128 a, int rounding)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int64_t dst;
   dst = Convert_FP32_To_Int64_rounding(a_vec[0], rounding);
@@ -5127,7 +5120,7 @@ return dst;
 */
 static inline int _mm_cvt_roundss_si32_dbg(__m128 a, int rounding)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int dst;
   dst = Convert_FP32_To_Int32_rounding(a_vec[0], rounding);
@@ -5149,7 +5142,7 @@ return dst;
 */
 static inline int64_t _mm_cvt_roundss_si64_dbg(__m128 a, int rounding)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int64_t dst;
   dst = Convert_FP32_To_Int64_rounding(a_vec[0], rounding);
@@ -5165,7 +5158,7 @@ return dst;
 */
 static inline int _mm_cvtss_i32_dbg(__m128 a)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int dst;
   dst = Convert_FP32_To_Int32(a_vec[0]);
@@ -5181,7 +5174,7 @@ return dst;
 */
 static inline int64_t _mm_cvtss_i64_dbg(__m128 a)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int64_t dst;
   dst = Convert_FP32_To_Int64(a_vec[0]);
@@ -5459,7 +5452,7 @@ static inline __m256i _mm512_maskz_cvttpd_epu32_dbg(__mmask8 k, __m512d a)
 */
 static inline __m512i _mm512_cvtt_roundps_epi32_dbg(__m512 a, int sae)
 {
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
   int32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
@@ -5477,7 +5470,7 @@ static inline __m512i _mm512_cvtt_roundps_epi32_dbg(__m512 a, int sae)
 */
 static inline __m512i _mm512_cvttps_epi32_dbg(__m512 a)
 {
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
   int32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
@@ -5498,7 +5491,7 @@ static inline __m512i _mm512_mask_cvtt_roundps_epi32_dbg(__m512i src, __mmask16 
 {
   int32_t src_vec[16];
   _mm512_storeu_si512((void*)src_vec, src);
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
   int32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
@@ -5522,7 +5515,7 @@ static inline __m512i _mm512_mask_cvttps_epi32_dbg(__m512i src, __mmask16 k, __m
 {
   int32_t src_vec[16];
   _mm512_storeu_si512((void*)src_vec, src);
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
   int32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
@@ -5545,7 +5538,7 @@ static inline __m512i _mm512_mask_cvttps_epi32_dbg(__m512i src, __mmask16 k, __m
 */
 static inline __m512i _mm512_maskz_cvtt_roundps_epi32_dbg(__mmask16 k, __m512 a, int sae)
 {
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
   int32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
@@ -5567,7 +5560,7 @@ static inline __m512i _mm512_maskz_cvtt_roundps_epi32_dbg(__mmask16 k, __m512 a,
 */
 static inline __m512i _mm512_maskz_cvttps_epi32_dbg(__mmask16 k, __m512 a)
 {
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
   int32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
@@ -5590,9 +5583,9 @@ static inline __m512i _mm512_maskz_cvttps_epi32_dbg(__mmask16 k, __m512 a)
 */
 static inline __m512i _mm512_cvtt_roundps_epu32_dbg(__m512 a, int sae)
 {
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[16];
+  uint32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     dst_vec[j] = Convert_FP32_To_UnsignedIntegerTruncate(a_vec[j]);
   }
@@ -5602,15 +5595,14 @@ static inline __m512i _mm512_cvtt_roundps_epu32_dbg(__m512 a, int sae)
 #undef _mm512_cvtt_roundps_epu32
 #define _mm512_cvtt_roundps_epu32 _mm512_cvtt_roundps_epu32_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed unsigned 32-bit integers with truncation, and store the results in "dst".
 */
 static inline __m512i _mm512_cvttps_epu32_dbg(__m512 a)
 {
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[16];
+  uint32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     dst_vec[j] = Convert_FP32_To_UnsignedInt32_Truncate(a_vec[j]);
   }
@@ -5629,9 +5621,9 @@ static inline __m512i _mm512_mask_cvtt_roundps_epu32_dbg(__m512i src, __mmask16 
 {
   int32_t src_vec[16];
   _mm512_storeu_si512((void*)src_vec, src);
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[16];
+  uint32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
       dst_vec[j] = Convert_FP32_To_UnsignedIntegerTruncate(a_vec[j]);
@@ -5645,7 +5637,6 @@ static inline __m512i _mm512_mask_cvtt_roundps_epu32_dbg(__m512i src, __mmask16 
 #undef _mm512_mask_cvtt_roundps_epu32
 #define _mm512_mask_cvtt_roundps_epu32 _mm512_mask_cvtt_roundps_epu32_dbg
 
-
 /*
  Convert packed double-precision (32-bit) floating-point elements in "a" to packed unsigned 32-bit integers with truncation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -5653,9 +5644,9 @@ static inline __m512i _mm512_mask_cvttps_epu32_dbg(__m512i src, __mmask16 k, __m
 {
   int32_t src_vec[16];
   _mm512_storeu_si512((void*)src_vec, src);
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[16];
+  uint32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
       dst_vec[j] = Convert_FP64_To_UnsignedInt32_Truncate(a_vec[j]);
@@ -5669,16 +5660,15 @@ static inline __m512i _mm512_mask_cvttps_epu32_dbg(__m512i src, __mmask16 k, __m
 #undef _mm512_mask_cvttps_epu32
 #define _mm512_mask_cvttps_epu32 _mm512_mask_cvttps_epu32_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed unsigned 32-bit integers with truncation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
 	Pass __MM_FROUND_NO_EXC to "sae" to suppress all exceptions.
 */
 static inline __m512i _mm512_maskz_cvtt_roundps_epu32_dbg(__mmask16 k, __m512 a, int sae)
 {
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[16];
+  uint32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
       dst_vec[j] = Convert_FP32_To_UnsignedIntegerTruncate(a_vec[j]);
@@ -5692,15 +5682,14 @@ static inline __m512i _mm512_maskz_cvtt_roundps_epu32_dbg(__mmask16 k, __m512 a,
 #undef _mm512_maskz_cvtt_roundps_epu32
 #define _mm512_maskz_cvtt_roundps_epu32 _mm512_maskz_cvtt_roundps_epu32_dbg
 
-
 /*
  Convert packed double-precision (32-bit) floating-point elements in "a" to packed unsigned 32-bit integers with truncation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
 static inline __m512i _mm512_maskz_cvttps_epu32_dbg(__mmask16 k, __m512 a)
 {
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[16];
+  uint32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
       dst_vec[j] = Convert_FP64_To_UnsignedInt32_Truncate(a_vec[j]);
@@ -5713,7 +5702,6 @@ static inline __m512i _mm512_maskz_cvttps_epu32_dbg(__mmask16 k, __m512 a)
 
 #undef _mm512_maskz_cvttps_epu32
 #define _mm512_maskz_cvttps_epu32 _mm512_maskz_cvttps_epu32_dbg
-
 
 /*
  Convert the lower double-precision (64-bit) floating-point element in "a" to a 32-bit integer with truncation, and store the result in "dst".
@@ -5845,7 +5833,7 @@ return dst;
 */
 static inline int _mm_cvtt_roundss_i32_dbg(__m128 a, int rounding)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int dst;
   dst = Convert_FP32_To_Int32_Truncate_rounding(a_vec[0], rounding);
@@ -5867,7 +5855,7 @@ return dst;
 */
 static inline int64_t _mm_cvtt_roundss_i64_dbg(__m128 a, int rounding)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int64_t dst;
   dst = Convert_FP32_To_Int64_Truncate_rounding(a_vec[0], rounding);
@@ -5889,7 +5877,7 @@ return dst;
 */
 static inline int _mm_cvtt_roundss_si32_dbg(__m128 a, int rounding)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int dst;
   dst = Convert_FP32_To_Int32_Truncate_rounding(a_vec[0], rounding);
@@ -5911,7 +5899,7 @@ return dst;
 */
 static inline int64_t _mm_cvtt_roundss_si64_dbg(__m128 a, int rounding)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int64_t dst;
   dst = Convert_FP32_To_Int64_Truncate_rounding(a_vec[0], rounding);
@@ -5927,7 +5915,7 @@ return dst;
 */
 static inline int _mm_cvttss_i32_dbg(__m128 a)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int dst;
   dst = Convert_FP32_To_Int32_Truncate(a_vec[0]);
@@ -5943,7 +5931,7 @@ return dst;
 */
 static inline int64_t _mm_cvttss_i64_dbg(__m128 a)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int64_t dst;
   dst = Convert_FP32_To_Int64_Truncate(a_vec[0]);
@@ -12455,7 +12443,7 @@ static inline __m512i _mm512_abs_epi64_dbg(__m512i a)
   _mm512_storeu_si512((void*)a_vec, a);
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
-    dst_vec[j] = abs(a_vec[j]);
+    dst_vec[j] = llabs(a_vec[j]);
   }
   return _mm512_loadu_si512((void*)dst_vec);
 }
@@ -12476,7 +12464,7 @@ static inline __m512i _mm512_mask_abs_epi64_dbg(__m512i src, __mmask8 k, __m512i
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = abs(a_vec[j]);
+      dst_vec[j] = llabs(a_vec[j]);
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -12498,7 +12486,7 @@ static inline __m512i _mm512_maskz_abs_epi64_dbg(__mmask8 k, __m512i a)
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = abs(a_vec[j]);
+      dst_vec[j] = llabs(a_vec[j]);
     } else {
       dst_vec[j] = 0;
     }
@@ -12508,7 +12496,6 @@ static inline __m512i _mm512_maskz_abs_epi64_dbg(__mmask8 k, __m512i a)
 
 #undef _mm512_maskz_abs_epi64
 #define _mm512_maskz_abs_epi64 _mm512_maskz_abs_epi64_dbg
-
 
 /*
  Add packed 32-bit integers in "a" and "b", and store the results in "dst".
@@ -13047,15 +13034,14 @@ static inline __mmask16 _mm512_cmple_epi32_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int32_t b_vec[16];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 #undef _mm512_cmple_epi32_mask
 #define _mm512_cmple_epi32_mask _mm512_cmple_epi32_mask_dbg
-
 
 /*
  Compare packed 32-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -13066,7 +13052,7 @@ static inline __mmask16 _mm512_cmplt_epi32_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int32_t b_vec[16];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
   }
@@ -13086,7 +13072,7 @@ static inline __mmask16 _mm512_mask_cmplt_epi32_mask_dbg(__mmask16 k1, __m512i a
   _mm512_storeu_si512((void*)a_vec, a);
   int32_t b_vec[16];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
@@ -13132,7 +13118,7 @@ static inline __mmask8 _mm512_cmpge_epi64_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
@@ -13172,14 +13158,13 @@ static inline __mmask8 _mm512_cmple_epi64_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm512_cmple_epi64_mask
 #define _mm512_cmple_epi64_mask _mm512_cmple_epi64_mask_dbg
-
 
 /*
  Compare packed 64-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -13257,7 +13242,7 @@ static inline __mmask8 _mm512_mask_cmpge_epi64_mask_dbg(__mmask8 k1, __m512i a, 
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -13305,7 +13290,7 @@ static inline __mmask8 _mm512_mask_cmple_epi64_mask_dbg(__mmask8 k1, __m512i a, 
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -13315,7 +13300,6 @@ static inline __mmask8 _mm512_mask_cmple_epi64_mask_dbg(__mmask8 k1, __m512i a, 
 
 #undef _mm512_mask_cmple_epi64_mask
 #define _mm512_mask_cmple_epi64_mask _mm512_mask_cmple_epi64_mask_dbg
-
 
 /*
  Compare packed 64-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -13396,7 +13380,7 @@ static inline __mmask8 _mm512_cmpge_epu64_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
@@ -13424,7 +13408,6 @@ static inline __mmask8 _mm512_cmpgt_epu64_mask_dbg(__m512i a, __m512i b)
 #undef _mm512_cmpgt_epu64_mask
 #define _mm512_cmpgt_epu64_mask _mm512_cmpgt_epu64_mask_dbg
 
-
 /*
  Compare packed unsigned 64-bit integers in "a" and "b" for less-than-or-equal, and store the results in mask vector "k".
 */
@@ -13436,14 +13419,13 @@ static inline __mmask8 _mm512_cmple_epu64_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm512_cmple_epu64_mask
 #define _mm512_cmple_epu64_mask _mm512_cmple_epu64_mask_dbg
-
 
 /*
  Compare packed unsigned 64-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -13521,7 +13503,7 @@ static inline __mmask8 _mm512_mask_cmpge_epu64_mask_dbg(__mmask8 k1, __m512i a, 
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -13531,7 +13513,6 @@ static inline __mmask8 _mm512_mask_cmpge_epu64_mask_dbg(__mmask8 k1, __m512i a, 
 
 #undef _mm512_mask_cmpge_epu64_mask
 #define _mm512_mask_cmpge_epu64_mask _mm512_mask_cmpge_epu64_mask_dbg
-
 
 /*
  Compare packed unsigned 64-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -13569,7 +13550,7 @@ static inline __mmask8 _mm512_mask_cmple_epu64_mask_dbg(__mmask8 k1, __m512i a, 
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -13579,7 +13560,6 @@ static inline __mmask8 _mm512_mask_cmple_epu64_mask_dbg(__mmask8 k1, __m512i a, 
 
 #undef _mm512_mask_cmple_epu64_mask
 #define _mm512_mask_cmple_epu64_mask _mm512_mask_cmple_epu64_mask_dbg
-
 
 /*
  Compare packed unsigned 64-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -14296,7 +14276,6 @@ static inline __m256i _mm512_maskz_cvtepi32_epi16_dbg(__mmask16 k, __m512i a)
 #undef _mm512_maskz_cvtepi32_epi16
 #define _mm512_maskz_cvtepi32_epi16 _mm512_maskz_cvtepi32_epi16_dbg
 
-
 /*
  Convert packed 64-bit integers in "a" to packed 8-bit integers with truncation, and store the results in "dst".
 */
@@ -14308,12 +14287,12 @@ static inline __m128i _mm512_cvtepi64_epi8_dbg(__m512i a)
   for (int j = 0; j <= 7; j++) {
     dst_vec[j] = Truncate_Int64_To_Int8(a_vec[j]);
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm512_cvtepi64_epi8
 #define _mm512_cvtepi64_epi8 _mm512_cvtepi64_epi8_dbg
-
 
 /*
  Convert packed 64-bit integers in "a" to packed 8-bit integers with truncation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -14332,12 +14311,12 @@ static inline __m128i _mm512_mask_cvtepi64_epi8_dbg(__m128i src, __mmask8 k, __m
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm512_mask_cvtepi64_epi8
 #define _mm512_mask_cvtepi64_epi8 _mm512_mask_cvtepi64_epi8_dbg
-
 
 /*
  Convert packed 64-bit integers in "a" to packed 8-bit integers with truncation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
@@ -14354,12 +14333,12 @@ static inline __m128i _mm512_maskz_cvtepi64_epi8_dbg(__mmask8 k, __m512i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm512_maskz_cvtepi64_epi8
 #define _mm512_maskz_cvtepi64_epi8 _mm512_maskz_cvtepi64_epi8_dbg
-
 
 /*
  Convert packed 64-bit integers in "a" to packed 32-bit integers with truncation, and store the results in "dst".
@@ -14628,6 +14607,7 @@ static inline __m128i _mm512_cvtsepi64_epi8_dbg(__m512i a)
   for (int j = 0; j <= 7; j++) {
     dst_vec[j] = Saturate_Int64_To_Int8(a_vec[j]);
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -14652,6 +14632,7 @@ static inline __m128i _mm512_mask_cvtsepi64_epi8_dbg(__m128i src, __mmask8 k, __
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -14674,6 +14655,7 @@ static inline __m128i _mm512_maskz_cvtsepi64_epi8_dbg(__mmask8 k, __m512i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -14697,7 +14679,6 @@ static inline __m256i _mm512_cvtsepi64_epi32_dbg(__m512i a)
 
 #undef _mm512_cvtsepi64_epi32
 #define _mm512_cvtsepi64_epi32 _mm512_cvtsepi64_epi32_dbg
-
 
 /*
  Convert packed 64-bit integers in "a" to packed 32-bit integers with signed saturation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -14914,7 +14895,6 @@ static inline __m512i _mm512_mask_cvtepi8_epi64_dbg(__m512i src, __mmask8 k, __m
 #undef _mm512_mask_cvtepi8_epi64
 #define _mm512_mask_cvtepi8_epi64 _mm512_mask_cvtepi8_epi64_dbg
 
-
 /*
  Sign extend packed 8-bit integers in the low 8 bytes of "a" to packed 64-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
 */
@@ -14935,7 +14915,6 @@ static inline __m512i _mm512_maskz_cvtepi8_epi64_dbg(__mmask8 k, __m128i a)
 
 #undef _mm512_maskz_cvtepi8_epi64
 #define _mm512_maskz_cvtepi8_epi64 _mm512_maskz_cvtepi8_epi64_dbg
-
 
 /*
  Sign extend packed 32-bit integers in "a" to packed 64-bit integers, and store the results in "dst".
@@ -15106,7 +15085,6 @@ static inline __m512i _mm512_mask_cvtepi16_epi64_dbg(__m512i src, __mmask8 k, __
 #undef _mm512_mask_cvtepi16_epi64
 #define _mm512_mask_cvtepi16_epi64 _mm512_mask_cvtepi16_epi64_dbg
 
-
 /*
  Sign extend packed 16-bit integers in "a" to packed 64-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
 */
@@ -15268,6 +15246,7 @@ static inline __m128i _mm512_cvtusepi64_epi8_dbg(__m512i a)
   for (int j = 0; j <= 7; j++) {
     dst_vec[j] = Saturate_UnsignedInt64_To_Int8(a_vec[j]);
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -15292,12 +15271,12 @@ static inline __m128i _mm512_mask_cvtusepi64_epi8_dbg(__m128i src, __mmask8 k, _
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm512_mask_cvtusepi64_epi8
 #define _mm512_mask_cvtusepi64_epi8 _mm512_mask_cvtusepi64_epi8_dbg
-
 
 /*
  Convert packed unsigned 64-bit integers in "a" to packed unsigned 8-bit integers with unsigned saturation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
@@ -15314,12 +15293,12 @@ static inline __m128i _mm512_maskz_cvtusepi64_epi8_dbg(__mmask8 k, __m512i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm512_maskz_cvtusepi64_epi8
 #define _mm512_maskz_cvtusepi64_epi8 _mm512_maskz_cvtusepi64_epi8_dbg
-
 
 /*
  Convert packed unsigned 64-bit integers in "a" to packed unsigned 32-bit integers with unsigned saturation, and store the results in "dst".
@@ -15337,7 +15316,6 @@ static inline __m256i _mm512_cvtusepi64_epi32_dbg(__m512i a)
 
 #undef _mm512_cvtusepi64_epi32
 #define _mm512_cvtusepi64_epi32 _mm512_cvtusepi64_epi32_dbg
-
 
 /*
  Convert packed unsigned 64-bit integers in "a" to packed unsigned 32-bit integers with unsigned saturation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -15512,13 +15490,12 @@ static inline __m512i _mm512_maskz_cvtepu8_epi32_dbg(__mmask16 k, __m128i a)
 #undef _mm512_maskz_cvtepu8_epi32
 #define _mm512_maskz_cvtepu8_epi32 _mm512_maskz_cvtepu8_epi32_dbg
 
-
 /*
- Zero extend packed unsigned 8-bit integers in the low 8 byte sof "a" to packed 64-bit integers, and store the results in "dst".
+ Zero extend packed unsigned 8-bit integers in the low 8 bytes of "a" to packed 64-bit integers, and store the results in "dst".
 */
 static inline __m512i _mm512_cvtepu8_epi64_dbg(__m128i a)
 {
-  int8_t a_vec[16];
+  uint8_t a_vec[16];
   _mm_storeu_si128((void*)a_vec, a);
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -15530,7 +15507,6 @@ static inline __m512i _mm512_cvtepu8_epi64_dbg(__m128i a)
 #undef _mm512_cvtepu8_epi64
 #define _mm512_cvtepu8_epi64 _mm512_cvtepu8_epi64_dbg
 
-
 /*
  Zero extend packed unsigned 8-bit integers in the low 8 bytes of "a" to packed 64-bit integers, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -15538,7 +15514,7 @@ static inline __m512i _mm512_mask_cvtepu8_epi64_dbg(__m512i src, __mmask8 k, __m
 {
   int64_t src_vec[8];
   _mm512_storeu_si512((void*)src_vec, src);
-  int8_t a_vec[16];
+  uint8_t a_vec[16];
   _mm_storeu_si128((void*)a_vec, a);
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -15554,13 +15530,12 @@ static inline __m512i _mm512_mask_cvtepu8_epi64_dbg(__m512i src, __mmask8 k, __m
 #undef _mm512_mask_cvtepu8_epi64
 #define _mm512_mask_cvtepu8_epi64 _mm512_mask_cvtepu8_epi64_dbg
 
-
 /*
  Zero extend packed unsigned 8-bit integers in the low 8 bytes of "a" to packed 64-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
 */
 static inline __m512i _mm512_maskz_cvtepu8_epi64_dbg(__mmask8 k, __m128i a)
 {
-  int8_t a_vec[16];
+  uint8_t a_vec[16];
   _mm_storeu_si128((void*)a_vec, a);
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -15576,13 +15551,12 @@ static inline __m512i _mm512_maskz_cvtepu8_epi64_dbg(__mmask8 k, __m128i a)
 #undef _mm512_maskz_cvtepu8_epi64
 #define _mm512_maskz_cvtepu8_epi64 _mm512_maskz_cvtepu8_epi64_dbg
 
-
 /*
  Zero extend packed unsigned 32-bit integers in "a" to packed 64-bit integers, and store the results in "dst".
 */
 static inline __m512i _mm512_cvtepu32_epi64_dbg(__m256i a)
 {
-  int32_t a_vec[8];
+  uint32_t a_vec[8];
   _mm256_storeu_si256((void*)a_vec, a);
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -15594,7 +15568,6 @@ static inline __m512i _mm512_cvtepu32_epi64_dbg(__m256i a)
 #undef _mm512_cvtepu32_epi64
 #define _mm512_cvtepu32_epi64 _mm512_cvtepu32_epi64_dbg
 
-
 /*
  Zero extend packed unsigned 32-bit integers in "a" to packed 64-bit integers, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -15602,7 +15575,7 @@ static inline __m512i _mm512_mask_cvtepu32_epi64_dbg(__m512i src, __mmask8 k, __
 {
   int64_t src_vec[8];
   _mm512_storeu_si512((void*)src_vec, src);
-  int32_t a_vec[8];
+  uint32_t a_vec[8];
   _mm256_storeu_si256((void*)a_vec, a);
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -15618,13 +15591,12 @@ static inline __m512i _mm512_mask_cvtepu32_epi64_dbg(__m512i src, __mmask8 k, __
 #undef _mm512_mask_cvtepu32_epi64
 #define _mm512_mask_cvtepu32_epi64 _mm512_mask_cvtepu32_epi64_dbg
 
-
 /*
  Zero extend packed unsigned 32-bit integers in "a" to packed 64-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
 static inline __m512i _mm512_maskz_cvtepu32_epi64_dbg(__mmask8 k, __m256i a)
 {
-  int32_t a_vec[8];
+  uint32_t a_vec[8];
   _mm256_storeu_si256((void*)a_vec, a);
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -15640,13 +15612,12 @@ static inline __m512i _mm512_maskz_cvtepu32_epi64_dbg(__mmask8 k, __m256i a)
 #undef _mm512_maskz_cvtepu32_epi64
 #define _mm512_maskz_cvtepu32_epi64 _mm512_maskz_cvtepu32_epi64_dbg
 
-
 /*
  Zero extend packed unsigned 16-bit integers in "a" to packed 32-bit integers, and store the results in "dst".
 */
 static inline __m512i _mm512_cvtepu16_epi32_dbg(__m256i a)
 {
-  int16_t a_vec[16];
+  uint16_t a_vec[16];
   _mm256_storeu_si256((void*)a_vec, a);
   int32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
@@ -15658,7 +15629,6 @@ static inline __m512i _mm512_cvtepu16_epi32_dbg(__m256i a)
 #undef _mm512_cvtepu16_epi32
 #define _mm512_cvtepu16_epi32 _mm512_cvtepu16_epi32_dbg
 
-
 /*
  Zero extend packed unsigned 16-bit integers in "a" to packed 32-bit integers, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -15666,7 +15636,7 @@ static inline __m512i _mm512_mask_cvtepu16_epi32_dbg(__m512i src, __mmask16 k, _
 {
   int32_t src_vec[16];
   _mm512_storeu_si512((void*)src_vec, src);
-  int16_t a_vec[16];
+  uint16_t a_vec[16];
   _mm256_storeu_si256((void*)a_vec, a);
   int32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
@@ -15682,13 +15652,12 @@ static inline __m512i _mm512_mask_cvtepu16_epi32_dbg(__m512i src, __mmask16 k, _
 #undef _mm512_mask_cvtepu16_epi32
 #define _mm512_mask_cvtepu16_epi32 _mm512_mask_cvtepu16_epi32_dbg
 
-
 /*
  Zero extend packed unsigned 16-bit integers in "a" to packed 32-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
 static inline __m512i _mm512_maskz_cvtepu16_epi32_dbg(__mmask16 k, __m256i a)
 {
-  int16_t a_vec[16];
+  uint16_t a_vec[16];
   _mm256_storeu_si256((void*)a_vec, a);
   int32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
@@ -15704,13 +15673,12 @@ static inline __m512i _mm512_maskz_cvtepu16_epi32_dbg(__mmask16 k, __m256i a)
 #undef _mm512_maskz_cvtepu16_epi32
 #define _mm512_maskz_cvtepu16_epi32 _mm512_maskz_cvtepu16_epi32_dbg
 
-
 /*
  Zero extend packed unsigned 16-bit integers in "a" to packed 64-bit integers, and store the results in "dst".
 */
 static inline __m512i _mm512_cvtepu16_epi64_dbg(__m128i a)
 {
-  int16_t a_vec[8];
+  uint16_t a_vec[8];
   _mm_storeu_si128((void*)a_vec, a);
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -15722,7 +15690,6 @@ static inline __m512i _mm512_cvtepu16_epi64_dbg(__m128i a)
 #undef _mm512_cvtepu16_epi64
 #define _mm512_cvtepu16_epi64 _mm512_cvtepu16_epi64_dbg
 
-
 /*
  Zero extend packed unsigned 16-bit integers in "a" to packed 64-bit integers, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -15730,7 +15697,7 @@ static inline __m512i _mm512_mask_cvtepu16_epi64_dbg(__m512i src, __mmask8 k, __
 {
   int64_t src_vec[8];
   _mm512_storeu_si512((void*)src_vec, src);
-  int16_t a_vec[8];
+  uint16_t a_vec[8];
   _mm_storeu_si128((void*)a_vec, a);
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -15746,13 +15713,12 @@ static inline __m512i _mm512_mask_cvtepu16_epi64_dbg(__m512i src, __mmask8 k, __
 #undef _mm512_mask_cvtepu16_epi64
 #define _mm512_mask_cvtepu16_epi64 _mm512_mask_cvtepu16_epi64_dbg
 
-
 /*
  Zero extend packed unsigned 16-bit integers in "a" to packed 64-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
 */
 static inline __m512i _mm512_maskz_cvtepu16_epi64_dbg(__mmask8 k, __m128i a)
 {
-  int16_t a_vec[8];
+  uint16_t a_vec[8];
   _mm_storeu_si128((void*)a_vec, a);
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -15768,7 +15734,6 @@ static inline __m512i _mm512_maskz_cvtepu16_epi64_dbg(__mmask8 k, __m128i a)
 #undef _mm512_maskz_cvtepu16_epi64
 #define _mm512_maskz_cvtepu16_epi64 _mm512_maskz_cvtepu16_epi64_dbg
 
-
 /*
  Multiply the low 32-bit integers from each packed 64-bit element in "a" and "b", and store the signed 64-bit results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -15783,7 +15748,7 @@ static inline __m512i _mm512_mask_mul_epi32_dbg(__m512i src, __mmask8 k, __m512i
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[j] * b_vec[j];
+      dst_vec[j] = a_vec[j*2] * b_vec[j*2];
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -15807,7 +15772,7 @@ static inline __m512i _mm512_maskz_mul_epi32_dbg(__mmask8 k, __m512i a, __m512i 
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[j] * b_vec[j];
+      dst_vec[j] = a_vec[j*2] * b_vec[j*2];
     } else {
       dst_vec[j] = 0;
     }
@@ -15830,7 +15795,7 @@ static inline __m512i _mm512_mul_epi32_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)b_vec, b);
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
-    dst_vec[j] = a_vec[j] * b_vec[j];
+    dst_vec[j] = a_vec[j*2] * b_vec[j*2];
   }
   return _mm512_loadu_si512((void*)dst_vec);
 }
@@ -15844,16 +15809,16 @@ static inline __m512i _mm512_mul_epi32_dbg(__m512i a, __m512i b)
 */
 static inline __m512i _mm512_mask_mul_epu32_dbg(__m512i src, __mmask8 k, __m512i a, __m512i b)
 {
-  int64_t src_vec[8];
+  uint64_t src_vec[8];
   _mm512_storeu_si512((void*)src_vec, src);
-  int32_t a_vec[16];
+  uint32_t a_vec[16];
   _mm512_storeu_si512((void*)a_vec, a);
-  int32_t b_vec[16];
+  uint32_t b_vec[16];
   _mm512_storeu_si512((void*)b_vec, b);
-  int64_t dst_vec[8];
+  uint64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[j] * b_vec[j];
+      dst_vec[j] = a_vec[j*2] * b_vec[j*2];
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -15870,14 +15835,14 @@ static inline __m512i _mm512_mask_mul_epu32_dbg(__m512i src, __mmask8 k, __m512i
 */
 static inline __m512i _mm512_maskz_mul_epu32_dbg(__mmask8 k, __m512i a, __m512i b)
 {
-  int32_t a_vec[16];
+  uint32_t a_vec[16];
   _mm512_storeu_si512((void*)a_vec, a);
-  int32_t b_vec[16];
+  uint32_t b_vec[16];
   _mm512_storeu_si512((void*)b_vec, b);
-  int64_t dst_vec[8];
+  uint64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[j] * b_vec[j];
+      dst_vec[j] = a_vec[j*2] * b_vec[j*2];
     } else {
       dst_vec[j] = 0;
     }
@@ -15894,13 +15859,13 @@ static inline __m512i _mm512_maskz_mul_epu32_dbg(__mmask8 k, __m512i a, __m512i 
 */
 static inline __m512i _mm512_mul_epu32_dbg(__m512i a, __m512i b)
 {
-  int32_t a_vec[16];
+  uint32_t a_vec[16];
   _mm512_storeu_si512((void*)a_vec, a);
-  int32_t b_vec[16];
+  uint32_t b_vec[16];
   _mm512_storeu_si512((void*)b_vec, b);
-  int64_t dst_vec[8];
+  uint64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
-    dst_vec[j] = a_vec[j] * b_vec[j];
+    dst_vec[j] = a_vec[j*2] * b_vec[j*2];
   }
   return _mm512_loadu_si512((void*)dst_vec);
 }
@@ -17066,7 +17031,7 @@ static inline __mmask16 _mm512_mask_testn_epi32_mask_dbg(__mmask16 k1, __m512i a
   _mm512_storeu_si512((void*)a_vec, a);
   int32_t b_vec[16];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (((a_vec[j] & b_vec[j]) == 0) ? 1 : 0) << j;
@@ -17090,7 +17055,7 @@ static inline __mmask16 _mm512_testn_epi32_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int32_t b_vec[16];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (((a_vec[j] & b_vec[j]) == 0) ? 1 : 0) << j;
   }
@@ -18909,22 +18874,22 @@ static inline __m512 _mm512_set1_ps_dbg(float a)
 static inline __m512i _mm512_set4_epi32_dbg(int d, int c, int b, int a)
 {
   int32_t dst_vec[16];
-  dst_vec[0] = d;
-  dst_vec[1] = c;
-  dst_vec[2] = b;
-  dst_vec[3] = a;
-  dst_vec[4] = d;
-  dst_vec[5] = c;
-  dst_vec[6] = b;
-  dst_vec[7] = a;
-  dst_vec[8] = d;
-  dst_vec[9] = c;
-  dst_vec[10] = b;
-  dst_vec[11] = a;
-  dst_vec[12] = d;
-  dst_vec[13] = c;
-  dst_vec[14] = b;
-  dst_vec[15] = a;
+  dst_vec[0] = a;
+  dst_vec[1] = b;
+  dst_vec[2] = c;
+  dst_vec[3] = d;
+  dst_vec[4] = a;
+  dst_vec[5] = b;
+  dst_vec[6] = c;
+  dst_vec[7] = d;
+  dst_vec[8] = a;
+  dst_vec[9] = b;
+  dst_vec[10] = c;
+  dst_vec[11] = d;
+  dst_vec[12] = a;
+  dst_vec[13] = b;
+  dst_vec[14] = c;
+  dst_vec[15] = d;
   return _mm512_loadu_si512((void*)dst_vec);
 }
 
@@ -18938,14 +18903,14 @@ static inline __m512i _mm512_set4_epi32_dbg(int d, int c, int b, int a)
 static inline __m512i _mm512_set4_epi64_dbg(int64_t d, int64_t c, int64_t b, int64_t a)
 {
   int64_t dst_vec[8];
-  dst_vec[0] = d;
-  dst_vec[1] = c;
-  dst_vec[2] = b;
-  dst_vec[3] = a;
-  dst_vec[4] = d;
-  dst_vec[5] = c;
-  dst_vec[6] = b;
-  dst_vec[7] = a;
+  dst_vec[0] = a;
+  dst_vec[1] = b;
+  dst_vec[2] = c;
+  dst_vec[3] = d;
+  dst_vec[4] = a;
+  dst_vec[5] = b;
+  dst_vec[6] = c;
+  dst_vec[7] = d;
   return _mm512_loadu_si512((void*)dst_vec);
 }
 
@@ -18959,14 +18924,14 @@ static inline __m512i _mm512_set4_epi64_dbg(int64_t d, int64_t c, int64_t b, int
 static inline __m512d _mm512_set4_pd_dbg(double d, double c, double b, double a)
 {
   double dst_vec[8];
-  dst_vec[0] = d;
-  dst_vec[1] = c;
-  dst_vec[2] = b;
-  dst_vec[3] = a;
-  dst_vec[4] = d;
-  dst_vec[5] = c;
-  dst_vec[6] = b;
-  dst_vec[7] = a;
+  dst_vec[0] = a;
+  dst_vec[1] = b;
+  dst_vec[2] = c;
+  dst_vec[3] = d;
+  dst_vec[4] = a;
+  dst_vec[5] = b;
+  dst_vec[6] = c;
+  dst_vec[7] = d;
   return _mm512_loadu_pd((void*)dst_vec);
 }
 
@@ -18980,22 +18945,22 @@ static inline __m512d _mm512_set4_pd_dbg(double d, double c, double b, double a)
 static inline __m512 _mm512_set4_ps_dbg(float d, float c, float b, float a)
 {
   float dst_vec[16];
-  dst_vec[0] = d;
-  dst_vec[1] = c;
-  dst_vec[2] = b;
-  dst_vec[3] = a;
-  dst_vec[4] = d;
-  dst_vec[5] = c;
-  dst_vec[6] = b;
-  dst_vec[7] = a;
-  dst_vec[8] = d;
-  dst_vec[9] = c;
-  dst_vec[10] = b;
-  dst_vec[11] = a;
-  dst_vec[12] = d;
-  dst_vec[13] = c;
-  dst_vec[14] = b;
-  dst_vec[15] = a;
+  dst_vec[0] = a;
+  dst_vec[1] = b;
+  dst_vec[2] = c;
+  dst_vec[3] = d;
+  dst_vec[4] = a;
+  dst_vec[5] = b;
+  dst_vec[6] = c;
+  dst_vec[7] = d;
+  dst_vec[8] = a;
+  dst_vec[9] = b;
+  dst_vec[10] = c;
+  dst_vec[11] = d;
+  dst_vec[12] = a;
+  dst_vec[13] = b;
+  dst_vec[14] = c;
+  dst_vec[15] = d;
   return _mm512_loadu_ps((void*)dst_vec);
 }
 
@@ -19231,22 +19196,22 @@ static inline __m512 _mm512_set_ps_dbg(float e15, float e14, float e13, float e1
 static inline __m512i _mm512_setr4_epi32_dbg(int d, int c, int b, int a)
 {
   int32_t dst_vec[16];
-  dst_vec[0] = a;
-  dst_vec[1] = b;
-  dst_vec[2] = c;
-  dst_vec[3] = d;
-  dst_vec[4] = a;
-  dst_vec[5] = b;
-  dst_vec[6] = c;
-  dst_vec[7] = d;
-  dst_vec[8] = a;
-  dst_vec[9] = b;
-  dst_vec[10] = c;
-  dst_vec[11] = d;
-  dst_vec[12] = a;
-  dst_vec[13] = b;
-  dst_vec[14] = c;
-  dst_vec[15] = d;
+  dst_vec[0] = d;
+  dst_vec[1] = c;
+  dst_vec[2] = b;
+  dst_vec[3] = a;
+  dst_vec[4] = d;
+  dst_vec[5] = c;
+  dst_vec[6] = b;
+  dst_vec[7] = a;
+  dst_vec[8] = d;
+  dst_vec[9] = c;
+  dst_vec[10] = b;
+  dst_vec[11] = a;
+  dst_vec[12] = d;
+  dst_vec[13] = c;
+  dst_vec[14] = b;
+  dst_vec[15] = a;
   return _mm512_loadu_si512((void*)dst_vec);
 }
 
@@ -19260,14 +19225,14 @@ static inline __m512i _mm512_setr4_epi32_dbg(int d, int c, int b, int a)
 static inline __m512i _mm512_setr4_epi64_dbg(int64_t d, int64_t c, int64_t b, int64_t a)
 {
   int64_t dst_vec[8];
-  dst_vec[0] = a;
-  dst_vec[1] = b;
-  dst_vec[2] = c;
-  dst_vec[3] = d;
-  dst_vec[4] = a;
-  dst_vec[5] = b;
-  dst_vec[6] = c;
-  dst_vec[7] = d;
+  dst_vec[0] = d;
+  dst_vec[1] = c;
+  dst_vec[2] = b;
+  dst_vec[3] = a;
+  dst_vec[4] = d;
+  dst_vec[5] = c;
+  dst_vec[6] = b;
+  dst_vec[7] = a;
   return _mm512_loadu_si512((void*)dst_vec);
 }
 
@@ -19281,14 +19246,14 @@ static inline __m512i _mm512_setr4_epi64_dbg(int64_t d, int64_t c, int64_t b, in
 static inline __m512d _mm512_setr4_pd_dbg(double d, double c, double b, double a)
 {
   double dst_vec[8];
-  dst_vec[0] = a;
-  dst_vec[1] = b;
-  dst_vec[2] = c;
-  dst_vec[3] = d;
-  dst_vec[4] = a;
-  dst_vec[5] = b;
-  dst_vec[6] = c;
-  dst_vec[7] = d;
+  dst_vec[0] = d;
+  dst_vec[1] = c;
+  dst_vec[2] = b;
+  dst_vec[3] = a;
+  dst_vec[4] = d;
+  dst_vec[5] = c;
+  dst_vec[6] = b;
+  dst_vec[7] = a;
   return _mm512_loadu_pd((void*)dst_vec);
 }
 
@@ -19302,22 +19267,22 @@ static inline __m512d _mm512_setr4_pd_dbg(double d, double c, double b, double a
 static inline __m512 _mm512_setr4_ps_dbg(float d, float c, float b, float a)
 {
   float dst_vec[16];
-  dst_vec[0] = a;
-  dst_vec[1] = b;
-  dst_vec[2] = c;
-  dst_vec[3] = d;
-  dst_vec[4] = a;
-  dst_vec[5] = b;
-  dst_vec[6] = c;
-  dst_vec[7] = d;
-  dst_vec[8] = a;
-  dst_vec[9] = b;
-  dst_vec[10] = c;
-  dst_vec[11] = d;
-  dst_vec[12] = a;
-  dst_vec[13] = b;
-  dst_vec[14] = c;
-  dst_vec[15] = d;
+  dst_vec[0] = d;
+  dst_vec[1] = c;
+  dst_vec[2] = b;
+  dst_vec[3] = a;
+  dst_vec[4] = d;
+  dst_vec[5] = c;
+  dst_vec[6] = b;
+  dst_vec[7] = a;
+  dst_vec[8] = d;
+  dst_vec[9] = c;
+  dst_vec[10] = b;
+  dst_vec[11] = a;
+  dst_vec[12] = d;
+  dst_vec[13] = c;
+  dst_vec[14] = b;
+  dst_vec[15] = a;
   return _mm512_loadu_ps((void*)dst_vec);
 }
 
@@ -19808,7 +19773,7 @@ static inline __m512i _mm512_mask_mullox_epi64_dbg(__m512i src, __mmask8 k, __m5
 */
 static inline float _mm512_cvtss_f32_dbg(__m512 a)
 {
-  int32_t a_vec[16];
+  float a_vec[16];
   _mm512_storeu_ps((void*)a_vec, a);
   float dst;
   dst = a_vec[0];
@@ -22243,12 +22208,12 @@ static inline __m128i _mm_mask_cvtpd_epi32_dbg(__m128i src, __mmask8 k, __m128d 
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm_mask_cvtpd_epi32
 #define _mm_mask_cvtpd_epi32 _mm_mask_cvtpd_epi32_dbg
-
 
 /*
  Convert packed double-precision (64-bit) floating-point elements in "a" to packed 32-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
@@ -22265,6 +22230,7 @@ static inline __m128i _mm_maskz_cvtpd_epi32_dbg(__mmask8 k, __m128d a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -22335,6 +22301,7 @@ static inline __m128 _mm_mask_cvtpd_ps_dbg(__m128 src, __mmask8 k, __m128d a)
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_ps((void*)dst_vec);
 }
 
@@ -22357,6 +22324,7 @@ static inline __m128 _mm_maskz_cvtpd_ps_dbg(__mmask8 k, __m128d a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_ps((void*)dst_vec);
 }
 
@@ -22701,7 +22669,6 @@ static inline __m128i _mm256_maskz_cvtpd_epu32_dbg(__mmask8 k, __m256d a)
 #undef _mm256_maskz_cvtpd_epu32
 #define _mm256_maskz_cvtpd_epu32 _mm256_maskz_cvtpd_epu32_dbg
 
-
 /*
  Convert packed double-precision (64-bit) floating-point elements in "a" to packed unsigned 32-bit integers, and store the results in "dst".
 */
@@ -22713,6 +22680,7 @@ static inline __m128i _mm_cvtpd_epu32_dbg(__m128d a)
   for (int j = 0; j <= 1; j++) {
     dst_vec[j] = Convert_FP64_To_UnsignedInt32(a_vec[j]);
   }
+  for (int j = 2; j <= 4; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -22737,12 +22705,12 @@ static inline __m128i _mm_mask_cvtpd_epu32_dbg(__m128i src, __mmask8 k, __m128d 
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 2; j <= 4; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm_mask_cvtpd_epu32
 #define _mm_mask_cvtpd_epu32 _mm_mask_cvtpd_epu32_dbg
-
 
 /*
  Convert packed double-precision (64-bit) floating-point elements in "a" to packed unsigned 32-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
@@ -22759,12 +22727,12 @@ static inline __m128i _mm_maskz_cvtpd_epu32_dbg(__mmask8 k, __m128d a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 2; j <= 4; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm_maskz_cvtpd_epu32
 #define _mm_maskz_cvtpd_epu32 _mm_maskz_cvtpd_epu32_dbg
-
 
 /*
  Convert packed double-precision (64-bit) floating-point elements in "a" to packed unsigned 64-bit integers, and store the results in "dst".
@@ -22806,7 +22774,6 @@ static inline __m256i _mm256_mask_cvtpd_epu64_dbg(__m256i src, __mmask8 k, __m25
 
 #undef _mm256_mask_cvtpd_epu64
 #define _mm256_mask_cvtpd_epu64 _mm256_mask_cvtpd_epu64_dbg
-
 
 /*
  Convert packed double-precision (64-bit) floating-point elements in "a" to packed unsigned 64-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
@@ -23063,7 +23030,6 @@ static inline __m256i _mm256_mask_cvtps_epi32_dbg(__m256i src, __mmask8 k, __m25
 #undef _mm256_mask_cvtps_epi32
 #define _mm256_mask_cvtps_epi32 _mm256_mask_cvtps_epi32_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 32-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
 */
@@ -23108,7 +23074,6 @@ static inline __m128i _mm_mask_cvtps_epi32_dbg(__m128i src, __mmask8 k, __m128 a
 
 #undef _mm_mask_cvtps_epi32
 #define _mm_mask_cvtps_epi32 _mm_mask_cvtps_epi32_dbg
-
 
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 32-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
@@ -23612,7 +23577,7 @@ static inline __m512i _mm512_cvt_roundps_epu64_dbg(__m256 a, int rounding)
 {
   float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[8];
+  uint64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     dst_vec[j] = Convert_FP32_To_UnsignedInt64_rounding(a_vec[j], rounding);
   }
@@ -23630,7 +23595,7 @@ static inline __m512i _mm512_cvtps_epu64_dbg(__m256 a)
 {
   float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[8];
+  uint64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     dst_vec[j] = Convert_FP32_To_UnsignedInt64(a_vec[j]);
   }
@@ -23656,7 +23621,7 @@ static inline __m512i _mm512_mask_cvt_roundps_epu64_dbg(__m512i src, __mmask8 k,
   _mm512_storeu_si512((void*)src_vec, src);
   float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[8];
+  uint64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP32_To_UnsignedInt64_rounding(a_vec[j], rounding);
@@ -23670,7 +23635,6 @@ static inline __m512i _mm512_mask_cvt_roundps_epu64_dbg(__m512i src, __mmask8 k,
 #undef _mm512_mask_cvt_roundps_epu64
 #define _mm512_mask_cvt_roundps_epu64 _mm512_mask_cvt_roundps_epu64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed unsigned 64-bit integers, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 	
@@ -23681,7 +23645,7 @@ static inline __m512i _mm512_mask_cvtps_epu64_dbg(__m512i src, __mmask8 k, __m25
   _mm512_storeu_si512((void*)src_vec, src);
   float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[8];
+  uint64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP32_To_UnsignedInt64(a_vec[j]);
@@ -23709,7 +23673,7 @@ static inline __m512i _mm512_maskz_cvt_roundps_epu64_dbg(__mmask8 k, __m256 a, i
 {
   float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[8];
+  uint64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP32_To_UnsignedInt64_rounding(a_vec[j], rounding);
@@ -23731,7 +23695,7 @@ static inline __m512i _mm512_maskz_cvtps_epu64_dbg(__mmask8 k, __m256 a)
 {
   float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[8];
+  uint64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP32_To_UnsignedInt64(a_vec[j]);
@@ -23753,7 +23717,7 @@ static inline __m128i _mm_cvtps_epu64_dbg(__m128 a)
 {
   float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[2];
+  uint64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
     dst_vec[j] = Convert_FP32_To_UnsignedInt64(a_vec[j]);
   }
@@ -23774,7 +23738,7 @@ static inline __m128i _mm_mask_cvtps_epu64_dbg(__m128i src, __mmask8 k, __m128 a
   _mm_storeu_si128((void*)src_vec, src);
   float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[2];
+  uint64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP32_To_UnsignedInt64(a_vec[j]);
@@ -23796,7 +23760,7 @@ static inline __m128i _mm_maskz_cvtps_epu64_dbg(__mmask8 k, __m128 a)
 {
   float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[2];
+  uint64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP32_To_UnsignedInt64(a_vec[j]);
@@ -24306,6 +24270,7 @@ static inline __m128 _mm_cvtepi64_ps_dbg(__m128i a)
   for (int j = 0; j <= 1; j++) {
     dst_vec[j] = Convert_Int64_To_FP32(a_vec[j]);
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_ps((void*)dst_vec);
 }
 
@@ -24330,6 +24295,7 @@ static inline __m128 _mm_mask_cvtepi64_ps_dbg(__m128 src, __mmask8 k, __m128i a)
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_ps((void*)dst_vec);
 }
 
@@ -24352,12 +24318,12 @@ static inline __m128 _mm_maskz_cvtepi64_ps_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_ps((void*)dst_vec);
 }
 
 #undef _mm_maskz_cvtepi64_ps
 #define _mm_maskz_cvtepi64_ps _mm_maskz_cvtepi64_ps_dbg
-
 
 /*
  Convert packed double-precision (64-bit) floating-point elements in "a" to packed 32-bit integers with truncation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -24422,6 +24388,7 @@ static inline __m128i _mm_mask_cvttpd_epi32_dbg(__m128i src, __mmask8 k, __m128d
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -24444,6 +24411,7 @@ static inline __m128i _mm_maskz_cvttpd_epi32_dbg(__mmask8 k, __m128d a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -24787,6 +24755,7 @@ static inline __m128i _mm_cvttpd_epu32_dbg(__m128d a)
   for (int j = 0; j <= 1; j++) {
     dst_vec[j] = Convert_FP64_To_UnsignedInt32_Truncate(a_vec[j]);
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -24811,6 +24780,7 @@ static inline __m128i _mm_mask_cvttpd_epu32_dbg(__m128i src, __mmask8 k, __m128d
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -24833,6 +24803,7 @@ static inline __m128i _mm_maskz_cvttpd_epu32_dbg(__mmask8 k, __m128d a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -25108,7 +25079,7 @@ static inline __m256i _mm256_mask_cvttps_epi32_dbg(__m256i src, __mmask8 k, __m2
 {
   int32_t src_vec[8];
   _mm256_storeu_si256((void*)src_vec, src);
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
   int32_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -25124,21 +25095,19 @@ static inline __m256i _mm256_mask_cvttps_epi32_dbg(__m256i src, __mmask8 k, __m2
 #undef _mm256_mask_cvttps_epi32
 #define _mm256_mask_cvttps_epi32 _mm256_mask_cvttps_epi32_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 32-bit integers with truncation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
 static inline __m256i _mm256_maskz_cvttps_epi32_dbg(__mmask8 k, __m256 a)
 {
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
   int32_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
-    int i = 32*i;
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[(i)/32] = Convert_FP32_To_IntegerTruncate(a_vec[(i)/32]);
+      dst_vec[j] = Convert_FP32_To_IntegerTruncate(a_vec[j]);
     } else {
-      dst_vec[(i)/32] = 0;
+      dst_vec[j] = 0;
     }
   }
   return _mm256_loadu_si256((void*)dst_vec);
@@ -25155,7 +25124,7 @@ static inline __m128i _mm_mask_cvttps_epi32_dbg(__m128i src, __mmask8 k, __m128 
 {
   int32_t src_vec[4];
   _mm_storeu_si128((void*)src_vec, src);
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int32_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
@@ -25171,21 +25140,19 @@ static inline __m128i _mm_mask_cvttps_epi32_dbg(__m128i src, __mmask8 k, __m128 
 #undef _mm_mask_cvttps_epi32
 #define _mm_mask_cvttps_epi32 _mm_mask_cvttps_epi32_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 32-bit integers with truncation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
 static inline __m128i _mm_maskz_cvttps_epi32_dbg(__mmask8 k, __m128 a)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int32_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
-    int i = 32*i;
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[(i)/32] = Convert_FP32_To_IntegerTruncate(a_vec[(i)/32]);
+      dst_vec[j] = Convert_FP32_To_IntegerTruncate(a_vec[j]);
     } else {
-      dst_vec[(i)/32] = 0;
+      dst_vec[j] = 0;
     }
   }
   return _mm_loadu_si128((void*)dst_vec);
@@ -25194,13 +25161,12 @@ static inline __m128i _mm_maskz_cvttps_epi32_dbg(__mmask8 k, __m128 a)
 #undef _mm_maskz_cvttps_epi32
 #define _mm_maskz_cvttps_epi32 _mm_maskz_cvttps_epi32_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 64-bit integers with truncation, and store the results in "dst".
 */
 static inline __m256i _mm256_cvttps_epi64_dbg(__m128 a)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
@@ -25212,7 +25178,6 @@ static inline __m256i _mm256_cvttps_epi64_dbg(__m128 a)
 #undef _mm256_cvttps_epi64
 #define _mm256_cvttps_epi64 _mm256_cvttps_epi64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 64-bit integers with truncation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -25220,7 +25185,7 @@ static inline __m256i _mm256_mask_cvttps_epi64_dbg(__m256i src, __mmask8 k, __m1
 {
   int64_t src_vec[4];
   _mm256_storeu_si256((void*)src_vec, src);
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
@@ -25236,13 +25201,12 @@ static inline __m256i _mm256_mask_cvttps_epi64_dbg(__m256i src, __mmask8 k, __m1
 #undef _mm256_mask_cvttps_epi64
 #define _mm256_mask_cvttps_epi64 _mm256_mask_cvttps_epi64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 64-bit integers with truncation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
 static inline __m256i _mm256_maskz_cvttps_epi64_dbg(__mmask8 k, __m128 a)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
@@ -25258,13 +25222,12 @@ static inline __m256i _mm256_maskz_cvttps_epi64_dbg(__mmask8 k, __m128 a)
 #undef _mm256_maskz_cvttps_epi64
 #define _mm256_maskz_cvttps_epi64 _mm256_maskz_cvttps_epi64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 64-bit integers with truncation, and store the results in "dst". Pass __MM_FROUND_NO_EXC to "sae" to suppress all exceptions.
 */
 static inline __m512i _mm512_cvtt_roundps_epi64_dbg(__m256 a, int sae)
 {
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -25276,13 +25239,12 @@ static inline __m512i _mm512_cvtt_roundps_epi64_dbg(__m256 a, int sae)
 #undef _mm512_cvtt_roundps_epi64
 #define _mm512_cvtt_roundps_epi64 _mm512_cvtt_roundps_epi64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 64-bit integers with truncation, and store the results in "dst".
 */
 static inline __m512i _mm512_cvttps_epi64_dbg(__m256 a)
 {
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -25294,7 +25256,6 @@ static inline __m512i _mm512_cvttps_epi64_dbg(__m256 a)
 #undef _mm512_cvttps_epi64
 #define _mm512_cvttps_epi64 _mm512_cvttps_epi64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 64-bit integers with truncation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 	Pass __MM_FROUND_NO_EXC to "sae" to suppress all exceptions.
@@ -25304,7 +25265,7 @@ static inline __m512i _mm512_mask_cvtt_roundps_epi64_dbg(__m512i src, __mmask8 k
 {
   int64_t src_vec[8];
   _mm512_storeu_si512((void*)src_vec, src);
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -25320,7 +25281,6 @@ static inline __m512i _mm512_mask_cvtt_roundps_epi64_dbg(__m512i src, __mmask8 k
 #undef _mm512_mask_cvtt_roundps_epi64
 #define _mm512_mask_cvtt_roundps_epi64 _mm512_mask_cvtt_roundps_epi64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 64-bit integers with truncation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -25328,7 +25288,7 @@ static inline __m512i _mm512_mask_cvttps_epi64_dbg(__m512i src, __mmask8 k, __m2
 {
   int64_t src_vec[8];
   _mm512_storeu_si512((void*)src_vec, src);
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -25344,14 +25304,13 @@ static inline __m512i _mm512_mask_cvttps_epi64_dbg(__m512i src, __mmask8 k, __m2
 #undef _mm512_mask_cvttps_epi64
 #define _mm512_mask_cvttps_epi64 _mm512_mask_cvttps_epi64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 64-bit integers with truncation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). Pass __MM_FROUND_NO_EXC to "sae" to suppress all exceptions.
 	
 */
 static inline __m512i _mm512_maskz_cvtt_roundps_epi64_dbg(__mmask8 k, __m256 a, int sae)
 {
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -25367,13 +25326,12 @@ static inline __m512i _mm512_maskz_cvtt_roundps_epi64_dbg(__mmask8 k, __m256 a, 
 #undef _mm512_maskz_cvtt_roundps_epi64
 #define _mm512_maskz_cvtt_roundps_epi64 _mm512_maskz_cvtt_roundps_epi64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 64-bit integers with truncation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
 static inline __m512i _mm512_maskz_cvttps_epi64_dbg(__mmask8 k, __m256 a)
 {
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
   int64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -25389,13 +25347,12 @@ static inline __m512i _mm512_maskz_cvttps_epi64_dbg(__mmask8 k, __m256 a)
 #undef _mm512_maskz_cvttps_epi64
 #define _mm512_maskz_cvttps_epi64 _mm512_maskz_cvttps_epi64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 64-bit integers with truncation, and store the results in "dst".
 */
 static inline __m128i _mm_cvttps_epi64_dbg(__m128 a)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
@@ -25407,7 +25364,6 @@ static inline __m128i _mm_cvttps_epi64_dbg(__m128 a)
 #undef _mm_cvttps_epi64
 #define _mm_cvttps_epi64 _mm_cvttps_epi64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 64-bit integers with truncation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -25415,7 +25371,7 @@ static inline __m128i _mm_mask_cvttps_epi64_dbg(__m128i src, __mmask8 k, __m128 
 {
   int64_t src_vec[2];
   _mm_storeu_si128((void*)src_vec, src);
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
@@ -25431,13 +25387,12 @@ static inline __m128i _mm_mask_cvttps_epi64_dbg(__m128i src, __mmask8 k, __m128 
 #undef _mm_mask_cvttps_epi64
 #define _mm_mask_cvttps_epi64 _mm_mask_cvttps_epi64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed 64-bit integers with truncation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
 static inline __m128i _mm_maskz_cvttps_epi64_dbg(__mmask8 k, __m128 a)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
   int64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
@@ -25459,9 +25414,9 @@ static inline __m128i _mm_maskz_cvttps_epi64_dbg(__mmask8 k, __m128 a)
 */
 static inline __m256i _mm256_cvttps_epu32_dbg(__m256 a)
 {
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[8];
+  uint32_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     dst_vec[j] = Convert_FP32_To_UnsignedInt32_Truncate(a_vec[j]);
   }
@@ -25471,7 +25426,6 @@ static inline __m256i _mm256_cvttps_epu32_dbg(__m256 a)
 #undef _mm256_cvttps_epu32
 #define _mm256_cvttps_epu32 _mm256_cvttps_epu32_dbg
 
-
 /*
  Convert packed double-precision (32-bit) floating-point elements in "a" to packed unsigned 32-bit integers with truncation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -25479,9 +25433,9 @@ static inline __m256i _mm256_mask_cvttps_epu32_dbg(__m256i src, __mmask8 k, __m2
 {
   int32_t src_vec[8];
   _mm256_storeu_si256((void*)src_vec, src);
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[8];
+  uint32_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP64_To_UnsignedInt32_Truncate(a_vec[j]);
@@ -25495,15 +25449,14 @@ static inline __m256i _mm256_mask_cvttps_epu32_dbg(__m256i src, __mmask8 k, __m2
 #undef _mm256_mask_cvttps_epu32
 #define _mm256_mask_cvttps_epu32 _mm256_mask_cvttps_epu32_dbg
 
-
 /*
  Convert packed double-precision (32-bit) floating-point elements in "a" to packed unsigned 32-bit integers with truncation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
 static inline __m256i _mm256_maskz_cvttps_epu32_dbg(__mmask8 k, __m256 a)
 {
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[8];
+  uint32_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP64_To_UnsignedInt32_Truncate(a_vec[j]);
@@ -25517,15 +25470,14 @@ static inline __m256i _mm256_maskz_cvttps_epu32_dbg(__mmask8 k, __m256 a)
 #undef _mm256_maskz_cvttps_epu32
 #define _mm256_maskz_cvttps_epu32 _mm256_maskz_cvttps_epu32_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed unsigned 32-bit integers with truncation, and store the results in "dst".
 */
 static inline __m128i _mm_cvttps_epu32_dbg(__m128 a)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[4];
+  uint32_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
     dst_vec[j] = Convert_FP32_To_UnsignedInt32_Truncate(a_vec[j]);
   }
@@ -25535,7 +25487,6 @@ static inline __m128i _mm_cvttps_epu32_dbg(__m128 a)
 #undef _mm_cvttps_epu32
 #define _mm_cvttps_epu32 _mm_cvttps_epu32_dbg
 
-
 /*
  Convert packed double-precision (32-bit) floating-point elements in "a" to packed unsigned 32-bit integers with truncation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -25543,9 +25494,9 @@ static inline __m128i _mm_mask_cvttps_epu32_dbg(__m128i src, __mmask8 k, __m128 
 {
   int32_t src_vec[4];
   _mm_storeu_si128((void*)src_vec, src);
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[4];
+  uint32_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP64_To_UnsignedInt32_Truncate(a_vec[j]);
@@ -25559,15 +25510,14 @@ static inline __m128i _mm_mask_cvttps_epu32_dbg(__m128i src, __mmask8 k, __m128 
 #undef _mm_mask_cvttps_epu32
 #define _mm_mask_cvttps_epu32 _mm_mask_cvttps_epu32_dbg
 
-
 /*
  Convert packed double-precision (32-bit) floating-point elements in "a" to packed unsigned 32-bit integers with truncation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
 static inline __m128i _mm_maskz_cvttps_epu32_dbg(__mmask8 k, __m128 a)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int32_t dst_vec[4];
+  uint32_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP64_To_UnsignedInt32_Truncate(a_vec[j]);
@@ -25581,15 +25531,14 @@ static inline __m128i _mm_maskz_cvttps_epu32_dbg(__mmask8 k, __m128 a)
 #undef _mm_maskz_cvttps_epu32
 #define _mm_maskz_cvttps_epu32 _mm_maskz_cvttps_epu32_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed unsigned 64-bit integers with truncation, and store the results in "dst".
 */
 static inline __m256i _mm256_cvttps_epu64_dbg(__m128 a)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[4];
+  uint64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
     dst_vec[j] = Convert_FP32_To_UnsignedInt64_Truncate(a_vec[j]);
   }
@@ -25599,7 +25548,6 @@ static inline __m256i _mm256_cvttps_epu64_dbg(__m128 a)
 #undef _mm256_cvttps_epu64
 #define _mm256_cvttps_epu64 _mm256_cvttps_epu64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed unsigned 64-bit integers with truncation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -25607,9 +25555,9 @@ static inline __m256i _mm256_mask_cvttps_epu64_dbg(__m256i src, __mmask8 k, __m1
 {
   int64_t src_vec[4];
   _mm256_storeu_si256((void*)src_vec, src);
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[4];
+  uint64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP32_To_UnsignedInt64_Truncate(a_vec[j]);
@@ -25623,16 +25571,15 @@ static inline __m256i _mm256_mask_cvttps_epu64_dbg(__m256i src, __mmask8 k, __m1
 #undef _mm256_mask_cvttps_epu64
 #define _mm256_mask_cvttps_epu64 _mm256_mask_cvttps_epu64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed unsigned 64-bit integers with truncation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 	
 */
 static inline __m256i _mm256_maskz_cvttps_epu64_dbg(__mmask8 k, __m128 a)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[4];
+  uint64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP32_To_UnsignedInt64_Truncate(a_vec[j]);
@@ -25646,15 +25593,14 @@ static inline __m256i _mm256_maskz_cvttps_epu64_dbg(__mmask8 k, __m128 a)
 #undef _mm256_maskz_cvttps_epu64
 #define _mm256_maskz_cvttps_epu64 _mm256_maskz_cvttps_epu64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed unsigned 64-bit integers with truncation, and store the results in "dst". Pass __MM_FROUND_NO_EXC to "sae" to suppress all exceptions.
 */
 static inline __m512i _mm512_cvtt_roundps_epu64_dbg(__m256 a, int sae)
 {
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[8];
+  uint64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     dst_vec[j] = Convert_FP32_To_UnsignedInt64_Truncate(a_vec[j]);
   }
@@ -25664,15 +25610,14 @@ static inline __m512i _mm512_cvtt_roundps_epu64_dbg(__m256 a, int sae)
 #undef _mm512_cvtt_roundps_epu64
 #define _mm512_cvtt_roundps_epu64 _mm512_cvtt_roundps_epu64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed unsigned 64-bit integers with truncation, and store the results in "dst".
 */
 static inline __m512i _mm512_cvttps_epu64_dbg(__m256 a)
 {
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[8];
+  uint64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     dst_vec[j] = Convert_FP32_To_UnsignedInt64_Truncate(a_vec[j]);
   }
@@ -25681,7 +25626,6 @@ static inline __m512i _mm512_cvttps_epu64_dbg(__m256 a)
 
 #undef _mm512_cvttps_epu64
 #define _mm512_cvttps_epu64 _mm512_cvttps_epu64_dbg
-
 
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed unsigned 64-bit integers with truncation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -25692,9 +25636,9 @@ static inline __m512i _mm512_mask_cvtt_roundps_epu64_dbg(__m512i src, __mmask8 k
 {
   int64_t src_vec[8];
   _mm512_storeu_si512((void*)src_vec, src);
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[8];
+  uint64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP32_To_UnsignedInt64_Truncate(a_vec[j]);
@@ -25708,7 +25652,6 @@ static inline __m512i _mm512_mask_cvtt_roundps_epu64_dbg(__m512i src, __mmask8 k
 #undef _mm512_mask_cvtt_roundps_epu64
 #define _mm512_mask_cvtt_roundps_epu64 _mm512_mask_cvtt_roundps_epu64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed unsigned 64-bit integers with truncation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -25716,9 +25659,9 @@ static inline __m512i _mm512_mask_cvttps_epu64_dbg(__m512i src, __mmask8 k, __m2
 {
   int64_t src_vec[8];
   _mm512_storeu_si512((void*)src_vec, src);
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[8];
+  uint64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP32_To_UnsignedInt64_Truncate(a_vec[j]);
@@ -25732,16 +25675,15 @@ static inline __m512i _mm512_mask_cvttps_epu64_dbg(__m512i src, __mmask8 k, __m2
 #undef _mm512_mask_cvttps_epu64
 #define _mm512_mask_cvttps_epu64 _mm512_mask_cvttps_epu64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed unsigned 64-bit integers with truncation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). Pass __MM_FROUND_NO_EXC to "sae" to suppress all exceptions.
 	
 */
 static inline __m512i _mm512_maskz_cvtt_roundps_epu64_dbg(__mmask8 k, __m256 a, int sae)
 {
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[8];
+  uint64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP32_To_UnsignedInt64_Truncate(a_vec[j]);
@@ -25755,16 +25697,15 @@ static inline __m512i _mm512_maskz_cvtt_roundps_epu64_dbg(__mmask8 k, __m256 a, 
 #undef _mm512_maskz_cvtt_roundps_epu64
 #define _mm512_maskz_cvtt_roundps_epu64 _mm512_maskz_cvtt_roundps_epu64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed unsigned 64-bit integers with truncation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 	
 */
 static inline __m512i _mm512_maskz_cvttps_epu64_dbg(__mmask8 k, __m256 a)
 {
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[8];
+  uint64_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP32_To_UnsignedInt64_Truncate(a_vec[j]);
@@ -25778,15 +25719,14 @@ static inline __m512i _mm512_maskz_cvttps_epu64_dbg(__mmask8 k, __m256 a)
 #undef _mm512_maskz_cvttps_epu64
 #define _mm512_maskz_cvttps_epu64 _mm512_maskz_cvttps_epu64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed unsigned 64-bit integers with truncation, and store the results in "dst".
 */
 static inline __m128i _mm_cvttps_epu64_dbg(__m128 a)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[2];
+  uint64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
     dst_vec[j] = Convert_FP32_To_UnsignedInt64_Truncate(a_vec[j]);
   }
@@ -25796,7 +25736,6 @@ static inline __m128i _mm_cvttps_epu64_dbg(__m128 a)
 #undef _mm_cvttps_epu64
 #define _mm_cvttps_epu64 _mm_cvttps_epu64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed unsigned 64-bit integers with truncation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -25804,9 +25743,9 @@ static inline __m128i _mm_mask_cvttps_epu64_dbg(__m128i src, __mmask8 k, __m128 
 {
   int64_t src_vec[2];
   _mm_storeu_si128((void*)src_vec, src);
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[2];
+  uint64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP32_To_UnsignedInt64_Truncate(a_vec[j]);
@@ -25820,16 +25759,15 @@ static inline __m128i _mm_mask_cvttps_epu64_dbg(__m128i src, __mmask8 k, __m128 
 #undef _mm_mask_cvttps_epu64
 #define _mm_mask_cvttps_epu64 _mm_mask_cvttps_epu64_dbg
 
-
 /*
  Convert packed single-precision (32-bit) floating-point elements in "a" to packed unsigned 64-bit integers with truncation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 	
 */
 static inline __m128i _mm_maskz_cvttps_epu64_dbg(__mmask8 k, __m128 a)
 {
-  int32_t a_vec[4];
+  float a_vec[4];
   _mm_storeu_ps((void*)a_vec, a);
-  int64_t dst_vec[2];
+  uint64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
     if (k & ((1 << j) & 0xff)) {
       dst_vec[j] = Convert_FP32_To_UnsignedInt64_Truncate(a_vec[j]);
@@ -25842,7 +25780,6 @@ static inline __m128i _mm_maskz_cvttps_epu64_dbg(__mmask8 k, __m128 a)
 
 #undef _mm_maskz_cvttps_epu64
 #define _mm_maskz_cvttps_epu64 _mm_maskz_cvttps_epu64_dbg
-
 
 /*
  Convert packed unsigned 32-bit integers in "a" to packed double-precision (64-bit) floating-point elements, and store the results in "dst".
@@ -26474,6 +26411,7 @@ static inline __m128 _mm_cvtepu64_ps_dbg(__m128i a)
   for (int j = 0; j <= 1; j++) {
     dst_vec[j] = ConvertUnsignedInt64_To_FP32(a_vec[j]);
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_ps((void*)dst_vec);
 }
 
@@ -26499,6 +26437,7 @@ static inline __m128 _mm_mask_cvtepu64_ps_dbg(__m128 src, __mmask8 k, __m128i a)
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_ps((void*)dst_vec);
 }
 
@@ -26521,6 +26460,7 @@ static inline __m128 _mm_maskz_cvtepu64_ps_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_ps((void*)dst_vec);
 }
 
@@ -31675,7 +31615,7 @@ static inline __m256i _mm256_abs_epi64_dbg(__m256i a)
   _mm256_storeu_si256((void*)a_vec, a);
   int64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
-    dst_vec[j] = abs(a_vec[j]);
+    dst_vec[j] = llabs(a_vec[j]);
   }
   return _mm256_loadu_si256((void*)dst_vec);
 }
@@ -31696,7 +31636,7 @@ static inline __m256i _mm256_mask_abs_epi64_dbg(__m256i src, __mmask8 k, __m256i
   int64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = abs(a_vec[j]);
+      dst_vec[j] = llabs(a_vec[j]);
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -31718,7 +31658,7 @@ static inline __m256i _mm256_maskz_abs_epi64_dbg(__mmask8 k, __m256i a)
   int64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = abs(a_vec[j]);
+      dst_vec[j] = llabs(a_vec[j]);
     } else {
       dst_vec[j] = 0;
     }
@@ -31739,7 +31679,7 @@ static inline __m128i _mm_abs_epi64_dbg(__m128i a)
   _mm_storeu_si128((void*)a_vec, a);
   int64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
-    dst_vec[j] = abs(a_vec[j]);
+    dst_vec[j] = llabs(a_vec[j]);
   }
   return _mm_loadu_si128((void*)dst_vec);
 }
@@ -31760,7 +31700,7 @@ static inline __m128i _mm_mask_abs_epi64_dbg(__m128i src, __mmask8 k, __m128i a)
   int64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = abs(a_vec[j]);
+      dst_vec[j] = llabs(a_vec[j]);
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -31782,7 +31722,7 @@ static inline __m128i _mm_maskz_abs_epi64_dbg(__mmask8 k, __m128i a)
   int64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = abs(a_vec[j]);
+      dst_vec[j] = llabs(a_vec[j]);
     } else {
       dst_vec[j] = 0;
     }
@@ -31792,7 +31732,6 @@ static inline __m128i _mm_maskz_abs_epi64_dbg(__mmask8 k, __m128i a)
 
 #undef _mm_maskz_abs_epi64
 #define _mm_maskz_abs_epi64 _mm_maskz_abs_epi64_dbg
-
 
 /*
  Compute the absolute value of packed 16-bit integers in "a", and store the unsigned results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -35157,7 +35096,7 @@ static inline __mmask32 _mm256_cmpeq_epi8_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
   }
@@ -35177,16 +35116,15 @@ static inline __mmask32 _mm256_cmpge_epi8_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm256_cmpge_epi8_mask
 #define _mm256_cmpge_epi8_mask _mm256_cmpge_epi8_mask_dbg
-
 
 /*
  Compare packed 8-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -35197,7 +35135,7 @@ static inline __mmask32 _mm256_cmpgt_epi8_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
   }
@@ -35217,16 +35155,15 @@ static inline __mmask32 _mm256_cmple_epi8_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm256_cmple_epi8_mask
 #define _mm256_cmple_epi8_mask _mm256_cmple_epi8_mask_dbg
-
 
 /*
  Compare packed 8-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -35237,7 +35174,7 @@ static inline __mmask32 _mm256_cmplt_epi8_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
   }
@@ -35257,7 +35194,7 @@ static inline __mmask32 _mm256_cmpneq_epi8_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
   }
@@ -35277,7 +35214,7 @@ static inline __mmask32 _mm256_mask_cmpeq_epi8_mask_dbg(__mmask32 k1, __m256i a,
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
@@ -35301,10 +35238,10 @@ static inline __mmask32 _mm256_mask_cmpge_epi8_mask_dbg(__mmask32 k1, __m256i a,
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -35315,7 +35252,6 @@ static inline __mmask32 _mm256_mask_cmpge_epi8_mask_dbg(__mmask32 k1, __m256i a,
 #undef _mm256_mask_cmpge_epi8_mask
 #define _mm256_mask_cmpge_epi8_mask _mm256_mask_cmpge_epi8_mask_dbg
 
-
 /*
  Compare packed 8-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -35325,7 +35261,7 @@ static inline __mmask32 _mm256_mask_cmpgt_epi8_mask_dbg(__mmask32 k1, __m256i a,
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
@@ -35349,10 +35285,10 @@ static inline __mmask32 _mm256_mask_cmple_epi8_mask_dbg(__mmask32 k1, __m256i a,
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -35363,7 +35299,6 @@ static inline __mmask32 _mm256_mask_cmple_epi8_mask_dbg(__mmask32 k1, __m256i a,
 #undef _mm256_mask_cmple_epi8_mask
 #define _mm256_mask_cmple_epi8_mask _mm256_mask_cmple_epi8_mask_dbg
 
-
 /*
  Compare packed 8-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -35373,7 +35308,7 @@ static inline __mmask32 _mm256_mask_cmplt_epi8_mask_dbg(__mmask32 k1, __m256i a,
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
@@ -35512,16 +35447,15 @@ static inline __mmask64 _mm512_cmpge_epi8_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm512_cmpge_epi8_mask
 #define _mm512_cmpge_epi8_mask _mm512_cmpge_epi8_mask_dbg
-
 
 /*
  Compare packed 8-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -35532,7 +35466,7 @@ static inline __mmask64 _mm512_cmpgt_epi8_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
   }
@@ -35552,16 +35486,15 @@ static inline __mmask64 _mm512_cmple_epi8_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm512_cmple_epi8_mask
 #define _mm512_cmple_epi8_mask _mm512_cmple_epi8_mask_dbg
-
 
 /*
  Compare packed 8-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -35572,7 +35505,7 @@ static inline __mmask64 _mm512_cmplt_epi8_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
   }
@@ -35592,7 +35525,7 @@ static inline __mmask64 _mm512_cmpneq_epi8_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
   }
@@ -35612,7 +35545,7 @@ static inline __mmask64 _mm512_mask_cmpeq_epi8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
@@ -35636,10 +35569,10 @@ static inline __mmask64 _mm512_mask_cmpge_epi8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -35650,7 +35583,6 @@ static inline __mmask64 _mm512_mask_cmpge_epi8_mask_dbg(__mmask64 k1, __m512i a,
 #undef _mm512_mask_cmpge_epi8_mask
 #define _mm512_mask_cmpge_epi8_mask _mm512_mask_cmpge_epi8_mask_dbg
 
-
 /*
  Compare packed 8-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -35660,7 +35592,7 @@ static inline __mmask64 _mm512_mask_cmpgt_epi8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
@@ -35684,10 +35616,10 @@ static inline __mmask64 _mm512_mask_cmple_epi8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -35698,7 +35630,6 @@ static inline __mmask64 _mm512_mask_cmple_epi8_mask_dbg(__mmask64 k1, __m512i a,
 #undef _mm512_mask_cmple_epi8_mask
 #define _mm512_mask_cmple_epi8_mask _mm512_mask_cmple_epi8_mask_dbg
 
-
 /*
  Compare packed 8-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -35708,7 +35639,7 @@ static inline __mmask64 _mm512_mask_cmplt_epi8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
@@ -35732,7 +35663,7 @@ static inline __mmask64 _mm512_mask_cmpneq_epi8_mask_dbg(__mmask64 k1, __m512i a
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
@@ -35756,7 +35687,7 @@ static inline __mmask16 _mm_cmpeq_epi8_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
   }
@@ -35776,16 +35707,15 @@ static inline __mmask16 _mm_cmpge_epi8_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm_cmpge_epi8_mask
 #define _mm_cmpge_epi8_mask _mm_cmpge_epi8_mask_dbg
-
 
 /*
  Compare packed 8-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -35796,7 +35726,7 @@ static inline __mmask16 _mm_cmpgt_epi8_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
   }
@@ -35816,16 +35746,15 @@ static inline __mmask16 _mm_cmple_epi8_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm_cmple_epi8_mask
 #define _mm_cmple_epi8_mask _mm_cmple_epi8_mask_dbg
-
 
 /*
  Compare packed 8-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -35836,7 +35765,7 @@ static inline __mmask16 _mm_cmplt_epi8_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
   }
@@ -35856,7 +35785,7 @@ static inline __mmask16 _mm_cmpneq_epi8_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
   }
@@ -35876,7 +35805,7 @@ static inline __mmask16 _mm_mask_cmpeq_epi8_mask_dbg(__mmask16 k1, __m128i a, __
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
@@ -35890,7 +35819,6 @@ static inline __mmask16 _mm_mask_cmpeq_epi8_mask_dbg(__mmask16 k1, __m128i a, __
 #undef _mm_mask_cmpeq_epi8_mask
 #define _mm_mask_cmpeq_epi8_mask _mm_mask_cmpeq_epi8_mask_dbg
 
-
 /*
  Compare packed 8-bit integers in "a" and "b" for greater-than-or-equal, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -35900,10 +35828,10 @@ static inline __mmask16 _mm_mask_cmpge_epi8_mask_dbg(__mmask16 k1, __m128i a, __
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -35914,7 +35842,6 @@ static inline __mmask16 _mm_mask_cmpge_epi8_mask_dbg(__mmask16 k1, __m128i a, __
 #undef _mm_mask_cmpge_epi8_mask
 #define _mm_mask_cmpge_epi8_mask _mm_mask_cmpge_epi8_mask_dbg
 
-
 /*
  Compare packed 8-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -35924,7 +35851,7 @@ static inline __mmask16 _mm_mask_cmpgt_epi8_mask_dbg(__mmask16 k1, __m128i a, __
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
@@ -35948,10 +35875,10 @@ static inline __mmask16 _mm_mask_cmple_epi8_mask_dbg(__mmask16 k1, __m128i a, __
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -35962,7 +35889,6 @@ static inline __mmask16 _mm_mask_cmple_epi8_mask_dbg(__mmask16 k1, __m128i a, __
 #undef _mm_mask_cmple_epi8_mask
 #define _mm_mask_cmple_epi8_mask _mm_mask_cmple_epi8_mask_dbg
 
-
 /*
  Compare packed 8-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -35972,7 +35898,7 @@ static inline __mmask16 _mm_mask_cmplt_epi8_mask_dbg(__mmask16 k1, __m128i a, __
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
@@ -35996,7 +35922,7 @@ static inline __mmask16 _mm_mask_cmpneq_epi8_mask_dbg(__mmask16 k1, __m128i a, _
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
@@ -36009,7 +35935,6 @@ static inline __mmask16 _mm_mask_cmpneq_epi8_mask_dbg(__mmask16 k1, __m128i a, _
 
 #undef _mm_mask_cmpneq_epi8_mask
 #define _mm_mask_cmpneq_epi8_mask _mm_mask_cmpneq_epi8_mask_dbg
-
 
 /*
  Compare packed 32-bit integers in "a" and "b" for equality, and store the results in mask vector "k".
@@ -36030,7 +35955,6 @@ static inline __mmask8 _mm256_cmpeq_epi32_mask_dbg(__m256i a, __m256i b)
 #undef _mm256_cmpeq_epi32_mask
 #define _mm256_cmpeq_epi32_mask _mm256_cmpeq_epi32_mask_dbg
 
-
 /*
  Compare packed 32-bit integers in "a" and "b" for greater-than-or-equal, and store the results in mask vector "k".
 */
@@ -36042,14 +35966,13 @@ static inline __mmask8 _mm256_cmpge_epi32_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm256_cmpge_epi32_mask
 #define _mm256_cmpge_epi32_mask _mm256_cmpge_epi32_mask_dbg
-
 
 /*
  Compare packed 32-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -36082,14 +36005,13 @@ static inline __mmask8 _mm256_cmple_epi32_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm256_cmple_epi32_mask
 #define _mm256_cmple_epi32_mask _mm256_cmple_epi32_mask_dbg
-
 
 /*
  Compare packed 32-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -36167,7 +36089,7 @@ static inline __mmask8 _mm256_mask_cmpge_epi32_mask_dbg(__mmask8 k1, __m256i a, 
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -36177,7 +36099,6 @@ static inline __mmask8 _mm256_mask_cmpge_epi32_mask_dbg(__mmask8 k1, __m256i a, 
 
 #undef _mm256_mask_cmpge_epi32_mask
 #define _mm256_mask_cmpge_epi32_mask _mm256_mask_cmpge_epi32_mask_dbg
-
 
 /*
  Compare packed 32-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -36215,7 +36136,7 @@ static inline __mmask8 _mm256_mask_cmple_epi32_mask_dbg(__mmask8 k1, __m256i a, 
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -36225,7 +36146,6 @@ static inline __mmask8 _mm256_mask_cmple_epi32_mask_dbg(__mmask8 k1, __m256i a, 
 
 #undef _mm256_mask_cmple_epi32_mask
 #define _mm256_mask_cmple_epi32_mask _mm256_mask_cmple_epi32_mask_dbg
-
 
 /*
  Compare packed 32-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -36306,14 +36226,13 @@ static inline __mmask8 _mm_cmpge_epi32_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 3; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm_cmpge_epi32_mask
 #define _mm_cmpge_epi32_mask _mm_cmpge_epi32_mask_dbg
-
 
 /*
  Compare packed 32-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -36346,14 +36265,13 @@ static inline __mmask8 _mm_cmple_epi32_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 3; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm_cmple_epi32_mask
 #define _mm_cmple_epi32_mask _mm_cmple_epi32_mask_dbg
-
 
 /*
  Compare packed 32-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -36431,7 +36349,7 @@ static inline __mmask8 _mm_mask_cmpge_epi32_mask_dbg(__mmask8 k1, __m128i a, __m
   __mmask8 k = 0;
   for (int j = 0; j <= 3; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -36441,7 +36359,6 @@ static inline __mmask8 _mm_mask_cmpge_epi32_mask_dbg(__mmask8 k1, __m128i a, __m
 
 #undef _mm_mask_cmpge_epi32_mask
 #define _mm_mask_cmpge_epi32_mask _mm_mask_cmpge_epi32_mask_dbg
-
 
 /*
  Compare packed 32-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -36479,7 +36396,7 @@ static inline __mmask8 _mm_mask_cmple_epi32_mask_dbg(__mmask8 k1, __m128i a, __m
   __mmask8 k = 0;
   for (int j = 0; j <= 3; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -36489,7 +36406,6 @@ static inline __mmask8 _mm_mask_cmple_epi32_mask_dbg(__mmask8 k1, __m128i a, __m
 
 #undef _mm_mask_cmple_epi32_mask
 #define _mm_mask_cmple_epi32_mask _mm_mask_cmple_epi32_mask_dbg
-
 
 /*
  Compare packed 32-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -36570,14 +36486,13 @@ static inline __mmask8 _mm256_cmpge_epi64_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 3; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm256_cmpge_epi64_mask
 #define _mm256_cmpge_epi64_mask _mm256_cmpge_epi64_mask_dbg
-
 
 /*
  Compare packed 64-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -36610,14 +36525,13 @@ static inline __mmask8 _mm256_cmple_epi64_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 3; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm256_cmple_epi64_mask
 #define _mm256_cmple_epi64_mask _mm256_cmple_epi64_mask_dbg
-
 
 /*
  Compare packed 64-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -36695,7 +36609,7 @@ static inline __mmask8 _mm256_mask_cmpge_epi64_mask_dbg(__mmask8 k1, __m256i a, 
   __mmask8 k = 0;
   for (int j = 0; j <= 3; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -36705,7 +36619,6 @@ static inline __mmask8 _mm256_mask_cmpge_epi64_mask_dbg(__mmask8 k1, __m256i a, 
 
 #undef _mm256_mask_cmpge_epi64_mask
 #define _mm256_mask_cmpge_epi64_mask _mm256_mask_cmpge_epi64_mask_dbg
-
 
 /*
  Compare packed 64-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -36743,7 +36656,7 @@ static inline __mmask8 _mm256_mask_cmple_epi64_mask_dbg(__mmask8 k1, __m256i a, 
   __mmask8 k = 0;
   for (int j = 0; j <= 3; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -36753,7 +36666,6 @@ static inline __mmask8 _mm256_mask_cmple_epi64_mask_dbg(__mmask8 k1, __m256i a, 
 
 #undef _mm256_mask_cmple_epi64_mask
 #define _mm256_mask_cmple_epi64_mask _mm256_mask_cmple_epi64_mask_dbg
-
 
 /*
  Compare packed 64-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -36834,14 +36746,13 @@ static inline __mmask8 _mm_cmpge_epi64_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 1; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm_cmpge_epi64_mask
 #define _mm_cmpge_epi64_mask _mm_cmpge_epi64_mask_dbg
-
 
 /*
  Compare packed 64-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -36874,14 +36785,13 @@ static inline __mmask8 _mm_cmple_epi64_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 1; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm_cmple_epi64_mask
 #define _mm_cmple_epi64_mask _mm_cmple_epi64_mask_dbg
-
 
 /*
  Compare packed 64-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -36959,7 +36869,7 @@ static inline __mmask8 _mm_mask_cmpge_epi64_mask_dbg(__mmask8 k1, __m128i a, __m
   __mmask8 k = 0;
   for (int j = 0; j <= 1; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -36969,7 +36879,6 @@ static inline __mmask8 _mm_mask_cmpge_epi64_mask_dbg(__mmask8 k1, __m128i a, __m
 
 #undef _mm_mask_cmpge_epi64_mask
 #define _mm_mask_cmpge_epi64_mask _mm_mask_cmpge_epi64_mask_dbg
-
 
 /*
  Compare packed 64-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -37007,7 +36916,7 @@ static inline __mmask8 _mm_mask_cmple_epi64_mask_dbg(__mmask8 k1, __m128i a, __m
   __mmask8 k = 0;
   for (int j = 0; j <= 1; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -37017,7 +36926,6 @@ static inline __mmask8 _mm_mask_cmple_epi64_mask_dbg(__mmask8 k1, __m128i a, __m
 
 #undef _mm_mask_cmple_epi64_mask
 #define _mm_mask_cmple_epi64_mask _mm_mask_cmple_epi64_mask_dbg
-
 
 /*
  Compare packed 64-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -37076,7 +36984,7 @@ static inline __mmask32 _mm256_cmpeq_epu8_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
   }
@@ -37096,16 +37004,15 @@ static inline __mmask32 _mm256_cmpge_epu8_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm256_cmpge_epu8_mask
 #define _mm256_cmpge_epu8_mask _mm256_cmpge_epu8_mask_dbg
-
 
 /*
  Compare packed unsigned 8-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -37116,7 +37023,7 @@ static inline __mmask32 _mm256_cmpgt_epu8_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
   }
@@ -37125,7 +37032,6 @@ static inline __mmask32 _mm256_cmpgt_epu8_mask_dbg(__m256i a, __m256i b)
 
 #undef _mm256_cmpgt_epu8_mask
 #define _mm256_cmpgt_epu8_mask _mm256_cmpgt_epu8_mask_dbg
-
 
 /*
  Compare packed unsigned 8-bit integers in "a" and "b" for less-than-or-equal, and store the results in mask vector "k".
@@ -37136,16 +37042,15 @@ static inline __mmask32 _mm256_cmple_epu8_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm256_cmple_epu8_mask
 #define _mm256_cmple_epu8_mask _mm256_cmple_epu8_mask_dbg
-
 
 /*
  Compare packed unsigned 8-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -37156,7 +37061,7 @@ static inline __mmask32 _mm256_cmplt_epu8_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
   }
@@ -37176,7 +37081,7 @@ static inline __mmask32 _mm256_cmpneq_epu8_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
   }
@@ -37196,7 +37101,7 @@ static inline __mmask32 _mm256_mask_cmpeq_epu8_mask_dbg(__mmask32 k1, __m256i a,
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
@@ -37220,10 +37125,10 @@ static inline __mmask32 _mm256_mask_cmpge_epu8_mask_dbg(__mmask32 k1, __m256i a,
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -37234,7 +37139,6 @@ static inline __mmask32 _mm256_mask_cmpge_epu8_mask_dbg(__mmask32 k1, __m256i a,
 #undef _mm256_mask_cmpge_epu8_mask
 #define _mm256_mask_cmpge_epu8_mask _mm256_mask_cmpge_epu8_mask_dbg
 
-
 /*
  Compare packed unsigned 8-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -37244,7 +37148,7 @@ static inline __mmask32 _mm256_mask_cmpgt_epu8_mask_dbg(__mmask32 k1, __m256i a,
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
@@ -37268,10 +37172,10 @@ static inline __mmask32 _mm256_mask_cmple_epu8_mask_dbg(__mmask32 k1, __m256i a,
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -37282,7 +37186,6 @@ static inline __mmask32 _mm256_mask_cmple_epu8_mask_dbg(__mmask32 k1, __m256i a,
 #undef _mm256_mask_cmple_epu8_mask
 #define _mm256_mask_cmple_epu8_mask _mm256_mask_cmple_epu8_mask_dbg
 
-
 /*
  Compare packed unsigned 8-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -37292,7 +37195,7 @@ static inline __mmask32 _mm256_mask_cmplt_epu8_mask_dbg(__mmask32 k1, __m256i a,
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
@@ -37316,7 +37219,7 @@ static inline __mmask32 _mm256_mask_cmpneq_epu8_mask_dbg(__mmask32 k1, __m256i a
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
@@ -37340,7 +37243,7 @@ static inline __mmask64 _mm512_cmpeq_epu8_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
   }
@@ -37360,16 +37263,15 @@ static inline __mmask64 _mm512_cmpge_epu8_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm512_cmpge_epu8_mask
 #define _mm512_cmpge_epu8_mask _mm512_cmpge_epu8_mask_dbg
-
 
 /*
  Compare packed unsigned 8-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -37380,7 +37282,7 @@ static inline __mmask64 _mm512_cmpgt_epu8_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
   }
@@ -37400,16 +37302,15 @@ static inline __mmask64 _mm512_cmple_epu8_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm512_cmple_epu8_mask
 #define _mm512_cmple_epu8_mask _mm512_cmple_epu8_mask_dbg
-
 
 /*
  Compare packed unsigned 8-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -37420,7 +37321,7 @@ static inline __mmask64 _mm512_cmplt_epu8_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
   }
@@ -37440,7 +37341,7 @@ static inline __mmask64 _mm512_cmpneq_epu8_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
   }
@@ -37460,7 +37361,7 @@ static inline __mmask64 _mm512_mask_cmpeq_epu8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
@@ -37484,10 +37385,10 @@ static inline __mmask64 _mm512_mask_cmpge_epu8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -37498,7 +37399,6 @@ static inline __mmask64 _mm512_mask_cmpge_epu8_mask_dbg(__mmask64 k1, __m512i a,
 #undef _mm512_mask_cmpge_epu8_mask
 #define _mm512_mask_cmpge_epu8_mask _mm512_mask_cmpge_epu8_mask_dbg
 
-
 /*
  Compare packed unsigned 8-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -37508,7 +37408,7 @@ static inline __mmask64 _mm512_mask_cmpgt_epu8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
@@ -37522,7 +37422,6 @@ static inline __mmask64 _mm512_mask_cmpgt_epu8_mask_dbg(__mmask64 k1, __m512i a,
 #undef _mm512_mask_cmpgt_epu8_mask
 #define _mm512_mask_cmpgt_epu8_mask _mm512_mask_cmpgt_epu8_mask_dbg
 
-
 /*
  Compare packed unsigned 8-bit integers in "a" and "b" for less-than-or-equal, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -37532,10 +37431,10 @@ static inline __mmask64 _mm512_mask_cmple_epu8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -37546,7 +37445,6 @@ static inline __mmask64 _mm512_mask_cmple_epu8_mask_dbg(__mmask64 k1, __m512i a,
 #undef _mm512_mask_cmple_epu8_mask
 #define _mm512_mask_cmple_epu8_mask _mm512_mask_cmple_epu8_mask_dbg
 
-
 /*
  Compare packed unsigned 8-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -37556,7 +37454,7 @@ static inline __mmask64 _mm512_mask_cmplt_epu8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
@@ -37580,7 +37478,7 @@ static inline __mmask64 _mm512_mask_cmpneq_epu8_mask_dbg(__mmask64 k1, __m512i a
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
@@ -37604,7 +37502,7 @@ static inline __mmask16 _mm_cmpeq_epu8_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
   }
@@ -37624,16 +37522,15 @@ static inline __mmask16 _mm_cmpge_epu8_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm_cmpge_epu8_mask
 #define _mm_cmpge_epu8_mask _mm_cmpge_epu8_mask_dbg
-
 
 /*
  Compare packed unsigned 8-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -37644,7 +37541,7 @@ static inline __mmask16 _mm_cmpgt_epu8_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
   }
@@ -37664,16 +37561,15 @@ static inline __mmask16 _mm_cmple_epu8_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm_cmple_epu8_mask
 #define _mm_cmple_epu8_mask _mm_cmple_epu8_mask_dbg
-
 
 /*
  Compare packed unsigned 8-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -37684,7 +37580,7 @@ static inline __mmask16 _mm_cmplt_epu8_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
   }
@@ -37704,7 +37600,7 @@ static inline __mmask16 _mm_cmpneq_epu8_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
   }
@@ -37724,7 +37620,7 @@ static inline __mmask16 _mm_mask_cmpeq_epu8_mask_dbg(__mmask16 k1, __m128i a, __
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
@@ -37748,10 +37644,10 @@ static inline __mmask16 _mm_mask_cmpge_epu8_mask_dbg(__mmask16 k1, __m128i a, __
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -37762,7 +37658,6 @@ static inline __mmask16 _mm_mask_cmpge_epu8_mask_dbg(__mmask16 k1, __m128i a, __
 #undef _mm_mask_cmpge_epu8_mask
 #define _mm_mask_cmpge_epu8_mask _mm_mask_cmpge_epu8_mask_dbg
 
-
 /*
  Compare packed unsigned 8-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -37772,7 +37667,7 @@ static inline __mmask16 _mm_mask_cmpgt_epu8_mask_dbg(__mmask16 k1, __m128i a, __
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
@@ -37796,10 +37691,10 @@ static inline __mmask16 _mm_mask_cmple_epu8_mask_dbg(__mmask16 k1, __m128i a, __
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -37810,7 +37705,6 @@ static inline __mmask16 _mm_mask_cmple_epu8_mask_dbg(__mmask16 k1, __m128i a, __
 #undef _mm_mask_cmple_epu8_mask
 #define _mm_mask_cmple_epu8_mask _mm_mask_cmple_epu8_mask_dbg
 
-
 /*
  Compare packed unsigned 8-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -37820,7 +37714,7 @@ static inline __mmask16 _mm_mask_cmplt_epu8_mask_dbg(__mmask16 k1, __m128i a, __
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
@@ -37844,7 +37738,7 @@ static inline __mmask16 _mm_mask_cmpneq_epu8_mask_dbg(__mmask16 k1, __m128i a, _
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
@@ -37857,7 +37751,6 @@ static inline __mmask16 _mm_mask_cmpneq_epu8_mask_dbg(__mmask16 k1, __m128i a, _
 
 #undef _mm_mask_cmpneq_epu8_mask
 #define _mm_mask_cmpneq_epu8_mask _mm_mask_cmpneq_epu8_mask_dbg
-
 
 /*
  Compare packed unsigned 32-bit integers in "a" and "b" for equality, and store the results in mask vector "k".
@@ -37890,14 +37783,13 @@ static inline __mmask8 _mm256_cmpge_epu32_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm256_cmpge_epu32_mask
 #define _mm256_cmpge_epu32_mask _mm256_cmpge_epu32_mask_dbg
-
 
 /*
  Compare packed unsigned 32-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -37930,14 +37822,13 @@ static inline __mmask8 _mm256_cmple_epu32_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm256_cmple_epu32_mask
 #define _mm256_cmple_epu32_mask _mm256_cmple_epu32_mask_dbg
-
 
 /*
  Compare packed unsigned 32-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -38015,7 +37906,7 @@ static inline __mmask8 _mm256_mask_cmpge_epu32_mask_dbg(__mmask8 k1, __m256i a, 
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -38025,7 +37916,6 @@ static inline __mmask8 _mm256_mask_cmpge_epu32_mask_dbg(__mmask8 k1, __m256i a, 
 
 #undef _mm256_mask_cmpge_epu32_mask
 #define _mm256_mask_cmpge_epu32_mask _mm256_mask_cmpge_epu32_mask_dbg
-
 
 /*
  Compare packed unsigned 32-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -38063,7 +37953,7 @@ static inline __mmask8 _mm256_mask_cmple_epu32_mask_dbg(__mmask8 k1, __m256i a, 
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -38073,7 +37963,6 @@ static inline __mmask8 _mm256_mask_cmple_epu32_mask_dbg(__mmask8 k1, __m256i a, 
 
 #undef _mm256_mask_cmple_epu32_mask
 #define _mm256_mask_cmple_epu32_mask _mm256_mask_cmple_epu32_mask_dbg
-
 
 /*
  Compare packed unsigned 32-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -38154,14 +38043,13 @@ static inline __mmask8 _mm_cmpge_epu32_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 3; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm_cmpge_epu32_mask
 #define _mm_cmpge_epu32_mask _mm_cmpge_epu32_mask_dbg
-
 
 /*
  Compare packed unsigned 32-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -38194,14 +38082,13 @@ static inline __mmask8 _mm_cmple_epu32_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 3; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm_cmple_epu32_mask
 #define _mm_cmple_epu32_mask _mm_cmple_epu32_mask_dbg
-
 
 /*
  Compare packed unsigned 32-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -38279,7 +38166,7 @@ static inline __mmask8 _mm_mask_cmpge_epu32_mask_dbg(__mmask8 k1, __m128i a, __m
   __mmask8 k = 0;
   for (int j = 0; j <= 3; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -38289,7 +38176,6 @@ static inline __mmask8 _mm_mask_cmpge_epu32_mask_dbg(__mmask8 k1, __m128i a, __m
 
 #undef _mm_mask_cmpge_epu32_mask
 #define _mm_mask_cmpge_epu32_mask _mm_mask_cmpge_epu32_mask_dbg
-
 
 /*
  Compare packed unsigned 32-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -38327,7 +38213,7 @@ static inline __mmask8 _mm_mask_cmple_epu32_mask_dbg(__mmask8 k1, __m128i a, __m
   __mmask8 k = 0;
   for (int j = 0; j <= 3; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -38337,7 +38223,6 @@ static inline __mmask8 _mm_mask_cmple_epu32_mask_dbg(__mmask8 k1, __m128i a, __m
 
 #undef _mm_mask_cmple_epu32_mask
 #define _mm_mask_cmple_epu32_mask _mm_mask_cmple_epu32_mask_dbg
-
 
 /*
  Compare packed unsigned 32-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -38418,14 +38303,13 @@ static inline __mmask8 _mm256_cmpge_epu64_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 3; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm256_cmpge_epu64_mask
 #define _mm256_cmpge_epu64_mask _mm256_cmpge_epu64_mask_dbg
-
 
 /*
  Compare packed unsigned 64-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -38458,14 +38342,13 @@ static inline __mmask8 _mm256_cmple_epu64_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 3; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm256_cmple_epu64_mask
 #define _mm256_cmple_epu64_mask _mm256_cmple_epu64_mask_dbg
-
 
 /*
  Compare packed unsigned 64-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -38543,7 +38426,7 @@ static inline __mmask8 _mm256_mask_cmpge_epu64_mask_dbg(__mmask8 k1, __m256i a, 
   __mmask8 k = 0;
   for (int j = 0; j <= 3; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -38553,7 +38436,6 @@ static inline __mmask8 _mm256_mask_cmpge_epu64_mask_dbg(__mmask8 k1, __m256i a, 
 
 #undef _mm256_mask_cmpge_epu64_mask
 #define _mm256_mask_cmpge_epu64_mask _mm256_mask_cmpge_epu64_mask_dbg
-
 
 /*
  Compare packed unsigned 64-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -38591,7 +38473,7 @@ static inline __mmask8 _mm256_mask_cmple_epu64_mask_dbg(__mmask8 k1, __m256i a, 
   __mmask8 k = 0;
   for (int j = 0; j <= 3; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -38601,7 +38483,6 @@ static inline __mmask8 _mm256_mask_cmple_epu64_mask_dbg(__mmask8 k1, __m256i a, 
 
 #undef _mm256_mask_cmple_epu64_mask
 #define _mm256_mask_cmple_epu64_mask _mm256_mask_cmple_epu64_mask_dbg
-
 
 /*
  Compare packed unsigned 64-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -38682,14 +38563,13 @@ static inline __mmask8 _mm_cmpge_epu64_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 1; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm_cmpge_epu64_mask
 #define _mm_cmpge_epu64_mask _mm_cmpge_epu64_mask_dbg
-
 
 /*
  Compare packed unsigned 64-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -38722,14 +38602,13 @@ static inline __mmask8 _mm_cmple_epu64_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 1; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm_cmple_epu64_mask
 #define _mm_cmple_epu64_mask _mm_cmple_epu64_mask_dbg
-
 
 /*
  Compare packed unsigned 64-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -38807,7 +38686,7 @@ static inline __mmask8 _mm_mask_cmpge_epu64_mask_dbg(__mmask8 k1, __m128i a, __m
   __mmask8 k = 0;
   for (int j = 0; j <= 1; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -38817,7 +38696,6 @@ static inline __mmask8 _mm_mask_cmpge_epu64_mask_dbg(__mmask8 k1, __m128i a, __m
 
 #undef _mm_mask_cmpge_epu64_mask
 #define _mm_mask_cmpge_epu64_mask _mm_mask_cmpge_epu64_mask_dbg
-
 
 /*
  Compare packed unsigned 64-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -38855,7 +38733,7 @@ static inline __mmask8 _mm_mask_cmple_epu64_mask_dbg(__mmask8 k1, __m128i a, __m
   __mmask8 k = 0;
   for (int j = 0; j <= 1; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -38865,7 +38743,6 @@ static inline __mmask8 _mm_mask_cmple_epu64_mask_dbg(__mmask8 k1, __m128i a, __m
 
 #undef _mm_mask_cmple_epu64_mask
 #define _mm_mask_cmple_epu64_mask _mm_mask_cmple_epu64_mask_dbg
-
 
 /*
  Compare packed unsigned 64-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -38924,7 +38801,7 @@ static inline __mmask16 _mm256_cmpeq_epu16_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
   }
@@ -38944,16 +38821,15 @@ static inline __mmask16 _mm256_cmpge_epu16_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm256_cmpge_epu16_mask
 #define _mm256_cmpge_epu16_mask _mm256_cmpge_epu16_mask_dbg
-
 
 /*
  Compare packed unsigned 16-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -38964,7 +38840,7 @@ static inline __mmask16 _mm256_cmpgt_epu16_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
   }
@@ -38984,16 +38860,15 @@ static inline __mmask16 _mm256_cmple_epu16_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm256_cmple_epu16_mask
 #define _mm256_cmple_epu16_mask _mm256_cmple_epu16_mask_dbg
-
 
 /*
  Compare packed unsigned 16-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -39004,7 +38879,7 @@ static inline __mmask16 _mm256_cmplt_epu16_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
   }
@@ -39024,7 +38899,7 @@ static inline __mmask16 _mm256_cmpneq_epu16_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
   }
@@ -39044,7 +38919,7 @@ static inline __mmask16 _mm256_mask_cmpeq_epu16_mask_dbg(__mmask16 k1, __m256i a
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
@@ -39068,10 +38943,10 @@ static inline __mmask16 _mm256_mask_cmpge_epu16_mask_dbg(__mmask16 k1, __m256i a
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -39082,7 +38957,6 @@ static inline __mmask16 _mm256_mask_cmpge_epu16_mask_dbg(__mmask16 k1, __m256i a
 #undef _mm256_mask_cmpge_epu16_mask
 #define _mm256_mask_cmpge_epu16_mask _mm256_mask_cmpge_epu16_mask_dbg
 
-
 /*
  Compare packed unsigned 16-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -39092,7 +38966,7 @@ static inline __mmask16 _mm256_mask_cmpgt_epu16_mask_dbg(__mmask16 k1, __m256i a
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
@@ -39116,10 +38990,10 @@ static inline __mmask16 _mm256_mask_cmple_epu16_mask_dbg(__mmask16 k1, __m256i a
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -39130,7 +39004,6 @@ static inline __mmask16 _mm256_mask_cmple_epu16_mask_dbg(__mmask16 k1, __m256i a
 #undef _mm256_mask_cmple_epu16_mask
 #define _mm256_mask_cmple_epu16_mask _mm256_mask_cmple_epu16_mask_dbg
 
-
 /*
  Compare packed unsigned 16-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -39140,7 +39013,7 @@ static inline __mmask16 _mm256_mask_cmplt_epu16_mask_dbg(__mmask16 k1, __m256i a
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
@@ -39164,7 +39037,7 @@ static inline __mmask16 _mm256_mask_cmpneq_epu16_mask_dbg(__mmask16 k1, __m256i 
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
@@ -39188,7 +39061,7 @@ static inline __mmask32 _mm512_cmpeq_epu16_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
   }
@@ -39208,16 +39081,15 @@ static inline __mmask32 _mm512_cmpge_epu16_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm512_cmpge_epu16_mask
 #define _mm512_cmpge_epu16_mask _mm512_cmpge_epu16_mask_dbg
-
 
 /*
  Compare packed unsigned 16-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -39228,7 +39100,7 @@ static inline __mmask32 _mm512_cmpgt_epu16_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
   }
@@ -39248,16 +39120,15 @@ static inline __mmask32 _mm512_cmple_epu16_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm512_cmple_epu16_mask
 #define _mm512_cmple_epu16_mask _mm512_cmple_epu16_mask_dbg
-
 
 /*
  Compare packed unsigned 16-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -39268,7 +39139,7 @@ static inline __mmask32 _mm512_cmplt_epu16_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
   }
@@ -39288,7 +39159,7 @@ static inline __mmask32 _mm512_cmpneq_epu16_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
   }
@@ -39308,7 +39179,7 @@ static inline __mmask32 _mm512_mask_cmpeq_epu16_mask_dbg(__mmask32 k1, __m512i a
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
@@ -39332,10 +39203,10 @@ static inline __mmask32 _mm512_mask_cmpge_epu16_mask_dbg(__mmask32 k1, __m512i a
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -39346,7 +39217,6 @@ static inline __mmask32 _mm512_mask_cmpge_epu16_mask_dbg(__mmask32 k1, __m512i a
 #undef _mm512_mask_cmpge_epu16_mask
 #define _mm512_mask_cmpge_epu16_mask _mm512_mask_cmpge_epu16_mask_dbg
 
-
 /*
  Compare packed unsigned 16-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -39356,7 +39226,7 @@ static inline __mmask32 _mm512_mask_cmpgt_epu16_mask_dbg(__mmask32 k1, __m512i a
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
@@ -39380,10 +39250,10 @@ static inline __mmask32 _mm512_mask_cmple_epu16_mask_dbg(__mmask32 k1, __m512i a
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -39394,7 +39264,6 @@ static inline __mmask32 _mm512_mask_cmple_epu16_mask_dbg(__mmask32 k1, __m512i a
 #undef _mm512_mask_cmple_epu16_mask
 #define _mm512_mask_cmple_epu16_mask _mm512_mask_cmple_epu16_mask_dbg
 
-
 /*
  Compare packed unsigned 16-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -39404,7 +39273,7 @@ static inline __mmask32 _mm512_mask_cmplt_epu16_mask_dbg(__mmask32 k1, __m512i a
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
@@ -39428,7 +39297,7 @@ static inline __mmask32 _mm512_mask_cmpneq_epu16_mask_dbg(__mmask32 k1, __m512i 
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
@@ -39474,14 +39343,13 @@ static inline __mmask8 _mm_cmpge_epu16_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm_cmpge_epu16_mask
 #define _mm_cmpge_epu16_mask _mm_cmpge_epu16_mask_dbg
-
 
 /*
  Compare packed unsigned 16-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -39514,14 +39382,13 @@ static inline __mmask8 _mm_cmple_epu16_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm_cmple_epu16_mask
 #define _mm_cmple_epu16_mask _mm_cmple_epu16_mask_dbg
-
 
 /*
  Compare packed unsigned 16-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -39599,7 +39466,7 @@ static inline __mmask8 _mm_mask_cmpge_epu16_mask_dbg(__mmask8 k1, __m128i a, __m
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -39609,7 +39476,6 @@ static inline __mmask8 _mm_mask_cmpge_epu16_mask_dbg(__mmask8 k1, __m128i a, __m
 
 #undef _mm_mask_cmpge_epu16_mask
 #define _mm_mask_cmpge_epu16_mask _mm_mask_cmpge_epu16_mask_dbg
-
 
 /*
  Compare packed unsigned 16-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -39647,7 +39513,7 @@ static inline __mmask8 _mm_mask_cmple_epu16_mask_dbg(__mmask8 k1, __m128i a, __m
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -39657,7 +39523,6 @@ static inline __mmask8 _mm_mask_cmple_epu16_mask_dbg(__mmask8 k1, __m128i a, __m
 
 #undef _mm_mask_cmple_epu16_mask
 #define _mm_mask_cmple_epu16_mask _mm_mask_cmple_epu16_mask_dbg
-
 
 /*
  Compare packed unsigned 16-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -39681,7 +39546,6 @@ static inline __mmask8 _mm_mask_cmplt_epu16_mask_dbg(__mmask8 k1, __m128i a, __m
 
 #undef _mm_mask_cmplt_epu16_mask
 #define _mm_mask_cmplt_epu16_mask _mm_mask_cmplt_epu16_mask_dbg
-
 
 /*
  Compare packed unsigned 16-bit integers in "a" and "b" for not-equal, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -39716,7 +39580,7 @@ static inline __mmask16 _mm256_cmpeq_epi16_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
   }
@@ -39736,16 +39600,15 @@ static inline __mmask16 _mm256_cmpge_epi16_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm256_cmpge_epi16_mask
 #define _mm256_cmpge_epi16_mask _mm256_cmpge_epi16_mask_dbg
-
 
 /*
  Compare packed 16-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -39756,7 +39619,7 @@ static inline __mmask16 _mm256_cmpgt_epi16_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
   }
@@ -39776,16 +39639,15 @@ static inline __mmask16 _mm256_cmple_epi16_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm256_cmple_epi16_mask
 #define _mm256_cmple_epi16_mask _mm256_cmple_epi16_mask_dbg
-
 
 /*
  Compare packed 16-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -39796,7 +39658,7 @@ static inline __mmask16 _mm256_cmplt_epi16_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
   }
@@ -39816,7 +39678,7 @@ static inline __mmask16 _mm256_cmpneq_epi16_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
   }
@@ -39836,7 +39698,7 @@ static inline __mmask16 _mm256_mask_cmpeq_epi16_mask_dbg(__mmask16 k1, __m256i a
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
@@ -39850,7 +39712,6 @@ static inline __mmask16 _mm256_mask_cmpeq_epi16_mask_dbg(__mmask16 k1, __m256i a
 #undef _mm256_mask_cmpeq_epi16_mask
 #define _mm256_mask_cmpeq_epi16_mask _mm256_mask_cmpeq_epi16_mask_dbg
 
-
 /*
  Compare packed 16-bit integers in "a" and "b" for greater-than-or-equal, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -39860,10 +39721,10 @@ static inline __mmask16 _mm256_mask_cmpge_epi16_mask_dbg(__mmask16 k1, __m256i a
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -39874,7 +39735,6 @@ static inline __mmask16 _mm256_mask_cmpge_epi16_mask_dbg(__mmask16 k1, __m256i a
 #undef _mm256_mask_cmpge_epi16_mask
 #define _mm256_mask_cmpge_epi16_mask _mm256_mask_cmpge_epi16_mask_dbg
 
-
 /*
  Compare packed 16-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -39884,7 +39744,7 @@ static inline __mmask16 _mm256_mask_cmpgt_epi16_mask_dbg(__mmask16 k1, __m256i a
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
@@ -39898,7 +39758,6 @@ static inline __mmask16 _mm256_mask_cmpgt_epi16_mask_dbg(__mmask16 k1, __m256i a
 #undef _mm256_mask_cmpgt_epi16_mask
 #define _mm256_mask_cmpgt_epi16_mask _mm256_mask_cmpgt_epi16_mask_dbg
 
-
 /*
  Compare packed 16-bit integers in "a" and "b" for less-than-or-equal, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -39908,10 +39767,10 @@ static inline __mmask16 _mm256_mask_cmple_epi16_mask_dbg(__mmask16 k1, __m256i a
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -39922,7 +39781,6 @@ static inline __mmask16 _mm256_mask_cmple_epi16_mask_dbg(__mmask16 k1, __m256i a
 #undef _mm256_mask_cmple_epi16_mask
 #define _mm256_mask_cmple_epi16_mask _mm256_mask_cmple_epi16_mask_dbg
 
-
 /*
  Compare packed 16-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -39932,7 +39790,7 @@ static inline __mmask16 _mm256_mask_cmplt_epi16_mask_dbg(__mmask16 k1, __m256i a
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
@@ -39946,7 +39804,6 @@ static inline __mmask16 _mm256_mask_cmplt_epi16_mask_dbg(__mmask16 k1, __m256i a
 #undef _mm256_mask_cmplt_epi16_mask
 #define _mm256_mask_cmplt_epi16_mask _mm256_mask_cmplt_epi16_mask_dbg
 
-
 /*
  Compare packed 16-bit integers in "a" and "b" for not-equal, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -39956,7 +39813,7 @@ static inline __mmask16 _mm256_mask_cmpneq_epi16_mask_dbg(__mmask16 k1, __m256i 
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
@@ -39970,7 +39827,6 @@ static inline __mmask16 _mm256_mask_cmpneq_epi16_mask_dbg(__mmask16 k1, __m256i 
 #undef _mm256_mask_cmpneq_epi16_mask
 #define _mm256_mask_cmpneq_epi16_mask _mm256_mask_cmpneq_epi16_mask_dbg
 
-
 /*
  Compare packed 16-bit integers in "a" and "b" for equality, and store the results in mask vector "k".
 */
@@ -39980,7 +39836,7 @@ static inline __mmask32 _mm512_cmpeq_epi16_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
   }
@@ -39989,7 +39845,6 @@ static inline __mmask32 _mm512_cmpeq_epi16_mask_dbg(__m512i a, __m512i b)
 
 #undef _mm512_cmpeq_epi16_mask
 #define _mm512_cmpeq_epi16_mask _mm512_cmpeq_epi16_mask_dbg
-
 
 /*
  Compare packed 16-bit integers in "a" and "b" for greater-than-or-equal, and store the results in mask vector "k".
@@ -40000,16 +39855,15 @@ static inline __mmask32 _mm512_cmpge_epi16_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm512_cmpge_epi16_mask
 #define _mm512_cmpge_epi16_mask _mm512_cmpge_epi16_mask_dbg
-
 
 /*
  Compare packed 16-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -40020,7 +39874,7 @@ static inline __mmask32 _mm512_cmpgt_epi16_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
   }
@@ -40029,7 +39883,6 @@ static inline __mmask32 _mm512_cmpgt_epi16_mask_dbg(__m512i a, __m512i b)
 
 #undef _mm512_cmpgt_epi16_mask
 #define _mm512_cmpgt_epi16_mask _mm512_cmpgt_epi16_mask_dbg
-
 
 /*
  Compare packed 16-bit integers in "a" and "b" for less-than-or-equal, and store the results in mask vector "k".
@@ -40040,16 +39893,15 @@ static inline __mmask32 _mm512_cmple_epi16_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm512_cmple_epi16_mask
 #define _mm512_cmple_epi16_mask _mm512_cmple_epi16_mask_dbg
-
 
 /*
  Compare packed 16-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -40060,7 +39912,7 @@ static inline __mmask32 _mm512_cmplt_epi16_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
   }
@@ -40080,7 +39932,7 @@ static inline __mmask32 _mm512_cmpneq_epi16_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
   }
@@ -40089,7 +39941,6 @@ static inline __mmask32 _mm512_cmpneq_epi16_mask_dbg(__m512i a, __m512i b)
 
 #undef _mm512_cmpneq_epi16_mask
 #define _mm512_cmpneq_epi16_mask _mm512_cmpneq_epi16_mask_dbg
-
 
 /*
  Compare packed 16-bit integers in "a" and "b" for equality, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -40100,7 +39951,7 @@ static inline __mmask32 _mm512_mask_cmpeq_epi16_mask_dbg(__mmask32 k1, __m512i a
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (( a_vec[j] == b_vec[j] ) ? 1 : 0) << j;
@@ -40114,7 +39965,6 @@ static inline __mmask32 _mm512_mask_cmpeq_epi16_mask_dbg(__mmask32 k1, __m512i a
 #undef _mm512_mask_cmpeq_epi16_mask
 #define _mm512_mask_cmpeq_epi16_mask _mm512_mask_cmpeq_epi16_mask_dbg
 
-
 /*
  Compare packed 16-bit integers in "a" and "b" for greater-than-or-equal, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -40124,10 +39974,10 @@ static inline __mmask32 _mm512_mask_cmpge_epi16_mask_dbg(__mmask32 k1, __m512i a
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -40138,7 +39988,6 @@ static inline __mmask32 _mm512_mask_cmpge_epi16_mask_dbg(__mmask32 k1, __m512i a
 #undef _mm512_mask_cmpge_epi16_mask
 #define _mm512_mask_cmpge_epi16_mask _mm512_mask_cmpge_epi16_mask_dbg
 
-
 /*
  Compare packed 16-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -40148,7 +39997,7 @@ static inline __mmask32 _mm512_mask_cmpgt_epi16_mask_dbg(__mmask32 k1, __m512i a
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
@@ -40172,10 +40021,10 @@ static inline __mmask32 _mm512_mask_cmple_epi16_mask_dbg(__mmask32 k1, __m512i a
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -40186,7 +40035,6 @@ static inline __mmask32 _mm512_mask_cmple_epi16_mask_dbg(__mmask32 k1, __m512i a
 #undef _mm512_mask_cmple_epi16_mask
 #define _mm512_mask_cmple_epi16_mask _mm512_mask_cmple_epi16_mask_dbg
 
-
 /*
  Compare packed 16-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -40196,7 +40044,7 @@ static inline __mmask32 _mm512_mask_cmplt_epi16_mask_dbg(__mmask32 k1, __m512i a
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
@@ -40220,7 +40068,7 @@ static inline __mmask32 _mm512_mask_cmpneq_epi16_mask_dbg(__mmask32 k1, __m512i 
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (( a_vec[j] != b_vec[j] ) ? 1 : 0) << j;
@@ -40233,7 +40081,6 @@ static inline __mmask32 _mm512_mask_cmpneq_epi16_mask_dbg(__mmask32 k1, __m512i 
 
 #undef _mm512_mask_cmpneq_epi16_mask
 #define _mm512_mask_cmpneq_epi16_mask _mm512_mask_cmpneq_epi16_mask_dbg
-
 
 /*
  Compare packed 16-bit integers in "a" and "b" for equality, and store the results in mask vector "k".
@@ -40266,14 +40113,13 @@ static inline __mmask8 _mm_cmpge_epi16_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
-    k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm_cmpge_epi16_mask
 #define _mm_cmpge_epi16_mask _mm_cmpge_epi16_mask_dbg
-
 
 /*
  Compare packed 16-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k".
@@ -40306,14 +40152,13 @@ static inline __mmask8 _mm_cmple_epi16_mask_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)b_vec, b);
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
-    k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+    k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
   }
   return k;
 }
 
 #undef _mm_cmple_epi16_mask
 #define _mm_cmple_epi16_mask _mm_cmple_epi16_mask_dbg
-
 
 /*
  Compare packed 16-bit integers in "a" and "b" for less-than, and store the results in mask vector "k".
@@ -40391,7 +40236,7 @@ static inline __mmask8 _mm_mask_cmpge_epi16_mask_dbg(__mmask8 k1, __m128i a, __m
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] > b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] >= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -40401,7 +40246,6 @@ static inline __mmask8 _mm_mask_cmpge_epi16_mask_dbg(__mmask8 k1, __m128i a, __m
 
 #undef _mm_mask_cmpge_epi16_mask
 #define _mm_mask_cmpge_epi16_mask _mm_mask_cmpge_epi16_mask_dbg
-
 
 /*
  Compare packed 16-bit integers in "a" and "b" for greater-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -40439,7 +40283,7 @@ static inline __mmask8 _mm_mask_cmple_epi16_mask_dbg(__mmask8 k1, __m128i a, __m
   __mmask8 k = 0;
   for (int j = 0; j <= 7; j++) {
     if (k1 & ((1 << j) & 0xff)) {
-      k |= (( a_vec[j] < b_vec[j] ) ? 1 : 0) << j;
+      k |= (( a_vec[j] <= b_vec[j] ) ? 1 : 0) << j;
     } else {
       k |= (0) << j;
     }
@@ -40449,7 +40293,6 @@ static inline __mmask8 _mm_mask_cmple_epi16_mask_dbg(__mmask8 k1, __m128i a, __m
 
 #undef _mm_mask_cmple_epi16_mask
 #define _mm_mask_cmple_epi16_mask _mm_mask_cmple_epi16_mask_dbg
-
 
 /*
  Compare packed 16-bit integers in "a" and "b" for less-than, and store the results in mask vector "k" using zeromask "k1" (elements are zeroed out when the corresponding mask bit is not set).
@@ -40714,7 +40557,7 @@ static inline __m256i _mm256_mask_maddubs_epi16_dbg(__m256i src, __mmask16 k, __
   int16_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
-      dst_vec[j] = Saturate_To_Int16( a_vec[j]*b_vec[j] + a_vec[j]*b_vec[j] );
+      dst_vec[j] = Saturate_To_Int16( a_vec[j*2]*b_vec[j*2] + a_vec[j*2+1]*b_vec[j*2+1] );
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -40739,7 +40582,7 @@ static inline __m256i _mm256_maskz_maddubs_epi16_dbg(__mmask16 k, __m256i a, __m
   int16_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
-      dst_vec[j] = Saturate_To_Int16( a_vec[j]*b_vec[j] + a_vec[j]*b_vec[j] );
+      dst_vec[j] = Saturate_To_Int16( a_vec[j*2]*b_vec[j*2] + a_vec[j*2+1]*b_vec[j*2+1] );
     } else {
       dst_vec[j] = 0;
     }
@@ -40763,7 +40606,7 @@ static inline __m512i _mm512_maddubs_epi16_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)b_vec, b);
   int16_t dst_vec[32];
   for (int j = 0; j <= 31; j++) {
-    dst_vec[j] = Saturate_To_Int16( a_vec[j]*b_vec[j] + a_vec[j]*b_vec[j] );
+    dst_vec[j] = Saturate_To_Int16( a_vec[j*2]*b_vec[j*2] + a_vec[j*2+1]*b_vec[j*2+1] );
   }
   return _mm512_loadu_si512((void*)dst_vec);
 }
@@ -40787,7 +40630,7 @@ static inline __m512i _mm512_mask_maddubs_epi16_dbg(__m512i src, __mmask32 k, __
   int16_t dst_vec[32];
   for (int j = 0; j <= 31; j++) {
     if (k & ((1 << j) & 0xffffffff)) {
-      dst_vec[j] = Saturate_To_Int16( a_vec[j]*b_vec[j] + a_vec[j]*b_vec[j] );
+      dst_vec[j] = Saturate_To_Int16( a_vec[j*2]*b_vec[j*2] + a_vec[j*2+1]*b_vec[j*2+1] );
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -40812,7 +40655,7 @@ static inline __m512i _mm512_maskz_maddubs_epi16_dbg(__mmask32 k, __m512i a, __m
   int16_t dst_vec[32];
   for (int j = 0; j <= 31; j++) {
     if (k & ((1 << j) & 0xffffffff)) {
-      dst_vec[j] = Saturate_To_Int16( a_vec[j]*b_vec[j] + a_vec[j]*b_vec[j] );
+      dst_vec[j] = Saturate_To_Int16( a_vec[j*2]*b_vec[j*2] + a_vec[j*2+1]*b_vec[j*2+1] );
     } else {
       dst_vec[j] = 0;
     }
@@ -40839,7 +40682,7 @@ static inline __m128i _mm_mask_maddubs_epi16_dbg(__m128i src, __mmask8 k, __m128
   int16_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = Saturate_To_Int16( a_vec[j]*b_vec[j] + a_vec[j]*b_vec[j] );
+      dst_vec[j] = Saturate_To_Int16( a_vec[j*2]*b_vec[j*2] + a_vec[j*2+1]*b_vec[j*2+1] );
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -40864,7 +40707,7 @@ static inline __m128i _mm_maskz_maddubs_epi16_dbg(__mmask8 k, __m128i a, __m128i
   int16_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = Saturate_To_Int16( a_vec[j]*b_vec[j] + a_vec[j]*b_vec[j] );
+      dst_vec[j] = Saturate_To_Int16( a_vec[j*2]*b_vec[j*2] + a_vec[j*2+1]*b_vec[j*2+1] );
     } else {
       dst_vec[j] = 0;
     }
@@ -40891,7 +40734,7 @@ static inline __m256i _mm256_mask_madd_epi16_dbg(__m256i src, __mmask8 k, __m256
   int32_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[j]*b_vec[j] + a_vec[j]*b_vec[j];
+      dst_vec[j] = a_vec[j*2]*b_vec[j*2] + a_vec[j*2+1]*b_vec[j*2+1];
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -40916,7 +40759,7 @@ static inline __m256i _mm256_maskz_madd_epi16_dbg(__mmask8 k, __m256i a, __m256i
   int32_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[j]*b_vec[j] + a_vec[j]*b_vec[j];
+      dst_vec[j] = a_vec[j*2]*b_vec[j*2] + a_vec[j*2+1]*b_vec[j*2+1];
     } else {
       dst_vec[j] = 0;
     }
@@ -40940,7 +40783,7 @@ static inline __m512i _mm512_madd_epi16_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)b_vec, b);
   int32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
-    dst_vec[j] = a_vec[j]*b_vec[j] + a_vec[j]*b_vec[j];
+    dst_vec[j] = a_vec[j*2]*b_vec[j*2] + a_vec[j*2+1]*b_vec[j*2+1];
   }
   return _mm512_loadu_si512((void*)dst_vec);
 }
@@ -40964,7 +40807,7 @@ static inline __m512i _mm512_mask_madd_epi16_dbg(__m512i src, __mmask16 k, __m51
   int32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
-      dst_vec[j] = a_vec[j]*b_vec[j] + a_vec[j]*b_vec[j];
+      dst_vec[j] = a_vec[j*2]*b_vec[j*2] + a_vec[j*2+1]*b_vec[j*2+1];
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -40989,7 +40832,7 @@ static inline __m512i _mm512_maskz_madd_epi16_dbg(__mmask16 k, __m512i a, __m512
   int32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
-      dst_vec[j] = a_vec[j]*b_vec[j] + a_vec[j]*b_vec[j];
+      dst_vec[j] = a_vec[j*2]*b_vec[j*2] + a_vec[j*2+1]*b_vec[j*2+1];
     } else {
       dst_vec[j] = 0;
     }
@@ -41016,7 +40859,7 @@ static inline __m128i _mm_mask_madd_epi16_dbg(__m128i src, __mmask8 k, __m128i a
   int32_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[j]*b_vec[j] + a_vec[j]*b_vec[j];
+      dst_vec[j] = a_vec[j*2]*b_vec[j*2] + a_vec[j*2+1]*b_vec[j*2+1];
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -41041,7 +40884,7 @@ static inline __m128i _mm_maskz_madd_epi16_dbg(__mmask8 k, __m128i a, __m128i b)
   int32_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[j]*b_vec[j] + a_vec[j]*b_vec[j];
+      dst_vec[j] = a_vec[j*2]*b_vec[j*2] + a_vec[j*2+1]*b_vec[j*2+1];
     } else {
       dst_vec[j] = 0;
     }
@@ -43810,6 +43653,7 @@ static inline __m128i _mm256_cvtepi32_epi8_dbg(__m256i a)
   for (int j = 0; j <= 7; j++) {
     dst_vec[j] = Truncate_Int32_To_Int8(a_vec[j]);
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -43834,6 +43678,7 @@ static inline __m128i _mm256_mask_cvtepi32_epi8_dbg(__m128i src, __mmask8 k, __m
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -43856,6 +43701,7 @@ static inline __m128i _mm256_maskz_cvtepi32_epi8_dbg(__mmask8 k, __m256i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -43874,6 +43720,7 @@ static inline __m128i _mm_cvtepi32_epi8_dbg(__m128i a)
   for (int j = 0; j <= 3; j++) {
     dst_vec[j] = Truncate_Int32_To_Int8(a_vec[j]);
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -43898,6 +43745,7 @@ static inline __m128i _mm_mask_cvtepi32_epi8_dbg(__m128i src, __mmask8 k, __m128
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -43920,6 +43768,7 @@ static inline __m128i _mm_maskz_cvtepi32_epi8_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44002,6 +43851,7 @@ static inline __m128i _mm_cvtepi32_epi16_dbg(__m128i a)
   for (int j = 0; j <= 3; j++) {
     dst_vec[j] = Truncate_Int32_To_Int16(a_vec[j]);
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44026,6 +43876,7 @@ static inline __m128i _mm_mask_cvtepi32_epi16_dbg(__m128i src, __mmask8 k, __m12
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44048,12 +43899,12 @@ static inline __m128i _mm_maskz_cvtepi32_epi16_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm_maskz_cvtepi32_epi16
 #define _mm_maskz_cvtepi32_epi16 _mm_maskz_cvtepi32_epi16_dbg
-
 
 /*
  Set each packed 8-bit integer in "dst" to all ones or all zeros based on the value of the corresponding bit in "k".
@@ -44306,6 +44157,7 @@ static inline __m128i _mm256_cvtepi64_epi8_dbg(__m256i a)
   for (int j = 0; j <= 3; j++) {
     dst_vec[j] = Truncate_Int64_To_Int8(a_vec[j]);
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44330,12 +44182,12 @@ static inline __m128i _mm256_mask_cvtepi64_epi8_dbg(__m128i src, __mmask8 k, __m
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm256_mask_cvtepi64_epi8
 #define _mm256_mask_cvtepi64_epi8 _mm256_mask_cvtepi64_epi8_dbg
-
 
 /*
  Convert packed 64-bit integers in "a" to packed 8-bit integers with truncation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
@@ -44352,12 +44204,12 @@ static inline __m128i _mm256_maskz_cvtepi64_epi8_dbg(__mmask8 k, __m256i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm256_maskz_cvtepi64_epi8
 #define _mm256_maskz_cvtepi64_epi8 _mm256_maskz_cvtepi64_epi8_dbg
-
 
 /*
  Convert packed 64-bit integers in "a" to packed 8-bit integers with truncation, and store the results in "dst".
@@ -44370,6 +44222,7 @@ static inline __m128i _mm_cvtepi64_epi8_dbg(__m128i a)
   for (int j = 0; j <= 1; j++) {
     dst_vec[j] = Truncate_Int64_To_Int8(a_vec[j]);
   }
+  for (int j = 2; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44394,6 +44247,7 @@ static inline __m128i _mm_mask_cvtepi64_epi8_dbg(__m128i src, __mmask8 k, __m128
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 2; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44416,12 +44270,12 @@ static inline __m128i _mm_maskz_cvtepi64_epi8_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 2; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm_maskz_cvtepi64_epi8
 #define _mm_maskz_cvtepi64_epi8 _mm_maskz_cvtepi64_epi8_dbg
-
 
 /*
  Convert packed 64-bit integers in "a" to packed 32-bit integers with truncation, and store the results in "dst".
@@ -44498,6 +44352,7 @@ static inline __m128i _mm_cvtepi64_epi32_dbg(__m128i a)
   for (int j = 0; j <= 1; j++) {
     dst_vec[j] = Truncate_Int64_To_Int32(a_vec[j]);
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44522,6 +44377,7 @@ static inline __m128i _mm_mask_cvtepi64_epi32_dbg(__m128i src, __mmask8 k, __m12
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44544,12 +44400,12 @@ static inline __m128i _mm_maskz_cvtepi64_epi32_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm_maskz_cvtepi64_epi32
 #define _mm_maskz_cvtepi64_epi32 _mm_maskz_cvtepi64_epi32_dbg
-
 
 /*
  Convert packed 64-bit integers in "a" to packed 16-bit integers with truncation, and store the results in "dst".
@@ -44562,6 +44418,7 @@ static inline __m128i _mm256_cvtepi64_epi16_dbg(__m256i a)
   for (int j = 0; j <= 3; j++) {
     dst_vec[j] = Truncate_Int64_To_Int16(a_vec[j]);
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44586,6 +44443,7 @@ static inline __m128i _mm256_mask_cvtepi64_epi16_dbg(__m128i src, __mmask8 k, __
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44608,6 +44466,7 @@ static inline __m128i _mm256_maskz_cvtepi64_epi16_dbg(__mmask8 k, __m256i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44626,12 +44485,12 @@ static inline __m128i _mm_cvtepi64_epi16_dbg(__m128i a)
   for (int j = 0; j <= 1; j++) {
     dst_vec[j] = Truncate_Int64_To_Int16(a_vec[j]);
   }
+  for (int j = 2; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm_cvtepi64_epi16
 #define _mm_cvtepi64_epi16 _mm_cvtepi64_epi16_dbg
-
 
 /*
  Convert packed 64-bit integers in "a" to packed 16-bit integers with truncation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -44650,6 +44509,7 @@ static inline __m128i _mm_mask_cvtepi64_epi16_dbg(__m128i src, __mmask8 k, __m12
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 2; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44672,6 +44532,7 @@ static inline __m128i _mm_maskz_cvtepi64_epi16_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 2; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44690,12 +44551,12 @@ static inline __m128i _mm256_cvtsepi32_epi8_dbg(__m256i a)
   for (int j = 0; j <= 7; j++) {
     dst_vec[j] = Saturate_Int32_To_Int8(a_vec[j]);
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm256_cvtsepi32_epi8
 #define _mm256_cvtsepi32_epi8 _mm256_cvtsepi32_epi8_dbg
-
 
 /*
  Convert packed 32-bit integers in "a" to packed 8-bit integers with signed saturation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -44714,6 +44575,7 @@ static inline __m128i _mm256_mask_cvtsepi32_epi8_dbg(__m128i src, __mmask8 k, __
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44736,12 +44598,12 @@ static inline __m128i _mm256_maskz_cvtsepi32_epi8_dbg(__mmask8 k, __m256i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm256_maskz_cvtsepi32_epi8
 #define _mm256_maskz_cvtsepi32_epi8 _mm256_maskz_cvtsepi32_epi8_dbg
-
 
 /*
  Convert packed 32-bit integers in "a" to packed 8-bit integers with signed saturation, and store the results in "dst".
@@ -44754,6 +44616,7 @@ static inline __m128i _mm_cvtsepi32_epi8_dbg(__m128i a)
   for (int j = 0; j <= 3; j++) {
     dst_vec[j] = Saturate_Int32_To_Int8(a_vec[j]);
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44778,6 +44641,7 @@ static inline __m128i _mm_mask_cvtsepi32_epi8_dbg(__m128i src, __mmask8 k, __m12
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44800,6 +44664,7 @@ static inline __m128i _mm_maskz_cvtsepi32_epi8_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44823,7 +44688,6 @@ static inline __m128i _mm256_cvtsepi32_epi16_dbg(__m256i a)
 
 #undef _mm256_cvtsepi32_epi16
 #define _mm256_cvtsepi32_epi16 _mm256_cvtsepi32_epi16_dbg
-
 
 /*
  Convert packed 32-bit integers in "a" to packed 16-bit integers with signed saturation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -44882,6 +44746,7 @@ static inline __m128i _mm_cvtsepi32_epi16_dbg(__m128i a)
   for (int j = 0; j <= 3; j++) {
     dst_vec[j] = Saturate_Int32_To_Int16(a_vec[j]);
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44906,6 +44771,7 @@ static inline __m128i _mm_mask_cvtsepi32_epi16_dbg(__m128i src, __mmask8 k, __m1
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44928,6 +44794,7 @@ static inline __m128i _mm_maskz_cvtsepi32_epi16_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44946,6 +44813,7 @@ static inline __m128i _mm256_cvtsepi64_epi8_dbg(__m256i a)
   for (int j = 0; j <= 3; j++) {
     dst_vec[j] = Saturate_Int64_To_Int8(a_vec[j]);
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44970,6 +44838,7 @@ static inline __m128i _mm256_mask_cvtsepi64_epi8_dbg(__m128i src, __mmask8 k, __
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -44992,6 +44861,7 @@ static inline __m128i _mm256_maskz_cvtsepi64_epi8_dbg(__mmask8 k, __m256i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -45010,6 +44880,7 @@ static inline __m128i _mm_cvtsepi64_epi8_dbg(__m128i a)
   for (int j = 0; j <= 1; j++) {
     dst_vec[j] = Saturate_Int64_To_Int8(a_vec[j]);
   }
+  for (int j = 2; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -45034,6 +44905,7 @@ static inline __m128i _mm_mask_cvtsepi64_epi8_dbg(__m128i src, __mmask8 k, __m12
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 2; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -45056,6 +44928,7 @@ static inline __m128i _mm_maskz_cvtsepi64_epi8_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 2; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -45138,6 +45011,7 @@ static inline __m128i _mm_cvtsepi64_epi32_dbg(__m128i a)
   for (int j = 0; j <= 1; j++) {
     dst_vec[j] = Saturate_Int64_To_Int32(a_vec[j]);
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -45162,6 +45036,7 @@ static inline __m128i _mm_mask_cvtsepi64_epi32_dbg(__m128i src, __mmask8 k, __m1
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -45184,6 +45059,7 @@ static inline __m128i _mm_maskz_cvtsepi64_epi32_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -45202,12 +45078,12 @@ static inline __m128i _mm256_cvtsepi64_epi16_dbg(__m256i a)
   for (int j = 0; j <= 3; j++) {
     dst_vec[j] = Saturate_Int64_To_Int16(a_vec[j]);
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm256_cvtsepi64_epi16
 #define _mm256_cvtsepi64_epi16 _mm256_cvtsepi64_epi16_dbg
-
 
 /*
  Convert packed 64-bit integers in "a" to packed 16-bit integers with signed saturation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -45226,6 +45102,7 @@ static inline __m128i _mm256_mask_cvtsepi64_epi16_dbg(__m128i src, __mmask8 k, _
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -45248,12 +45125,12 @@ static inline __m128i _mm256_maskz_cvtsepi64_epi16_dbg(__mmask8 k, __m256i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm256_maskz_cvtsepi64_epi16
 #define _mm256_maskz_cvtsepi64_epi16 _mm256_maskz_cvtsepi64_epi16_dbg
-
 
 /*
  Convert packed 64-bit integers in "a" to packed 16-bit integers with signed saturation, and store the results in "dst".
@@ -45266,6 +45143,7 @@ static inline __m128i _mm_cvtsepi64_epi16_dbg(__m128i a)
   for (int j = 0; j <= 1; j++) {
     dst_vec[j] = Saturate_Int64_To_Int16(a_vec[j]);
   }
+  for (int j = 2; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -45290,6 +45168,7 @@ static inline __m128i _mm_mask_cvtsepi64_epi16_dbg(__m128i src, __mmask8 k, __m1
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 2; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -45312,6 +45191,7 @@ static inline __m128i _mm_maskz_cvtsepi64_epi16_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 2; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -45458,6 +45338,7 @@ static inline __m128i _mm_cvtsepi16_epi8_dbg(__m128i a)
   for (int j = 0; j <= 7; j++) {
     dst_vec[j] = Saturate_Int16_To_Int8(a_vec[j]);
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -45482,6 +45363,7 @@ static inline __m128i _mm_mask_cvtsepi16_epi8_dbg(__m128i src, __mmask8 k, __m12
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -45504,6 +45386,7 @@ static inline __m128i _mm_maskz_cvtsepi16_epi8_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -45534,7 +45417,6 @@ static inline __m256i _mm256_mask_cvtepi8_epi32_dbg(__m256i src, __mmask8 k, __m
 #undef _mm256_mask_cvtepi8_epi32
 #define _mm256_mask_cvtepi8_epi32 _mm256_mask_cvtepi8_epi32_dbg
 
-
 /*
  Sign extend packed 8-bit integers in the low 8 bytes of "a" to packed 32-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
 */
@@ -45555,7 +45437,6 @@ static inline __m256i _mm256_maskz_cvtepi8_epi32_dbg(__mmask8 k, __m128i a)
 
 #undef _mm256_maskz_cvtepi8_epi32
 #define _mm256_maskz_cvtepi8_epi32 _mm256_maskz_cvtepi8_epi32_dbg
-
 
 /*
  Sign extend packed 8-bit integers in the low 4 bytes of "a" to packed 32-bit integers, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -45602,7 +45483,6 @@ static inline __m128i _mm_maskz_cvtepi8_epi32_dbg(__mmask8 k, __m128i a)
 #undef _mm_maskz_cvtepi8_epi32
 #define _mm_maskz_cvtepi8_epi32 _mm_maskz_cvtepi8_epi32_dbg
 
-
 /*
  Sign extend packed 8-bit integers in the low 4 bytes of "a" to packed 64-bit integers, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -45625,7 +45505,6 @@ static inline __m256i _mm256_mask_cvtepi8_epi64_dbg(__m256i src, __mmask8 k, __m
 
 #undef _mm256_mask_cvtepi8_epi64
 #define _mm256_mask_cvtepi8_epi64 _mm256_mask_cvtepi8_epi64_dbg
-
 
 /*
  Sign extend packed 8-bit integers in the low 4 bytes of "a" to packed 64-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
@@ -46141,6 +46020,7 @@ static inline __m128i _mm256_cvtusepi32_epi8_dbg(__m256i a)
   for (int j = 0; j <= 7; j++) {
     dst_vec[j] = Saturate_UnsignedInt32_To_Int8(a_vec[j]);
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46165,6 +46045,7 @@ static inline __m128i _mm256_mask_cvtusepi32_epi8_dbg(__m128i src, __mmask8 k, _
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46187,6 +46068,7 @@ static inline __m128i _mm256_maskz_cvtusepi32_epi8_dbg(__mmask8 k, __m256i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46205,12 +46087,12 @@ static inline __m128i _mm_cvtusepi32_epi8_dbg(__m128i a)
   for (int j = 0; j <= 3; j++) {
     dst_vec[j] = Saturate_UnsignedInt32_To_Int8(a_vec[j]);
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm_cvtusepi32_epi8
 #define _mm_cvtusepi32_epi8 _mm_cvtusepi32_epi8_dbg
-
 
 /*
  Convert packed unsigned 32-bit integers in "a" to packed unsigned 8-bit integers with unsigned saturation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -46229,6 +46111,7 @@ static inline __m128i _mm_mask_cvtusepi32_epi8_dbg(__m128i src, __mmask8 k, __m1
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46251,6 +46134,7 @@ static inline __m128i _mm_maskz_cvtusepi32_epi8_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46333,6 +46217,7 @@ static inline __m128i _mm_cvtusepi32_epi16_dbg(__m128i a)
   for (int j = 0; j <= 3; j++) {
     dst_vec[j] = Saturate_UnsignedInt32_To_Int16(a_vec[j]);
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46357,6 +46242,7 @@ static inline __m128i _mm_mask_cvtusepi32_epi16_dbg(__m128i src, __mmask8 k, __m
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46379,12 +46265,12 @@ static inline __m128i _mm_maskz_cvtusepi32_epi16_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm_maskz_cvtusepi32_epi16
 #define _mm_maskz_cvtusepi32_epi16 _mm_maskz_cvtusepi32_epi16_dbg
-
 
 /*
  Convert packed unsigned 64-bit integers in "a" to packed unsigned 8-bit integers with unsigned saturation, and store the results in "dst".
@@ -46397,6 +46283,7 @@ static inline __m128i _mm256_cvtusepi64_epi8_dbg(__m256i a)
   for (int j = 0; j <= 3; j++) {
     dst_vec[j] = Saturate_UnsignedInt64_To_Int8(a_vec[j]);
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46421,6 +46308,7 @@ static inline __m128i _mm256_mask_cvtusepi64_epi8_dbg(__m128i src, __mmask8 k, _
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46443,6 +46331,7 @@ static inline __m128i _mm256_maskz_cvtusepi64_epi8_dbg(__mmask8 k, __m256i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 4; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46461,6 +46350,7 @@ static inline __m128i _mm_cvtusepi64_epi8_dbg(__m128i a)
   for (int j = 0; j <= 1; j++) {
     dst_vec[j] = Saturate_UnsignedInt64_To_Int8(a_vec[j]);
   }
+  for (int j = 2; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46485,6 +46375,7 @@ static inline __m128i _mm_mask_cvtusepi64_epi8_dbg(__m128i src, __mmask8 k, __m1
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 2; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46507,6 +46398,7 @@ static inline __m128i _mm_maskz_cvtusepi64_epi8_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 2; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46589,6 +46481,7 @@ static inline __m128i _mm_cvtusepi64_epi32_dbg(__m128i a)
   for (int j = 0; j <= 1; j++) {
     dst_vec[j] = Saturate_UnsignedInt64_To_Int32(a_vec[j]);
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46613,6 +46506,7 @@ static inline __m128i _mm_mask_cvtusepi64_epi32_dbg(__m128i src, __mmask8 k, __m
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46635,12 +46529,12 @@ static inline __m128i _mm_maskz_cvtusepi64_epi32_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 2; j <= 3; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm_maskz_cvtusepi64_epi32
 #define _mm_maskz_cvtusepi64_epi32 _mm_maskz_cvtusepi64_epi32_dbg
-
 
 /*
  Convert packed unsigned 64-bit integers in "a" to packed unsigned 16-bit integers with unsigned saturation, and store the results in "dst".
@@ -46653,12 +46547,12 @@ static inline __m128i _mm256_cvtusepi64_epi16_dbg(__m256i a)
   for (int j = 0; j <= 3; j++) {
     dst_vec[j] = Saturate_UnsignedInt64_To_Int16(a_vec[j]);
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm256_cvtusepi64_epi16
 #define _mm256_cvtusepi64_epi16 _mm256_cvtusepi64_epi16_dbg
-
 
 /*
  Convert packed unsigned 64-bit integers in "a" to packed unsigned 16-bit integers with unsigned saturation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -46677,12 +46571,12 @@ static inline __m128i _mm256_mask_cvtusepi64_epi16_dbg(__m128i src, __mmask8 k, 
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm256_mask_cvtusepi64_epi16
 #define _mm256_mask_cvtusepi64_epi16 _mm256_mask_cvtusepi64_epi16_dbg
-
 
 /*
  Convert packed unsigned 64-bit integers in "a" to packed unsigned 16-bit integers with unsigned saturation, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
@@ -46699,12 +46593,12 @@ static inline __m128i _mm256_maskz_cvtusepi64_epi16_dbg(__mmask8 k, __m256i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 4; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm256_maskz_cvtusepi64_epi16
 #define _mm256_maskz_cvtusepi64_epi16 _mm256_maskz_cvtusepi64_epi16_dbg
-
 
 /*
  Convert packed unsigned 64-bit integers in "a" to packed unsigned 16-bit integers with unsigned saturation, and store the results in "dst".
@@ -46717,6 +46611,7 @@ static inline __m128i _mm_cvtusepi64_epi16_dbg(__m128i a)
   for (int j = 0; j <= 1; j++) {
     dst_vec[j] = Saturate_UnsignedInt64_To_Int16(a_vec[j]);
   }
+  for (int j = 2; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46741,6 +46636,7 @@ static inline __m128i _mm_mask_cvtusepi64_epi16_dbg(__m128i src, __mmask8 k, __m
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 2; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46763,6 +46659,7 @@ static inline __m128i _mm_maskz_cvtusepi64_epi16_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 2; j <= 7; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46786,7 +46683,6 @@ static inline __m128i _mm256_cvtusepi16_epi8_dbg(__m256i a)
 
 #undef _mm256_cvtusepi16_epi8
 #define _mm256_cvtusepi16_epi8 _mm256_cvtusepi16_epi8_dbg
-
 
 /*
  Convert packed unsigned 16-bit integers in "a" to packed unsigned 8-bit integers with unsigned saturation, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -46909,6 +46805,7 @@ static inline __m128i _mm_cvtusepi16_epi8_dbg(__m128i a)
   for (int j = 0; j <= 7; j++) {
     dst_vec[j] = Saturate_UnsignedInt16_To_Int8(a_vec[j]);
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46933,6 +46830,7 @@ static inline __m128i _mm_mask_cvtusepi16_epi8_dbg(__m128i src, __mmask8 k, __m1
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -46955,12 +46853,12 @@ static inline __m128i _mm_maskz_cvtusepi16_epi8_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm_maskz_cvtusepi16_epi8
 #define _mm_maskz_cvtusepi16_epi8 _mm_maskz_cvtusepi16_epi8_dbg
-
 
 /*
  Convert packed 16-bit integers in "a" to packed 8-bit integers with truncation, and store the results in "dst". 
@@ -47101,6 +46999,7 @@ static inline __m128i _mm_cvtepi16_epi8_dbg(__m128i a)
   for (int j = 0; j <= 7; j++) {
     dst_vec[j] = Truncate_Int16_To_Int8(a_vec[j]);
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -47125,6 +47024,7 @@ static inline __m128i _mm_mask_cvtepi16_epi8_dbg(__m128i src, __mmask8 k, __m128
       dst_vec[j] = src_vec[j];
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
@@ -47147,12 +47047,12 @@ static inline __m128i _mm_maskz_cvtepi16_epi8_dbg(__mmask8 k, __m128i a)
       dst_vec[j] = 0;
     }
   }
+  for (int j = 8; j <= 15; j++) dst_vec[j] = 0;
   return _mm_loadu_si128((void*)dst_vec);
 }
 
 #undef _mm_maskz_cvtepi16_epi8
 #define _mm_maskz_cvtepi16_epi8 _mm_maskz_cvtepi16_epi8_dbg
-
 
 /*
  Zero extend packed unsigned 8-bit integers in the low 8 bytes of "a" to packed 32-bit integers, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -47161,7 +47061,7 @@ static inline __m256i _mm256_mask_cvtepu8_epi32_dbg(__m256i src, __mmask8 k, __m
 {
   int32_t src_vec[8];
   _mm256_storeu_si256((void*)src_vec, src);
-  int8_t a_vec[16];
+  uint8_t a_vec[16];
   _mm_storeu_si128((void*)a_vec, a);
   int32_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -47344,7 +47244,7 @@ static inline __m256i _mm256_mask_cvtepu8_epi16_dbg(__m256i src, __mmask16 k, __
 {
   int16_t src_vec[16];
   _mm256_storeu_si256((void*)src_vec, src);
-  int8_t a_vec[16];
+  uint8_t a_vec[16];
   _mm_storeu_si128((void*)a_vec, a);
   int16_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
@@ -47367,7 +47267,7 @@ static inline __m256i _mm256_mask_cvtepu8_epi16_dbg(__m256i src, __mmask16 k, __
 */
 static inline __m256i _mm256_maskz_cvtepu8_epi16_dbg(__mmask16 k, __m128i a)
 {
-  int8_t a_vec[16];
+  uint8_t a_vec[16];
   _mm_storeu_si128((void*)a_vec, a);
   int16_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
@@ -47389,7 +47289,7 @@ static inline __m256i _mm256_maskz_cvtepu8_epi16_dbg(__mmask16 k, __m128i a)
 */
 static inline __m512i _mm512_cvtepu8_epi16_dbg(__m256i a)
 {
-  int8_t a_vec[32];
+  uint8_t a_vec[32];
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t dst_vec[32];
   for (int j = 0; j <= 31; j++) {
@@ -47409,7 +47309,7 @@ static inline __m512i _mm512_mask_cvtepu8_epi16_dbg(__m512i src, __mmask32 k, __
 {
   int16_t src_vec[32];
   _mm512_storeu_si512((void*)src_vec, src);
-  int8_t a_vec[32];
+  uint8_t a_vec[32];
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t dst_vec[32];
   for (int j = 0; j <= 31; j++) {
@@ -47432,7 +47332,7 @@ static inline __m512i _mm512_mask_cvtepu8_epi16_dbg(__m512i src, __mmask32 k, __
 */
 static inline __m512i _mm512_maskz_cvtepu8_epi16_dbg(__mmask32 k, __m256i a)
 {
-  int8_t a_vec[32];
+  uint8_t a_vec[32];
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t dst_vec[32];
   for (int j = 0; j <= 31; j++) {
@@ -47456,7 +47356,7 @@ static inline __m128i _mm_mask_cvtepu8_epi16_dbg(__m128i src, __mmask8 k, __m128
 {
   int16_t src_vec[8];
   _mm_storeu_si128((void*)src_vec, src);
-  int8_t a_vec[16];
+  uint8_t a_vec[16];
   _mm_storeu_si128((void*)a_vec, a);
   int16_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -47479,7 +47379,7 @@ static inline __m128i _mm_mask_cvtepu8_epi16_dbg(__m128i src, __mmask8 k, __m128
 */
 static inline __m128i _mm_maskz_cvtepu8_epi16_dbg(__mmask8 k, __m128i a)
 {
-  int8_t a_vec[16];
+  uint8_t a_vec[16];
   _mm_storeu_si128((void*)a_vec, a);
   int16_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -47503,7 +47403,7 @@ static inline __m256i _mm256_mask_cvtepu32_epi64_dbg(__m256i src, __mmask8 k, __
 {
   int64_t src_vec[4];
   _mm256_storeu_si256((void*)src_vec, src);
-  int32_t a_vec[4];
+  uint32_t a_vec[4];
   _mm_storeu_si128((void*)a_vec, a);
   int64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
@@ -47525,7 +47425,7 @@ static inline __m256i _mm256_mask_cvtepu32_epi64_dbg(__m256i src, __mmask8 k, __
 */
 static inline __m256i _mm256_maskz_cvtepu32_epi64_dbg(__mmask8 k, __m128i a)
 {
-  int32_t a_vec[4];
+  uint32_t a_vec[4];
   _mm_storeu_si128((void*)a_vec, a);
   int64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
@@ -47541,7 +47441,6 @@ static inline __m256i _mm256_maskz_cvtepu32_epi64_dbg(__mmask8 k, __m128i a)
 #undef _mm256_maskz_cvtepu32_epi64
 #define _mm256_maskz_cvtepu32_epi64 _mm256_maskz_cvtepu32_epi64_dbg
 
-
 /*
  Zero extend packed unsigned 32-bit integers in "a" to packed 64-bit integers, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -47549,7 +47448,7 @@ static inline __m128i _mm_mask_cvtepu32_epi64_dbg(__m128i src, __mmask8 k, __m12
 {
   int64_t src_vec[2];
   _mm_storeu_si128((void*)src_vec, src);
-  int32_t a_vec[4];
+  uint32_t a_vec[4];
   _mm_storeu_si128((void*)a_vec, a);
   int64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
@@ -47565,13 +47464,12 @@ static inline __m128i _mm_mask_cvtepu32_epi64_dbg(__m128i src, __mmask8 k, __m12
 #undef _mm_mask_cvtepu32_epi64
 #define _mm_mask_cvtepu32_epi64 _mm_mask_cvtepu32_epi64_dbg
 
-
 /*
  Zero extend packed unsigned 32-bit integers in "a" to packed 64-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
 static inline __m128i _mm_maskz_cvtepu32_epi64_dbg(__mmask8 k, __m128i a)
 {
-  int32_t a_vec[4];
+  uint32_t a_vec[4];
   _mm_storeu_si128((void*)a_vec, a);
   int64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
@@ -47587,7 +47485,6 @@ static inline __m128i _mm_maskz_cvtepu32_epi64_dbg(__mmask8 k, __m128i a)
 #undef _mm_maskz_cvtepu32_epi64
 #define _mm_maskz_cvtepu32_epi64 _mm_maskz_cvtepu32_epi64_dbg
 
-
 /*
  Zero extend packed unsigned 16-bit integers in "a" to packed 32-bit integers, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -47595,7 +47492,7 @@ static inline __m256i _mm256_mask_cvtepu16_epi32_dbg(__m256i src, __mmask8 k, __
 {
   int32_t src_vec[8];
   _mm256_storeu_si256((void*)src_vec, src);
-  int16_t a_vec[8];
+  uint16_t a_vec[8];
   _mm_storeu_si128((void*)a_vec, a);
   int32_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -47611,13 +47508,12 @@ static inline __m256i _mm256_mask_cvtepu16_epi32_dbg(__m256i src, __mmask8 k, __
 #undef _mm256_mask_cvtepu16_epi32
 #define _mm256_mask_cvtepu16_epi32 _mm256_mask_cvtepu16_epi32_dbg
 
-
 /*
  Zero extend packed unsigned 16-bit integers in "a" to packed 32-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
 static inline __m256i _mm256_maskz_cvtepu16_epi32_dbg(__mmask8 k, __m128i a)
 {
-  int16_t a_vec[8];
+  uint16_t a_vec[8];
   _mm_storeu_si128((void*)a_vec, a);
   int32_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
@@ -47633,7 +47529,6 @@ static inline __m256i _mm256_maskz_cvtepu16_epi32_dbg(__mmask8 k, __m128i a)
 #undef _mm256_maskz_cvtepu16_epi32
 #define _mm256_maskz_cvtepu16_epi32 _mm256_maskz_cvtepu16_epi32_dbg
 
-
 /*
  Zero extend packed unsigned 16-bit integers in "a" to packed 32-bit integers, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -47641,7 +47536,7 @@ static inline __m128i _mm_mask_cvtepu16_epi32_dbg(__m128i src, __mmask8 k, __m12
 {
   int32_t src_vec[4];
   _mm_storeu_si128((void*)src_vec, src);
-  int16_t a_vec[8];
+  uint16_t a_vec[8];
   _mm_storeu_si128((void*)a_vec, a);
   int32_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
@@ -47657,13 +47552,12 @@ static inline __m128i _mm_mask_cvtepu16_epi32_dbg(__m128i src, __mmask8 k, __m12
 #undef _mm_mask_cvtepu16_epi32
 #define _mm_mask_cvtepu16_epi32 _mm_mask_cvtepu16_epi32_dbg
 
-
 /*
  Zero extend packed unsigned 16-bit integers in "a" to packed 32-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
 static inline __m128i _mm_maskz_cvtepu16_epi32_dbg(__mmask8 k, __m128i a)
 {
-  int16_t a_vec[8];
+  uint16_t a_vec[8];
   _mm_storeu_si128((void*)a_vec, a);
   int32_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
@@ -47679,7 +47573,6 @@ static inline __m128i _mm_maskz_cvtepu16_epi32_dbg(__mmask8 k, __m128i a)
 #undef _mm_maskz_cvtepu16_epi32
 #define _mm_maskz_cvtepu16_epi32 _mm_maskz_cvtepu16_epi32_dbg
 
-
 /*
  Zero extend packed unsigned 16-bit integers in the low 8 bytes of "a" to packed 64-bit integers, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -47687,7 +47580,7 @@ static inline __m256i _mm256_mask_cvtepu16_epi64_dbg(__m256i src, __mmask8 k, __
 {
   int64_t src_vec[4];
   _mm256_storeu_si256((void*)src_vec, src);
-  int16_t a_vec[8];
+  uint16_t a_vec[8];
   _mm_storeu_si128((void*)a_vec, a);
   int64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
@@ -47703,13 +47596,12 @@ static inline __m256i _mm256_mask_cvtepu16_epi64_dbg(__m256i src, __mmask8 k, __
 #undef _mm256_mask_cvtepu16_epi64
 #define _mm256_mask_cvtepu16_epi64 _mm256_mask_cvtepu16_epi64_dbg
 
-
 /*
  Zero extend packed unsigned 16-bit integers in the low 8 bytes of "a" to packed 64-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
 */
 static inline __m256i _mm256_maskz_cvtepu16_epi64_dbg(__mmask8 k, __m128i a)
 {
-  int16_t a_vec[8];
+  uint16_t a_vec[8];
   _mm_storeu_si128((void*)a_vec, a);
   int64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
@@ -47725,7 +47617,6 @@ static inline __m256i _mm256_maskz_cvtepu16_epi64_dbg(__mmask8 k, __m128i a)
 #undef _mm256_maskz_cvtepu16_epi64
 #define _mm256_maskz_cvtepu16_epi64 _mm256_maskz_cvtepu16_epi64_dbg
 
-
 /*
  Zero extend packed unsigned 16-bit integers in the low 4 bytes of "a" to packed 64-bit integers, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -47733,7 +47624,7 @@ static inline __m128i _mm_mask_cvtepu16_epi64_dbg(__m128i src, __mmask8 k, __m12
 {
   int64_t src_vec[2];
   _mm_storeu_si128((void*)src_vec, src);
-  int16_t a_vec[8];
+  uint16_t a_vec[8];
   _mm_storeu_si128((void*)a_vec, a);
   int64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
@@ -47749,13 +47640,12 @@ static inline __m128i _mm_mask_cvtepu16_epi64_dbg(__m128i src, __mmask8 k, __m12
 #undef _mm_mask_cvtepu16_epi64
 #define _mm_mask_cvtepu16_epi64 _mm_mask_cvtepu16_epi64_dbg
 
-
 /*
  Zero extend packed unsigned 16-bit integers in the low 4 bytes of "a" to packed 64-bit integers, and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
 */
 static inline __m128i _mm_maskz_cvtepu16_epi64_dbg(__mmask8 k, __m128i a)
 {
-  int16_t a_vec[8];
+  uint16_t a_vec[8];
   _mm_storeu_si128((void*)a_vec, a);
   int64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
@@ -47771,7 +47661,6 @@ static inline __m128i _mm_maskz_cvtepu16_epi64_dbg(__mmask8 k, __m128i a)
 #undef _mm_maskz_cvtepu16_epi64
 #define _mm_maskz_cvtepu16_epi64 _mm_maskz_cvtepu16_epi64_dbg
 
-
 /*
  Multiply the low 32-bit integers from each packed 64-bit element in "a" and "b", and store the signed 64-bit results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -47786,7 +47675,7 @@ static inline __m256i _mm256_mask_mul_epi32_dbg(__m256i src, __mmask8 k, __m256i
   int64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[j] * b_vec[j];
+      dst_vec[j] = a_vec[j*2] * b_vec[j*2];
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -47796,7 +47685,6 @@ static inline __m256i _mm256_mask_mul_epi32_dbg(__m256i src, __mmask8 k, __m256i
 
 #undef _mm256_mask_mul_epi32
 #define _mm256_mask_mul_epi32 _mm256_mask_mul_epi32_dbg
-
 
 /*
  Multiply the low 32-bit integers from each packed 64-bit element in "a" and "b", and store the signed 64-bit results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
@@ -47810,7 +47698,7 @@ static inline __m256i _mm256_maskz_mul_epi32_dbg(__mmask8 k, __m256i a, __m256i 
   int64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[j] * b_vec[j];
+      dst_vec[j] = a_vec[j*2] * b_vec[j*2];
     } else {
       dst_vec[j] = 0;
     }
@@ -47820,7 +47708,6 @@ static inline __m256i _mm256_maskz_mul_epi32_dbg(__mmask8 k, __m256i a, __m256i 
 
 #undef _mm256_maskz_mul_epi32
 #define _mm256_maskz_mul_epi32 _mm256_maskz_mul_epi32_dbg
-
 
 /*
  Multiply the low 32-bit integers from each packed 64-bit element in "a" and "b", and store the signed 64-bit results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -47836,7 +47723,7 @@ static inline __m128i _mm_mask_mul_epi32_dbg(__m128i src, __mmask8 k, __m128i a,
   int64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[j] * b_vec[j];
+      dst_vec[j] = a_vec[j*2] * b_vec[j*2];
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -47846,7 +47733,6 @@ static inline __m128i _mm_mask_mul_epi32_dbg(__m128i src, __mmask8 k, __m128i a,
 
 #undef _mm_mask_mul_epi32
 #define _mm_mask_mul_epi32 _mm_mask_mul_epi32_dbg
-
 
 /*
  Multiply the low 32-bit integers from each packed 64-bit element in "a" and "b", and store the signed 64-bit results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
@@ -47860,7 +47746,7 @@ static inline __m128i _mm_maskz_mul_epi32_dbg(__mmask8 k, __m128i a, __m128i b)
   int64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[j] * b_vec[j];
+      dst_vec[j] = a_vec[j*2] * b_vec[j*2];
     } else {
       dst_vec[j] = 0;
     }
@@ -47870,7 +47756,6 @@ static inline __m128i _mm_maskz_mul_epi32_dbg(__mmask8 k, __m128i a, __m128i b)
 
 #undef _mm_maskz_mul_epi32
 #define _mm_maskz_mul_epi32 _mm_maskz_mul_epi32_dbg
-
 
 /*
  Multiply packed 16-bit integers in "a" and "b", producing intermediate signed 32-bit integers. Truncate each intermediate integer to the 18 most significant bits, round by adding 1, and store bits [16:1] to "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -48245,7 +48130,7 @@ static inline __m128i _mm_maskz_mulhi_epu16_dbg(__mmask8 k, __m128i a, __m128i b
 */
 static inline __m256i _mm256_mask_mulhi_epi16_dbg(__m256i src, __mmask16 k, __m256i a, __m256i b)
 {
-  uint32_t tmp;
+  int32_t tmp;
   int16_t src_vec[16];
   _mm256_storeu_si256((void*)src_vec, src);
   int16_t a_vec[16];
@@ -48273,7 +48158,7 @@ static inline __m256i _mm256_mask_mulhi_epi16_dbg(__m256i src, __mmask16 k, __m2
 */
 static inline __m256i _mm256_maskz_mulhi_epi16_dbg(__mmask16 k, __m256i a, __m256i b)
 {
-  uint32_t tmp;
+  int32_t tmp;
   int16_t a_vec[16];
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
@@ -48299,7 +48184,7 @@ static inline __m256i _mm256_maskz_mulhi_epi16_dbg(__mmask16 k, __m256i a, __m25
 */
 static inline __m512i _mm512_mask_mulhi_epi16_dbg(__m512i src, __mmask32 k, __m512i a, __m512i b)
 {
-  uint32_t tmp;
+  int32_t tmp;
   int16_t src_vec[32];
   _mm512_storeu_si512((void*)src_vec, src);
   int16_t a_vec[32];
@@ -48327,7 +48212,7 @@ static inline __m512i _mm512_mask_mulhi_epi16_dbg(__m512i src, __mmask32 k, __m5
 */
 static inline __m512i _mm512_maskz_mulhi_epi16_dbg(__mmask32 k, __m512i a, __m512i b)
 {
-  uint32_t tmp;
+  int32_t tmp;
   int16_t a_vec[32];
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
@@ -48353,7 +48238,7 @@ static inline __m512i _mm512_maskz_mulhi_epi16_dbg(__mmask32 k, __m512i a, __m51
 */
 static inline __m512i _mm512_mulhi_epi16_dbg(__m512i a, __m512i b)
 {
-  uint32_t tmp;
+  int32_t tmp;
   int16_t a_vec[32];
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
@@ -48375,7 +48260,7 @@ static inline __m512i _mm512_mulhi_epi16_dbg(__m512i a, __m512i b)
 */
 static inline __m128i _mm_mask_mulhi_epi16_dbg(__m128i src, __mmask8 k, __m128i a, __m128i b)
 {
-  uint32_t tmp;
+  int32_t tmp;
   int16_t src_vec[8];
   _mm_storeu_si128((void*)src_vec, src);
   int16_t a_vec[8];
@@ -48403,7 +48288,7 @@ static inline __m128i _mm_mask_mulhi_epi16_dbg(__m128i src, __mmask8 k, __m128i 
 */
 static inline __m128i _mm_maskz_mulhi_epi16_dbg(__mmask8 k, __m128i a, __m128i b)
 {
-  uint32_t tmp;
+  int32_t tmp;
   int16_t a_vec[8];
   _mm_storeu_si128((void*)a_vec, a);
   int16_t b_vec[8];
@@ -48429,7 +48314,7 @@ static inline __m128i _mm_maskz_mulhi_epi16_dbg(__mmask8 k, __m128i a, __m128i b
 */
 static inline __m256i _mm256_mask_mullo_epi32_dbg(__m256i src, __mmask8 k, __m256i a, __m256i b)
 {
-  uint64_t tmp;
+  int64_t tmp;
   int32_t src_vec[8];
   _mm256_storeu_si256((void*)src_vec, src);
   int32_t a_vec[8];
@@ -48440,7 +48325,7 @@ static inline __m256i _mm256_mask_mullo_epi32_dbg(__m256i src, __mmask8 k, __m25
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
       tmp = a_vec[j] * b_vec[j];
-      dst_vec[j] = (tmp & 0xffffffff) >> 0;
+      dst_vec[j] = tmp & 0xffffffff;
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -48457,7 +48342,7 @@ static inline __m256i _mm256_mask_mullo_epi32_dbg(__m256i src, __mmask8 k, __m25
 */
 static inline __m256i _mm256_maskz_mullo_epi32_dbg(__mmask8 k, __m256i a, __m256i b)
 {
-  uint64_t tmp;
+  int64_t tmp;
   int32_t a_vec[8];
   _mm256_storeu_si256((void*)a_vec, a);
   int32_t b_vec[8];
@@ -48466,7 +48351,7 @@ static inline __m256i _mm256_maskz_mullo_epi32_dbg(__mmask8 k, __m256i a, __m256
   for (int j = 0; j <= 7; j++) {
     if (k & ((1 << j) & 0xff)) {
       tmp = a_vec[j] * b_vec[j];
-      dst_vec[j] = (tmp & 0xffffffff) >> 0;
+      dst_vec[j] = tmp & 0xffffffff;
     } else {
       dst_vec[j] = 0;
     }
@@ -48483,7 +48368,7 @@ static inline __m256i _mm256_maskz_mullo_epi32_dbg(__mmask8 k, __m256i a, __m256
 */
 static inline __m512i _mm512_maskz_mullo_epi32_dbg(__mmask16 k, __m512i a, __m512i b)
 {
-  uint64_t tmp;
+  int64_t tmp;
   int32_t a_vec[16];
   _mm512_storeu_si512((void*)a_vec, a);
   int32_t b_vec[16];
@@ -48492,7 +48377,7 @@ static inline __m512i _mm512_maskz_mullo_epi32_dbg(__mmask16 k, __m512i a, __m51
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
       tmp = a_vec[j] * b_vec[j];
-      dst_vec[j] = (tmp & 0xffffffff) >> 0;
+      dst_vec[j] = tmp & 0xffffffff;
     } else {
       dst_vec[j] = 0;
     }
@@ -48509,7 +48394,7 @@ static inline __m512i _mm512_maskz_mullo_epi32_dbg(__mmask16 k, __m512i a, __m51
 */
 static inline __m128i _mm_mask_mullo_epi32_dbg(__m128i src, __mmask8 k, __m128i a, __m128i b)
 {
-  uint64_t tmp;
+  int64_t tmp;
   int32_t src_vec[4];
   _mm_storeu_si128((void*)src_vec, src);
   int32_t a_vec[4];
@@ -48520,7 +48405,7 @@ static inline __m128i _mm_mask_mullo_epi32_dbg(__m128i src, __mmask8 k, __m128i 
   for (int j = 0; j <= 3; j++) {
     if (k & ((1 << j) & 0xff)) {
       tmp = a_vec[j] * b_vec[j];
-      dst_vec[j] = (tmp & 0xffffffff) >> 0;
+      dst_vec[j] = tmp & 0xffffffff;
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -48537,7 +48422,7 @@ static inline __m128i _mm_mask_mullo_epi32_dbg(__m128i src, __mmask8 k, __m128i 
 */
 static inline __m128i _mm_maskz_mullo_epi32_dbg(__mmask8 k, __m128i a, __m128i b)
 {
-  uint64_t tmp;
+  int64_t tmp;
   int32_t a_vec[4];
   _mm_storeu_si128((void*)a_vec, a);
   int32_t b_vec[4];
@@ -48546,7 +48431,7 @@ static inline __m128i _mm_maskz_mullo_epi32_dbg(__mmask8 k, __m128i a, __m128i b
   for (int j = 0; j <= 3; j++) {
     if (k & ((1 << j) & 0xff)) {
       tmp = a_vec[j] * b_vec[j];
-      dst_vec[j] = (tmp & 0xffffffff) >> 0;
+      dst_vec[j] = tmp & 0xffffffff;
     } else {
       dst_vec[j] = 0;
     }
@@ -48557,13 +48442,12 @@ static inline __m128i _mm_maskz_mullo_epi32_dbg(__mmask8 k, __m128i a, __m128i b
 #undef _mm_maskz_mullo_epi32
 #define _mm_maskz_mullo_epi32 _mm_maskz_mullo_epi32_dbg
 
-
 /*
  Multiply the packed 64-bit integers in "a" and "b", producing intermediate 128-bit integers, and store the low 64 bits of the intermediate integers in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
 static inline __m256i _mm256_mask_mullo_epi64_dbg(__m256i src, __mmask8 k, __m256i a, __m256i b)
 {
-  int64_t tmp_vec[8];
+  int64_t tmp_vec[2];
   int64_t src_vec[4];
   _mm256_storeu_si256((void*)src_vec, src);
   int64_t a_vec[4];
@@ -48585,13 +48469,12 @@ static inline __m256i _mm256_mask_mullo_epi64_dbg(__m256i src, __mmask8 k, __m25
 #undef _mm256_mask_mullo_epi64
 #define _mm256_mask_mullo_epi64 _mm256_mask_mullo_epi64_dbg
 
-
 /*
  Multiply the packed 64-bit integers in "a" and "b", producing intermediate 128-bit integers, and store the low 64 bits of the intermediate integers in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
 */
 static inline __m256i _mm256_maskz_mullo_epi64_dbg(__mmask8 k, __m256i a, __m256i b)
 {
-  int64_t tmp_vec[8];
+  int64_t tmp_vec[2];
   int64_t a_vec[4];
   _mm256_storeu_si256((void*)a_vec, a);
   int64_t b_vec[4];
@@ -48611,14 +48494,13 @@ static inline __m256i _mm256_maskz_mullo_epi64_dbg(__mmask8 k, __m256i a, __m256
 #undef _mm256_maskz_mullo_epi64
 #define _mm256_maskz_mullo_epi64 _mm256_maskz_mullo_epi64_dbg
 
-
 /*
  Multiply the packed 64-bit integers in "a" and "b", producing intermediate 128-bit integers, and store the low 64 bits of the intermediate integers in "dst". 
 */
 static inline __m256i _mm256_mullo_epi64_dbg(__m256i a, __m256i b)
 {
   int64_t tmp_vec[8];
-  int64_t a_vec[4];
+  int64_t a_vec[2];
   _mm256_storeu_si256((void*)a_vec, a);
   int64_t b_vec[4];
   _mm256_storeu_si256((void*)b_vec, b);
@@ -48633,13 +48515,12 @@ static inline __m256i _mm256_mullo_epi64_dbg(__m256i a, __m256i b)
 #undef _mm256_mullo_epi64
 #define _mm256_mullo_epi64 _mm256_mullo_epi64_dbg
 
-
 /*
  Multiply the packed 64-bit integers in "a" and "b", producing intermediate 128-bit integers, and store the low 64 bits of the intermediate integers in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
 static inline __m512i _mm512_mask_mullo_epi64_dbg(__m512i src, __mmask8 k, __m512i a, __m512i b)
 {
-  int64_t tmp_vec[8];
+  int64_t tmp_vec[2];
   int64_t src_vec[8];
   _mm512_storeu_si512((void*)src_vec, src);
   int64_t a_vec[8];
@@ -48661,13 +48542,12 @@ static inline __m512i _mm512_mask_mullo_epi64_dbg(__m512i src, __mmask8 k, __m51
 #undef _mm512_mask_mullo_epi64
 #define _mm512_mask_mullo_epi64 _mm512_mask_mullo_epi64_dbg
 
-
 /*
  Multiply the packed 64-bit integers in "a" and "b", producing intermediate 128-bit integers, and store the low 64 bits of the intermediate integers in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
 */
 static inline __m512i _mm512_maskz_mullo_epi64_dbg(__mmask8 k, __m512i a, __m512i b)
 {
-  int64_t tmp_vec[8];
+  int64_t tmp_vec[2];
   int64_t a_vec[8];
   _mm512_storeu_si512((void*)a_vec, a);
   int64_t b_vec[8];
@@ -48687,13 +48567,12 @@ static inline __m512i _mm512_maskz_mullo_epi64_dbg(__mmask8 k, __m512i a, __m512
 #undef _mm512_maskz_mullo_epi64
 #define _mm512_maskz_mullo_epi64 _mm512_maskz_mullo_epi64_dbg
 
-
 /*
  Multiply the packed 64-bit integers in "a" and "b", producing intermediate 128-bit integers, and store the low 64 bits of the intermediate integers in "dst". 
 */
 static inline __m512i _mm512_mullo_epi64_dbg(__m512i a, __m512i b)
 {
-  int64_t tmp_vec[8];
+  int64_t tmp_vec[2];
   int64_t a_vec[8];
   _mm512_storeu_si512((void*)a_vec, a);
   int64_t b_vec[8];
@@ -48709,13 +48588,12 @@ static inline __m512i _mm512_mullo_epi64_dbg(__m512i a, __m512i b)
 #undef _mm512_mullo_epi64
 #define _mm512_mullo_epi64 _mm512_mullo_epi64_dbg
 
-
 /*
  Multiply the packed 64-bit integers in "a" and "b", producing intermediate 128-bit integers, and store the low 64 bits of the intermediate integers in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
 static inline __m128i _mm_mask_mullo_epi64_dbg(__m128i src, __mmask8 k, __m128i a, __m128i b)
 {
-  int64_t tmp_vec[8];
+  int64_t tmp_vec[2];
   int64_t src_vec[2];
   _mm_storeu_si128((void*)src_vec, src);
   int64_t a_vec[2];
@@ -48737,13 +48615,12 @@ static inline __m128i _mm_mask_mullo_epi64_dbg(__m128i src, __mmask8 k, __m128i 
 #undef _mm_mask_mullo_epi64
 #define _mm_mask_mullo_epi64 _mm_mask_mullo_epi64_dbg
 
-
 /*
  Multiply the packed 64-bit integers in "a" and "b", producing intermediate 128-bit integers, and store the low 64 bits of the intermediate integers in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
 */
 static inline __m128i _mm_maskz_mullo_epi64_dbg(__mmask8 k, __m128i a, __m128i b)
 {
-  int64_t tmp_vec[8];
+  int64_t tmp_vec[2];
   int64_t a_vec[2];
   _mm_storeu_si128((void*)a_vec, a);
   int64_t b_vec[2];
@@ -48763,13 +48640,12 @@ static inline __m128i _mm_maskz_mullo_epi64_dbg(__mmask8 k, __m128i a, __m128i b
 #undef _mm_maskz_mullo_epi64
 #define _mm_maskz_mullo_epi64 _mm_maskz_mullo_epi64_dbg
 
-
 /*
  Multiply the packed 64-bit integers in "a" and "b", producing intermediate 128-bit integers, and store the low 64 bits of the intermediate integers in "dst". 
 */
 static inline __m128i _mm_mullo_epi64_dbg(__m128i a, __m128i b)
 {
-  int64_t tmp_vec[8];
+  int64_t tmp_vec[2];
   int64_t a_vec[2];
   _mm_storeu_si128((void*)a_vec, a);
   int64_t b_vec[2];
@@ -48791,7 +48667,7 @@ static inline __m128i _mm_mullo_epi64_dbg(__m128i a, __m128i b)
 */
 static inline __m256i _mm256_mask_mullo_epi16_dbg(__m256i src, __mmask16 k, __m256i a, __m256i b)
 {
-  uint32_t tmp;
+  int32_t tmp;
   int16_t src_vec[16];
   _mm256_storeu_si256((void*)src_vec, src);
   int16_t a_vec[16];
@@ -48819,7 +48695,7 @@ static inline __m256i _mm256_mask_mullo_epi16_dbg(__m256i src, __mmask16 k, __m2
 */
 static inline __m256i _mm256_maskz_mullo_epi16_dbg(__mmask16 k, __m256i a, __m256i b)
 {
-  uint32_t tmp;
+  int32_t tmp;
   int16_t a_vec[16];
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
@@ -48845,7 +48721,7 @@ static inline __m256i _mm256_maskz_mullo_epi16_dbg(__mmask16 k, __m256i a, __m25
 */
 static inline __m512i _mm512_mask_mullo_epi16_dbg(__m512i src, __mmask32 k, __m512i a, __m512i b)
 {
-  uint32_t tmp;
+  int32_t tmp;
   int16_t src_vec[32];
   _mm512_storeu_si512((void*)src_vec, src);
   int16_t a_vec[32];
@@ -48873,7 +48749,7 @@ static inline __m512i _mm512_mask_mullo_epi16_dbg(__m512i src, __mmask32 k, __m5
 */
 static inline __m512i _mm512_maskz_mullo_epi16_dbg(__mmask32 k, __m512i a, __m512i b)
 {
-  uint32_t tmp;
+  int32_t tmp;
   int16_t a_vec[32];
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
@@ -48899,7 +48775,7 @@ static inline __m512i _mm512_maskz_mullo_epi16_dbg(__mmask32 k, __m512i a, __m51
 */
 static inline __m512i _mm512_mullo_epi16_dbg(__m512i a, __m512i b)
 {
-  uint32_t tmp;
+  int32_t tmp;
   int16_t a_vec[32];
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
@@ -48921,7 +48797,7 @@ static inline __m512i _mm512_mullo_epi16_dbg(__m512i a, __m512i b)
 */
 static inline __m128i _mm_mask_mullo_epi16_dbg(__m128i src, __mmask8 k, __m128i a, __m128i b)
 {
-  uint32_t tmp;
+  int32_t tmp;
   int16_t src_vec[8];
   _mm_storeu_si128((void*)src_vec, src);
   int16_t a_vec[8];
@@ -48949,7 +48825,7 @@ static inline __m128i _mm_mask_mullo_epi16_dbg(__m128i src, __mmask8 k, __m128i 
 */
 static inline __m128i _mm_maskz_mullo_epi16_dbg(__mmask8 k, __m128i a, __m128i b)
 {
-  uint32_t tmp;
+  int32_t tmp;
   int16_t a_vec[8];
   _mm_storeu_si128((void*)a_vec, a);
   int16_t b_vec[8];
@@ -48969,7 +48845,6 @@ static inline __m128i _mm_maskz_mullo_epi16_dbg(__mmask8 k, __m128i a, __m128i b
 #undef _mm_maskz_mullo_epi16
 #define _mm_maskz_mullo_epi16 _mm_maskz_mullo_epi16_dbg
 
-
 /*
  Multiply the low unsigned 32-bit integers from each packed 64-bit element in "a" and "b", and store the unsigned 64-bit results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -48977,14 +48852,14 @@ static inline __m256i _mm256_mask_mul_epu32_dbg(__m256i src, __mmask8 k, __m256i
 {
   int64_t src_vec[4];
   _mm256_storeu_si256((void*)src_vec, src);
-  int32_t a_vec[8];
+  uint32_t a_vec[8];
   _mm256_storeu_si256((void*)a_vec, a);
-  int32_t b_vec[8];
+  uint32_t b_vec[8];
   _mm256_storeu_si256((void*)b_vec, b);
-  int64_t dst_vec[4];
+  uint64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[j] * b_vec[j];
+      dst_vec[j] = a_vec[j*2] * b_vec[j*2];
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -48995,20 +48870,19 @@ static inline __m256i _mm256_mask_mul_epu32_dbg(__m256i src, __mmask8 k, __m256i
 #undef _mm256_mask_mul_epu32
 #define _mm256_mask_mul_epu32 _mm256_mask_mul_epu32_dbg
 
-
 /*
  Multiply the low unsigned 32-bit integers from each packed 64-bit element in "a" and "b", and store the unsigned 64-bit results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
 */
 static inline __m256i _mm256_maskz_mul_epu32_dbg(__mmask8 k, __m256i a, __m256i b)
 {
-  int32_t a_vec[8];
+  uint32_t a_vec[8];
   _mm256_storeu_si256((void*)a_vec, a);
-  int32_t b_vec[8];
+  uint32_t b_vec[8];
   _mm256_storeu_si256((void*)b_vec, b);
-  int64_t dst_vec[4];
+  uint64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[j] * b_vec[j];
+      dst_vec[j] = a_vec[j*2] * b_vec[j*2];
     } else {
       dst_vec[j] = 0;
     }
@@ -49019,7 +48893,6 @@ static inline __m256i _mm256_maskz_mul_epu32_dbg(__mmask8 k, __m256i a, __m256i 
 #undef _mm256_maskz_mul_epu32
 #define _mm256_maskz_mul_epu32 _mm256_maskz_mul_epu32_dbg
 
-
 /*
  Multiply the low unsigned 32-bit integers from each packed 64-bit element in "a" and "b", and store the unsigned 64-bit results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -49027,14 +48900,14 @@ static inline __m128i _mm_mask_mul_epu32_dbg(__m128i src, __mmask8 k, __m128i a,
 {
   int64_t src_vec[2];
   _mm_storeu_si128((void*)src_vec, src);
-  int32_t a_vec[4];
+  uint32_t a_vec[4];
   _mm_storeu_si128((void*)a_vec, a);
-  int32_t b_vec[4];
+  uint32_t b_vec[4];
   _mm_storeu_si128((void*)b_vec, b);
-  int64_t dst_vec[2];
+  uint64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[j] * b_vec[j];
+      dst_vec[j] = a_vec[j*2] * b_vec[j*2];
     } else {
       dst_vec[j] = src_vec[j];
     }
@@ -49045,20 +48918,19 @@ static inline __m128i _mm_mask_mul_epu32_dbg(__m128i src, __mmask8 k, __m128i a,
 #undef _mm_mask_mul_epu32
 #define _mm_mask_mul_epu32 _mm_mask_mul_epu32_dbg
 
-
 /*
  Multiply the low unsigned 32-bit integers from each packed 64-bit element in "a" and "b", and store the unsigned 64-bit results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
 */
 static inline __m128i _mm_maskz_mul_epu32_dbg(__mmask8 k, __m128i a, __m128i b)
 {
-  int32_t a_vec[4];
+  uint32_t a_vec[4];
   _mm_storeu_si128((void*)a_vec, a);
-  int32_t b_vec[4];
+  uint32_t b_vec[4];
   _mm_storeu_si128((void*)b_vec, b);
-  int64_t dst_vec[2];
+  uint64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
     if (k & ((1 << j) & 0xff)) {
-      dst_vec[j] = a_vec[j] * b_vec[j];
+      dst_vec[j] = a_vec[j*2] * b_vec[j*2];
     } else {
       dst_vec[j] = 0;
     }
@@ -49068,7 +48940,6 @@ static inline __m128i _mm_maskz_mul_epu32_dbg(__mmask8 k, __m128i a, __m128i b)
 
 #undef _mm_maskz_mul_epu32
 #define _mm_maskz_mul_epu32 _mm_maskz_mul_epu32_dbg
-
 
 /*
  Compute the bitwise OR of packed 32-bit integers in "a" and "b", and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -52860,7 +52731,7 @@ static inline __mmask32 _mm256_mask_test_epi8_mask_dbg(__mmask32 k1, __m256i a, 
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (((a_vec[j] & b_vec[j]) != 0) ? 1 : 0) << j;
@@ -52874,7 +52745,6 @@ static inline __mmask32 _mm256_mask_test_epi8_mask_dbg(__mmask32 k1, __m256i a, 
 #undef _mm256_mask_test_epi8_mask
 #define _mm256_mask_test_epi8_mask _mm256_mask_test_epi8_mask_dbg
 
-
 /*
  Compute the bitwise AND of packed 8-bit integers in "a" and "b", producing intermediate 8-bit values, and set the corresponding bit in result mask "k" if the intermediate value is non-zero.
 */
@@ -52884,7 +52754,7 @@ static inline __mmask32 _mm256_test_epi8_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (((a_vec[j] & b_vec[j]) != 0) ? 1 : 0) << j;
   }
@@ -52893,7 +52763,6 @@ static inline __mmask32 _mm256_test_epi8_mask_dbg(__m256i a, __m256i b)
 
 #undef _mm256_test_epi8_mask
 #define _mm256_test_epi8_mask _mm256_test_epi8_mask_dbg
-
 
 /*
  Compute the bitwise AND of packed 8-bit integers in "a" and "b", producing intermediate 8-bit values, and set the corresponding bit in result mask "k" (subject to writemask "k") if the intermediate value is non-zero.
@@ -52904,7 +52773,7 @@ static inline __mmask64 _mm512_mask_test_epi8_mask_dbg(__mmask64 k1, __m512i a, 
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (((a_vec[j] & b_vec[j]) != 0) ? 1 : 0) << j;
@@ -52918,7 +52787,6 @@ static inline __mmask64 _mm512_mask_test_epi8_mask_dbg(__mmask64 k1, __m512i a, 
 #undef _mm512_mask_test_epi8_mask
 #define _mm512_mask_test_epi8_mask _mm512_mask_test_epi8_mask_dbg
 
-
 /*
  Compute the bitwise AND of packed 8-bit integers in "a" and "b", producing intermediate 8-bit values, and set the corresponding bit in result mask "k" if the intermediate value is non-zero.
 */
@@ -52928,7 +52796,7 @@ static inline __mmask64 _mm512_test_epi8_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     k |= (((a_vec[j] & b_vec[j]) != 0) ? 1 : 0) << j;
   }
@@ -52948,7 +52816,7 @@ static inline __mmask16 _mm_mask_test_epi8_mask_dbg(__mmask16 k1, __m128i a, __m
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (((a_vec[j] & b_vec[j]) != 0) ? 1 : 0) << j;
@@ -52961,7 +52829,6 @@ static inline __mmask16 _mm_mask_test_epi8_mask_dbg(__mmask16 k1, __m128i a, __m
 
 #undef _mm_mask_test_epi8_mask
 #define _mm_mask_test_epi8_mask _mm_mask_test_epi8_mask_dbg
-
 
 /*
  Compute the bitwise AND of packed 32-bit integers in "a" and "b", producing intermediate 32-bit values, and set the corresponding bit in result mask "k" (subject to writemask "k") if the intermediate value is non-zero.
@@ -52985,7 +52852,6 @@ static inline __mmask8 _mm256_mask_test_epi32_mask_dbg(__mmask8 k1, __m256i a, _
 
 #undef _mm256_mask_test_epi32_mask
 #define _mm256_mask_test_epi32_mask _mm256_mask_test_epi32_mask_dbg
-
 
 /*
  Compute the bitwise AND of packed 32-bit integers in "a" and "b", producing intermediate 32-bit values, and set the corresponding bit in result mask "k" if the intermediate value is non-zero.
@@ -53098,7 +52964,6 @@ static inline __mmask8 _mm_mask_test_epi64_mask_dbg(__mmask8 k1, __m128i a, __m1
 #undef _mm_mask_test_epi64_mask
 #define _mm_mask_test_epi64_mask _mm_mask_test_epi64_mask_dbg
 
-
 /*
  Compute the bitwise AND of packed 16-bit integers in "a" and "b", producing intermediate 16-bit values, and set the corresponding bit in result mask "k" (subject to writemask "k") if the intermediate value is non-zero.
 */
@@ -53108,7 +52973,7 @@ static inline __mmask16 _mm256_mask_test_epi16_mask_dbg(__mmask16 k1, __m256i a,
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (((a_vec[j] & b_vec[j]) != 0) ? 1 : 0) << j;
@@ -53122,7 +52987,6 @@ static inline __mmask16 _mm256_mask_test_epi16_mask_dbg(__mmask16 k1, __m256i a,
 #undef _mm256_mask_test_epi16_mask
 #define _mm256_mask_test_epi16_mask _mm256_mask_test_epi16_mask_dbg
 
-
 /*
  Compute the bitwise AND of packed 16-bit integers in "a" and "b", producing intermediate 16-bit values, and set the corresponding bit in result mask "k" if the intermediate value is non-zero.
 */
@@ -53132,7 +52996,7 @@ static inline __mmask16 _mm256_test_epi16_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (((a_vec[j] & b_vec[j]) != 0) ? 1 : 0) << j;
   }
@@ -53141,7 +53005,6 @@ static inline __mmask16 _mm256_test_epi16_mask_dbg(__m256i a, __m256i b)
 
 #undef _mm256_test_epi16_mask
 #define _mm256_test_epi16_mask _mm256_test_epi16_mask_dbg
-
 
 /*
  Compute the bitwise AND of packed 16-bit integers in "a" and "b", producing intermediate 16-bit values, and set the corresponding bit in result mask "k" (subject to writemask "k") if the intermediate value is non-zero.
@@ -53152,7 +53015,7 @@ static inline __mmask32 _mm512_mask_test_epi16_mask_dbg(__mmask32 k1, __m512i a,
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (((a_vec[j] & b_vec[j]) != 0) ? 1 : 0) << j;
@@ -53166,7 +53029,6 @@ static inline __mmask32 _mm512_mask_test_epi16_mask_dbg(__mmask32 k1, __m512i a,
 #undef _mm512_mask_test_epi16_mask
 #define _mm512_mask_test_epi16_mask _mm512_mask_test_epi16_mask_dbg
 
-
 /*
  Compute the bitwise AND of packed 16-bit integers in "a" and "b", producing intermediate 16-bit values, and set the corresponding bit in result mask "k" if the intermediate value is non-zero.
 */
@@ -53176,7 +53038,7 @@ static inline __mmask32 _mm512_test_epi16_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (((a_vec[j] & b_vec[j]) != 0) ? 1 : 0) << j;
   }
@@ -53185,7 +53047,6 @@ static inline __mmask32 _mm512_test_epi16_mask_dbg(__m512i a, __m512i b)
 
 #undef _mm512_test_epi16_mask
 #define _mm512_test_epi16_mask _mm512_test_epi16_mask_dbg
-
 
 /*
  Compute the bitwise AND of packed 16-bit integers in "a" and "b", producing intermediate 16-bit values, and set the corresponding bit in result mask "k" (subject to writemask "k") if the intermediate value is non-zero.
@@ -53210,7 +53071,6 @@ static inline __mmask8 _mm_mask_test_epi16_mask_dbg(__mmask8 k1, __m128i a, __m1
 #undef _mm_mask_test_epi16_mask
 #define _mm_mask_test_epi16_mask _mm_mask_test_epi16_mask_dbg
 
-
 /*
  Compute the bitwise NAND of packed 8-bit integers in "a" and "b", producing intermediate 8-bit values, and set the corresponding bit in result mask "k" (subject to writemask "k") if the intermediate value is zero.
 */
@@ -53220,7 +53080,7 @@ static inline __mmask32 _mm256_mask_testn_epi8_mask_dbg(__mmask32 k1, __m256i a,
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (((a_vec[j] & b_vec[j]) == 0) ? 1 : 0) << j;
@@ -53234,7 +53094,6 @@ static inline __mmask32 _mm256_mask_testn_epi8_mask_dbg(__mmask32 k1, __m256i a,
 #undef _mm256_mask_testn_epi8_mask
 #define _mm256_mask_testn_epi8_mask _mm256_mask_testn_epi8_mask_dbg
 
-
 /*
  Compute the bitwise NAND of packed 8-bit integers in "a" and "b", producing intermediate 8-bit values, and set the corresponding bit in result mask "k" if the intermediate value is zero.
 */
@@ -53244,7 +53103,7 @@ static inline __mmask32 _mm256_testn_epi8_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int8_t b_vec[32];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (((a_vec[j] & b_vec[j]) == 0) ? 1 : 0) << j;
   }
@@ -53253,7 +53112,6 @@ static inline __mmask32 _mm256_testn_epi8_mask_dbg(__m256i a, __m256i b)
 
 #undef _mm256_testn_epi8_mask
 #define _mm256_testn_epi8_mask _mm256_testn_epi8_mask_dbg
-
 
 /*
  Compute the bitwise NAND of packed 8-bit integers in "a" and "b", producing intermediate 8-bit values, and set the corresponding bit in result mask "k" (subject to writemask "k") if the intermediate value is zero.
@@ -53264,7 +53122,7 @@ static inline __mmask64 _mm512_mask_testn_epi8_mask_dbg(__mmask64 k1, __m512i a,
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     if (k1 & ((1 << j) & 0xFFFFFFFFFFFFFFFFL)) {
       k |= (((a_vec[j] & b_vec[j]) == 0) ? 1 : 0) << j;
@@ -53278,7 +53136,6 @@ static inline __mmask64 _mm512_mask_testn_epi8_mask_dbg(__mmask64 k1, __m512i a,
 #undef _mm512_mask_testn_epi8_mask
 #define _mm512_mask_testn_epi8_mask _mm512_mask_testn_epi8_mask_dbg
 
-
 /*
  Compute the bitwise NAND of packed 8-bit integers in "a" and "b", producing intermediate 8-bit values, and set the corresponding bit in result mask "k" if the intermediate value is zero.
 */
@@ -53288,7 +53145,7 @@ static inline __mmask64 _mm512_testn_epi8_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int8_t b_vec[64];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask64 k;
+  __mmask64 k = 0;
   for (int j = 0; j <= 63; j++) {
     k |= (((a_vec[j] & b_vec[j]) == 0) ? 1 : 0) << j;
   }
@@ -53297,7 +53154,6 @@ static inline __mmask64 _mm512_testn_epi8_mask_dbg(__m512i a, __m512i b)
 
 #undef _mm512_testn_epi8_mask
 #define _mm512_testn_epi8_mask _mm512_testn_epi8_mask_dbg
-
 
 /*
  Compute the bitwise NAND of packed 8-bit integers in "a" and "b", producing intermediate 8-bit values, and set the corresponding bit in result mask "k" (subject to writemask "k") if the intermediate value is zero.
@@ -53308,7 +53164,7 @@ static inline __mmask16 _mm_mask_testn_epi8_mask_dbg(__mmask16 k1, __m128i a, __
   _mm_storeu_si128((void*)a_vec, a);
   int8_t b_vec[16];
   _mm_storeu_si128((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (((a_vec[j] & b_vec[j]) == 0) ? 1 : 0) << j;
@@ -53321,7 +53177,6 @@ static inline __mmask16 _mm_mask_testn_epi8_mask_dbg(__mmask16 k1, __m128i a, __
 
 #undef _mm_mask_testn_epi8_mask
 #define _mm_mask_testn_epi8_mask _mm_mask_testn_epi8_mask_dbg
-
 
 /*
  Compute the bitwise NAND of packed 32-bit integers in "a" and "b", producing intermediate 32-bit values, and set the corresponding bit in result mask "k" (subject to writemask "k") if the intermediate value is zero.
@@ -53468,7 +53323,7 @@ static inline __mmask16 _mm256_mask_testn_epi16_mask_dbg(__mmask16 k1, __m256i a
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     if (k1 & ((1 << j) & 0xffff)) {
       k |= (((a_vec[j] & b_vec[j]) == 0) ? 1 : 0) << j;
@@ -53482,7 +53337,6 @@ static inline __mmask16 _mm256_mask_testn_epi16_mask_dbg(__mmask16 k1, __m256i a
 #undef _mm256_mask_testn_epi16_mask
 #define _mm256_mask_testn_epi16_mask _mm256_mask_testn_epi16_mask_dbg
 
-
 /*
  Compute the bitwise NAND of packed 16-bit integers in "a" and "b", producing intermediate 16-bit values, and set the corresponding bit in result mask "k" if the intermediate value is zero.
 */
@@ -53492,7 +53346,7 @@ static inline __mmask16 _mm256_testn_epi16_mask_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
   _mm256_storeu_si256((void*)b_vec, b);
-  __mmask16 k;
+  __mmask16 k = 0;
   for (int j = 0; j <= 15; j++) {
     k |= (((a_vec[j] & b_vec[j]) == 0) ? 1 : 0) << j;
   }
@@ -53512,7 +53366,7 @@ static inline __mmask32 _mm512_mask_testn_epi16_mask_dbg(__mmask32 k1, __m512i a
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     if (k1 & ((1 << j) & 0xffffffff)) {
       k |= (((a_vec[j] & b_vec[j]) == 0) ? 1 : 0) << j;
@@ -53526,7 +53380,6 @@ static inline __mmask32 _mm512_mask_testn_epi16_mask_dbg(__mmask32 k1, __m512i a
 #undef _mm512_mask_testn_epi16_mask
 #define _mm512_mask_testn_epi16_mask _mm512_mask_testn_epi16_mask_dbg
 
-
 /*
  Compute the bitwise NAND of packed 16-bit integers in "a" and "b", producing intermediate 16-bit values, and set the corresponding bit in result mask "k" if the intermediate value is zero.
 */
@@ -53536,7 +53389,7 @@ static inline __mmask32 _mm512_testn_epi16_mask_dbg(__m512i a, __m512i b)
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t b_vec[32];
   _mm512_storeu_si512((void*)b_vec, b);
-  __mmask32 k;
+  __mmask32 k = 0;
   for (int j = 0; j <= 31; j++) {
     k |= (((a_vec[j] & b_vec[j]) == 0) ? 1 : 0) << j;
   }
@@ -57040,7 +56893,6 @@ static inline __m256i _mm256_blendv_epi8_dbg(__m256i a, __m256i b, __m256i mask)
 #undef _mm256_blendv_epi8
 #define _mm256_blendv_epi8 _mm256_blendv_epi8_dbg
 
-
 /*
  Broadcast the low packed 8-bit integer from "a" to all elements of "dst".
 */
@@ -57542,7 +57394,6 @@ static inline __m256i _mm256_cvtepi8_epi32_dbg(__m128i a)
 #undef _mm256_cvtepi8_epi32
 #define _mm256_cvtepi8_epi32 _mm256_cvtepi8_epi32_dbg
 
-
 /*
  Sign extend packed 8-bit integers in the low 8 bytes of "a" to packed 64-bit integers, and store the results in "dst".
 */
@@ -57560,7 +57411,6 @@ static inline __m256i _mm256_cvtepi8_epi64_dbg(__m128i a)
 #undef _mm256_cvtepi8_epi64
 #define _mm256_cvtepi8_epi64 _mm256_cvtepi8_epi64_dbg
 
-
 /*
  Zero extend packed unsigned 16-bit integers in "a" to packed 32-bit integers, and store the results in "dst".
 */
@@ -57577,7 +57427,6 @@ static inline __m256i _mm256_cvtepu16_epi32_dbg(__m128i a)
 
 #undef _mm256_cvtepu16_epi32
 #define _mm256_cvtepu16_epi32 _mm256_cvtepu16_epi32_dbg
-
 
 /*
  Zero extend packed unsigned 16-bit integers in "a" to packed 64-bit integers, and store the results in "dst".
@@ -57650,7 +57499,6 @@ static inline __m256i _mm256_cvtepu8_epi32_dbg(__m128i a)
 #undef _mm256_cvtepu8_epi32
 #define _mm256_cvtepu8_epi32 _mm256_cvtepu8_epi32_dbg
 
-
 /*
  Zero extend packed unsigned 8-bit integers in the low 8 byte sof "a" to packed 64-bit integers, and store the results in "dst".
 */
@@ -57667,7 +57515,6 @@ static inline __m256i _mm256_cvtepu8_epi64_dbg(__m128i a)
 
 #undef _mm256_cvtepu8_epi64
 #define _mm256_cvtepu8_epi64 _mm256_cvtepu8_epi64_dbg
-
 
 /*
  Horizontally add adjacent pairs of 16-bit integers in "a" and "b", and pack the signed 16-bit results in "dst".
@@ -57913,7 +57760,7 @@ static inline __m256i _mm256_madd_epi16_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)b_vec, b);
   int32_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
-    dst_vec[j] = a_vec[j]*b_vec[j] + a_vec[j]*b_vec[j];
+    dst_vec[j] = a_vec[j*2]*b_vec[j*2] + a_vec[j*2+1]*b_vec[j*2+1];
   }
   return _mm256_loadu_si256((void*)dst_vec);
 }
@@ -57934,7 +57781,7 @@ static inline __m256i _mm256_maddubs_epi16_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)b_vec, b);
   int16_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
-    dst_vec[j] = Saturate_To_Int16( a_vec[j]*b_vec[j] + a_vec[j]*b_vec[j] );
+    dst_vec[j] = Saturate_To_Int16( a_vec[j*2]*b_vec[j*2] + a_vec[j*2+1]*b_vec[j*2+1] );
   }
   return _mm256_loadu_si256((void*)dst_vec);
 }
@@ -58239,7 +58086,6 @@ static inline __m256i _mm256_min_epu32_dbg(__m256i a, __m256i b)
 #undef _mm256_min_epu32
 #define _mm256_min_epu32 _mm256_min_epu32_dbg
 
-
 /*
  Multiply the low 32-bit integers from each packed 64-bit element in "a" and "b", and store the signed 64-bit results in "dst". 
 */
@@ -58251,7 +58097,7 @@ static inline __m256i _mm256_mul_epi32_dbg(__m256i a, __m256i b)
   _mm256_storeu_si256((void*)b_vec, b);
   int64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
-    dst_vec[j] = a_vec[j] * b_vec[j];
+    dst_vec[j] = a_vec[j*2] * b_vec[j*2];
   }
   return _mm256_loadu_si256((void*)dst_vec);
 }
@@ -58259,19 +58105,18 @@ static inline __m256i _mm256_mul_epi32_dbg(__m256i a, __m256i b)
 #undef _mm256_mul_epi32
 #define _mm256_mul_epi32 _mm256_mul_epi32_dbg
 
-
 /*
  Multiply the low unsigned 32-bit integers from each packed 64-bit element in "a" and "b", and store the unsigned 64-bit results in "dst". 
 */
 static inline __m256i _mm256_mul_epu32_dbg(__m256i a, __m256i b)
 {
-  int32_t a_vec[8];
+  uint32_t a_vec[8];
   _mm256_storeu_si256((void*)a_vec, a);
-  int32_t b_vec[8];
+  uint32_t b_vec[8];
   _mm256_storeu_si256((void*)b_vec, b);
-  int64_t dst_vec[4];
+  uint64_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
-    dst_vec[j] = a_vec[j] * b_vec[j];
+    dst_vec[j] = a_vec[j*2] * b_vec[j*2];
   }
   return _mm256_loadu_si256((void*)dst_vec);
 }
@@ -58279,13 +58124,12 @@ static inline __m256i _mm256_mul_epu32_dbg(__m256i a, __m256i b)
 #undef _mm256_mul_epu32
 #define _mm256_mul_epu32 _mm256_mul_epu32_dbg
 
-
 /*
  Multiply the packed 16-bit integers in "a" and "b", producing intermediate 32-bit integers, and store the high 16 bits of the intermediate integers in "dst". 
 */
 static inline __m256i _mm256_mulhi_epi16_dbg(__m256i a, __m256i b)
 {
-  uint32_t tmp;
+  int32_t tmp;
   int16_t a_vec[16];
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
@@ -58300,7 +58144,6 @@ static inline __m256i _mm256_mulhi_epi16_dbg(__m256i a, __m256i b)
 
 #undef _mm256_mulhi_epi16
 #define _mm256_mulhi_epi16 _mm256_mulhi_epi16_dbg
-
 
 /*
  Multiply the packed unsigned 16-bit integers in "a" and "b", producing intermediate 32-bit integers, and store the high 16 bits of the intermediate integers in "dst". 
@@ -58323,13 +58166,12 @@ static inline __m256i _mm256_mulhi_epu16_dbg(__m256i a, __m256i b)
 #undef _mm256_mulhi_epu16
 #define _mm256_mulhi_epu16 _mm256_mulhi_epu16_dbg
 
-
 /*
  Multiply packed 16-bit integers in "a" and "b", producing intermediate signed 32-bit integers. Truncate each intermediate integer to the 18 most significant bits, round by adding 1, and store bits [16:1] to "dst". 
 */
 static inline __m256i _mm256_mulhrs_epi16_dbg(__m256i a, __m256i b)
 {
-  uint32_t tmp;
+  int32_t tmp;
   int16_t a_vec[16];
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
@@ -58345,13 +58187,12 @@ static inline __m256i _mm256_mulhrs_epi16_dbg(__m256i a, __m256i b)
 #undef _mm256_mulhrs_epi16
 #define _mm256_mulhrs_epi16 _mm256_mulhrs_epi16_dbg
 
-
 /*
  Multiply the packed 16-bit integers in "a" and "b", producing intermediate 32-bit integers, and store the low 16 bits of the intermediate integers in "dst". 
 */
 static inline __m256i _mm256_mullo_epi16_dbg(__m256i a, __m256i b)
 {
-  uint32_t tmp;
+  int32_t tmp;
   int16_t a_vec[16];
   _mm256_storeu_si256((void*)a_vec, a);
   int16_t b_vec[16];
@@ -58367,13 +58208,12 @@ static inline __m256i _mm256_mullo_epi16_dbg(__m256i a, __m256i b)
 #undef _mm256_mullo_epi16
 #define _mm256_mullo_epi16 _mm256_mullo_epi16_dbg
 
-
 /*
  Multiply the packed 32-bit integers in "a" and "b", producing intermediate 64-bit integers, and store the low 32 bits of the intermediate integers in "dst". 
 */
 static inline __m256i _mm256_mullo_epi32_dbg(__m256i a, __m256i b)
 {
-  uint64_t tmp;
+  int64_t tmp;
   int32_t a_vec[8];
   _mm256_storeu_si256((void*)a_vec, a);
   int32_t b_vec[8];
@@ -58381,14 +58221,13 @@ static inline __m256i _mm256_mullo_epi32_dbg(__m256i a, __m256i b)
   int32_t dst_vec[8];
   for (int j = 0; j <= 7; j++) {
     tmp = a_vec[j] * b_vec[j];
-    dst_vec[j] = (tmp & 0xffffffff) >> 0;
+    dst_vec[j] = tmp & 0xffffffff;
   }
   return _mm256_loadu_si256((void*)dst_vec);
 }
 
 #undef _mm256_mullo_epi32
 #define _mm256_mullo_epi32 _mm256_mullo_epi32_dbg
-
 
 /*
  Compute the bitwise OR of 256 bits (representing integer data) in "a" and "b", and store the result in "dst".
@@ -60555,7 +60394,7 @@ static inline __m256i _mm256_setr_m128i_dbg(__m128i lo, __m128i hi)
 */
 static inline float _mm256_cvtss_f32_dbg(__m256 a)
 {
-  int32_t a_vec[8];
+  float a_vec[8];
   _mm256_storeu_ps((void*)a_vec, a);
   float dst;
   dst = a_vec[0];
@@ -60564,7 +60403,6 @@ return dst;
 
 #undef _mm256_cvtss_f32
 #define _mm256_cvtss_f32 _mm256_cvtss_f32_dbg
-
 
 /*
  Blend packed double-precision (64-bit) floating-point elements from "a" and "b" using control mask "imm8", and store the results in "dst".
@@ -60719,6 +60557,7 @@ return _mm_loadu_si128((void*)dst_vec);
 /*
  Conditionally multiply the packed double-precision (64-bit) floating-point elements in "a" and "b" using the high 4 bits in "imm8", sum the four products, and conditionally store the sum in "dst" using the low 4 bits of "imm8".
 */
+/*
 static inline __m128d _mm_dp_pd_dbg(__m128d a, __m128d b, const int imm8)
 {
   __m128d a_vec[1];
@@ -60731,7 +60570,7 @@ return _mm_loadu_pd((void*)dst_vec);
 
 #undef _mm_dp_pd
 #define _mm_dp_pd _mm_dp_pd_dbg
-
+*/
 
 /*
  Conditionally multiply the packed single-precision (32-bit) floating-point elements in "a" and "b" using the high 4 bits in "imm8", sum the four products, and conditionally store the sum in "dst" using the low 4 bits of "imm8".
@@ -61034,7 +60873,6 @@ return _mm_loadu_si128((void*)dst_vec);
 #undef _mm_cvtepi8_epi32
 #define _mm_cvtepi8_epi32 _mm_cvtepi8_epi32_dbg
 
-
 /*
  Sign extend packed 8-bit integers in the low 8 bytes of "a" to packed 64-bit integers, and store the results in "dst".
 */
@@ -61052,7 +60890,6 @@ return _mm_loadu_si128((void*)dst_vec);
 #undef _mm_cvtepi8_epi64
 #define _mm_cvtepi8_epi64 _mm_cvtepi8_epi64_dbg
 
-
 /*
  Sign extend packed 16-bit integers in "a" to packed 32-bit integers, and store the results in "dst".
 */
@@ -61069,7 +60906,6 @@ return _mm_loadu_si128((void*)dst_vec);
 
 #undef _mm_cvtepi16_epi32
 #define _mm_cvtepi16_epi32 _mm_cvtepi16_epi32_dbg
-
 
 /*
  Sign extend packed 16-bit integers in "a" to packed 64-bit integers, and store the results in "dst".
@@ -61142,7 +60978,6 @@ return _mm_loadu_si128((void*)dst_vec);
 #undef _mm_cvtepu8_epi32
 #define _mm_cvtepu8_epi32 _mm_cvtepu8_epi32_dbg
 
-
 /*
  Zero extend packed unsigned 8-bit integers in the low 8 byte sof "a" to packed 64-bit integers, and store the results in "dst".
 */
@@ -61160,13 +60995,12 @@ return _mm_loadu_si128((void*)dst_vec);
 #undef _mm_cvtepu8_epi64
 #define _mm_cvtepu8_epi64 _mm_cvtepu8_epi64_dbg
 
-
 /*
  Zero extend packed unsigned 16-bit integers in "a" to packed 32-bit integers, and store the results in "dst".
 */
 static inline __m128i _mm_cvtepu16_epi32_dbg(__m128i a)
 {
-  int16_t a_vec[8];
+  uint16_t a_vec[8];
   _mm_storeu_si128((void*)a_vec, a);
   int32_t dst_vec[4];
   for (int j = 0; j <= 3; j++) {
@@ -61196,7 +61030,6 @@ return _mm_loadu_si128((void*)dst_vec);
 #undef _mm_cvtepu16_epi64
 #define _mm_cvtepu16_epi64 _mm_cvtepu16_epi64_dbg
 
-
 /*
  Zero extend packed unsigned 32-bit integers in "a" to packed 64-bit integers, and store the results in "dst".
 */
@@ -61214,7 +61047,6 @@ return _mm_loadu_si128((void*)dst_vec);
 #undef _mm_cvtepu32_epi64
 #define _mm_cvtepu32_epi64 _mm_cvtepu32_epi64_dbg
 
-
 /*
  Multiply the low 32-bit integers from each packed 64-bit element in "a" and "b", and store the signed 64-bit results in "dst". 
 */
@@ -61226,7 +61058,7 @@ static inline __m128i _mm_mul_epi32_dbg(__m128i a, __m128i b)
   _mm_storeu_si128((void*)b_vec, b);
   int64_t dst_vec[2];
   for (int j = 0; j <= 1; j++) {
-    dst_vec[j] = a_vec[j] * b_vec[j];
+    dst_vec[j] = a_vec[j*2] * b_vec[j*2];
   }
 return _mm_loadu_si128((void*)dst_vec);
 }
@@ -61234,13 +61066,12 @@ return _mm_loadu_si128((void*)dst_vec);
 #undef _mm_mul_epi32
 #define _mm_mul_epi32 _mm_mul_epi32_dbg
 
-
 /*
  Multiply the packed 32-bit integers in "a" and "b", producing intermediate 64-bit integers, and store the low 32 bits of the intermediate integers in "dst". 
 */
 static inline __m128i _mm_mullo_epi32_dbg(__m128i a, __m128i b)
 {
-  uint64_t tmp;
+  int64_t tmp;
   int32_t a_vec[4];
   _mm_storeu_si128((void*)a_vec, a);
   int32_t b_vec[4];
@@ -61255,7 +61086,6 @@ return _mm_loadu_si128((void*)dst_vec);
 
 #undef _mm_mullo_epi32
 #define _mm_mullo_epi32 _mm_mullo_epi32_dbg
-
 
 /*
  Round the packed double-precision (64-bit) floating-point elements in "a" using the "rounding" parameter, and store the results as packed double-precision floating-point elements in "dst".
@@ -63121,6 +62951,44 @@ static inline __m512i _mm512_unpackhi_epi16_dbg(__m512i a, __m512i b)
 
 #undef _mm512_unpackhi_epi16
 #define _mm512_unpackhi_epi16 _mm512_unpackhi_epi16_dbg
+
+/*
+ Compare packed single-precision (32-bit) floating-point elements in "a" and "b" for equality, and store the results in mask vector "k".
+*/
+static inline __mmask16 _mm512_cmpeq_ps_mask_dbg(__m512 a, __m512 b)
+{
+  float a_vec[16];
+  _mm512_storeu_ps((void*)a_vec, a);
+  float b_vec[16];
+  _mm512_storeu_ps((void*)b_vec, b);
+  __mmask16 k = 0;
+  for (int j = 0; j <= 15; j++) {
+    k |= ((a_vec[j] == b_vec[j]) ? 1 : 0) << j;
+  }
+  return k;
+}
+
+#undef _mm512_cmpeq_ps_mask
+#define _mm512_cmpeq_ps_mask _mm512_cmpeq_ps_mask_dbg
+
+/*
+ Compare packed double-precision (64-bit) floating-point elements in "a" and "b" for equality, and store the results in mask vector "k".
+*/
+static inline __mmask8 _mm512_cmpeq_pd_mask_dbg(__m512d a, __m512d b)
+{
+  double a_vec[8];
+  _mm512_storeu_pd((void*)a_vec, a);
+  double b_vec[8];
+  _mm512_storeu_pd((void*)b_vec, b);
+  __mmask8 k = 0;
+  for (int j = 0; j <= 7; j++) {
+    k |= ((a_vec[j] == b_vec[j]) ? 1 : 0) << j;
+  }
+  return k;
+}
+
+#undef _mm512_cmpeq_pd_mask
+#define _mm512_cmpeq_pd_mask _mm512_cmpeq_pd_mask_dbg
 
 
 #undef MIN
