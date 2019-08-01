@@ -7345,7 +7345,7 @@ static inline __m512 _mm512_maskz_fmadd_round_ps_dbg(__mmask16 k, __m512 a, __m5
   float dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
-      a_vec[j] = (a_vec[j] * b_vec[j]) + c_vec[j];
+      dst_vec[j] = (a_vec[j] * b_vec[j]) + c_vec[j];
     } else {
       dst_vec[j] = 0;
     }
