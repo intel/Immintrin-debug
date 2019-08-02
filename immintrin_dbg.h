@@ -12388,7 +12388,6 @@ static inline __m512i _mm512_abs_epi32_dbg(__m512i a)
 #undef _mm512_abs_epi32
 #define _mm512_abs_epi32 _mm512_abs_epi32_dbg
 
-
 /*
  Compute the absolute value of packed 32-bit integers in "a", and store the unsigned results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
@@ -12411,7 +12410,6 @@ static inline __m512i _mm512_mask_abs_epi32_dbg(__m512i src, __mmask16 k, __m512
 
 #undef _mm512_mask_abs_epi32
 #define _mm512_mask_abs_epi32 _mm512_mask_abs_epi32_dbg
-
 
 /*
  Compute the absolute value of packed 32-bit integers in "a", and store the unsigned results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). 
@@ -62585,7 +62583,7 @@ static inline __m256 _mm256_castps128_ps256_dbg(__m128 a)
 {
   __m128 b[2];
   b[0] = a;
-  return _mm256_loadu_ps(b);
+  return _mm256_loadu_ps((float*)b);
 }
 #undef _mm256_castps128_ps256
 #define _mm256_castps128_ps256 _mm256_castps128_ps256_dbg
@@ -62593,7 +62591,7 @@ static inline __m256d _mm256_castpd128_pd256_dbg(__m128d a)
 {
   __m128d b[2];
   b[0] = a;
-  return _mm256_loadu_pd(b);
+  return _mm256_loadu_pd((double*)b);
 }
 #undef _mm256_castpd128_pd256
 #define _mm256_castpd128_pd256 _mm256_castpd128_pd256_dbg
@@ -62601,7 +62599,7 @@ static inline __m256i _mm256_castsi128_si256_dbg(__m128i a)
 {
   __m128i b[2];
   b[0] = a;
-  return _mm256_loadu_si256(b);
+  return _mm256_loadu_si256((__m256i*)b);
 }
 #undef _mm256_castsi128_si256
 #define _mm256_castsi128_si256 _mm256_castsi128_si256_dbg
@@ -62609,7 +62607,7 @@ static inline __m512d _mm512_castpd256_pd512_dbg(__m256d a)
 {
   __m256d b[2];
   b[0] = a;
-  return _mm512_loadu_pd(b);
+  return _mm512_loadu_pd((double*)b);
 }
 #undef _mm512_castpd256_pd512
 #define _mm512_castpd256_pd512 _mm512_castpd256_pd512_dbg
@@ -62874,7 +62872,6 @@ static inline __m256i _mm256_mask_loadu_epi16_dbg (__m256i src, __mmask16 k, voi
 #undef _mm256_mask_loadu_epi16
 #define _mm256_mask_loadu_epi16 _mm256_mask_loadu_epi16_dbg
 
-
 /*
  Unpack and interleave 16-bit integers from the high half of each 128-bit lane in "a" and "b", and store the results in "dst".
 */
@@ -62937,7 +62934,6 @@ static inline __mmask8 _mm512_cmpeq_pd_mask_dbg(__m512d a, __m512d b)
 
 #undef _mm512_cmpeq_pd_mask
 #define _mm512_cmpeq_pd_mask _mm512_cmpeq_pd_mask_dbg
-
 
 #undef MIN
 #undef MAX
