@@ -11,7 +11,6 @@ If compiled with -O3, it will vectorize the debug library which would make debug
 
 Known bugs:
 fmaddsub_round_pd
-_mm512_maskz_fmadd_round_ps
 _range_pd
 _reduce_pd
 rsqrt accuracy
