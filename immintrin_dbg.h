@@ -561,31 +561,33 @@ static inline double RANGE(double src1, double src2, int opCtl, int signSelCtl)
 {
   double tmp;
   double dst;
+  uint64_t *ptmp = &tmp, *psrc1 = &src1, *psrc2 = &src2, *pdst = &dst;
   switch (opCtl) {
-    case 0: 
+    case 0:
       tmp = (src1 <= src2) ? src1 : src2; break;
-    case 1: 
+    case 1:
       tmp = (src1 <= src2) ? src2 : src1; break;
-	  case 2: 
+    case 2:
       tmp = (abs(src1) <= abs(src2)) ? src1 : src2; break;
-	  case 3: 
+    case 3:
       tmp = (abs(src1) <= abs(src2)) ? src2 : src1; break;
   }
-	
+
   switch (signSelCtl) {
-    case 0: dst = ((uint64_t)src1 & 0x8000000000000000UL) | ((uint64_t)tmp & 0x7FFFFFFFFFFFFFFFUL); break;
-    case 1: dst = tmp; break;
-    case 2: dst = ((uint64_t)tmp & 0x7FFFFFFFFFFFFFFFUL); break;
-    case 3: dst = (1UL << 63) | ((uint64_t)tmp & 0x7FFFFFFFFFFFFFFFUL); break;
-	}
-	
-	return dst;
+    case 0: *pdst = (*psrc1 & 0x8000000000000000ULL) | (*ptmp & 0x7FFFFFFFFFFFFFFFULL); break;
+    case 1: *pdst = *ptmp; break;
+    case 2: *pdst = (*ptmp & 0x7FFFFFFFFFFFFFFFULL); break;
+    case 3: *pdst = (1ULL << 63) | (*ptmp & 0x7FFFFFFFFFFFFFFFULL); break;
+  }
+
+  return dst;
 }
 
 static inline double RANGE32(float src1, float src2, int opCtl, int signSelCtl)
 {
   float tmp;
   float dst;
+  uint32_t *ptmp = &tmp, *psrc1 = &src1, *psrc2 = &src2, *pdst = &dst;
   switch (opCtl) {
     case 0: 
       tmp = (src1 <= src2) ? src1 : src2; break;
@@ -598,10 +600,10 @@ static inline double RANGE32(float src1, float src2, int opCtl, int signSelCtl)
   }
 	
   switch (signSelCtl) {
-    case 0: dst = ((uint32_t)src1 & 0x80000000UL) | ((uint32_t)tmp & 0x7FFFFFFFUL); break;
-    case 1: dst = tmp; break;
-    case 2: dst = ((uint32_t)tmp & 0x7FFFFFFFUL); break;
-    case 3: dst = (1 << 31) | ((uint32_t)tmp & 0x7FFFFFFFUL); break;
+    case 0: *pdst = (*psrc1 & 0x80000000UL) | (*ptmp & 0x7FFFFFFFUL); break;
+    case 1: *pdst = *ptmp; break;
+    case 2: *pdst = (*ptmp & 0x7FFFFFFFUL); break;
+    case 3: *pdst = (1 << 31) | (*ptmp & 0x7FFFFFFFUL); break;
   }
 	
 	return dst;
