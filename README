@@ -3,7 +3,7 @@ to enable source level debug.
 Usage: just include immintrin_dbg.h in debug build only. All functions are automatically generated from 
 intrinsics guide: https://software.intel.com/sites/landingpage/IntrinsicsGuide/ 
 $ icc -O -g -xAVX
-$ gcc -Og -std=c99 -g -lm -Wno-psabi -march=nehalem
+$ gcc -Og -std=c99 -g -lm -Wno-psabi -march=nehalem -Wno-incompatible-pointer-types
 $ clang -O1 -g -march=nehalem -lm
 Please note, that GCC and clang will compile using SSE registers only, so this will work on any x86 CPU but Quark. ICC may still
 use ZMM0 register to return _m512 type from functions.
