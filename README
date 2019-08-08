@@ -10,7 +10,6 @@ use ZMM0 register to return _m512 type from functions.
 If compiled with -O3, it will vectorize the debug library which would make debugging harder.
 
 Known bugs:
-fmaddsub_round_pd
 _range_pd
 _reduce_pd
 rsqrt accuracy
