@@ -28,7 +28,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
    Intrinsics guide version: 3.5.4
-   Parser version: 0.24
+   Parser version: 0.25
 */
 
 #ifndef __IMMINTRIN_DBG_H_
@@ -31125,6 +31125,56 @@ static inline __m512d _mm512_or_pd_dbg(__m512d a, __m512d b)
 #define _mm512_or_pd _mm512_or_pd_dbg
 
 /*
+ Compute the bitwise OR of packed 32-bit integers in "a" and "b", and store the results in "dst".
+*/
+static inline __m512i _mm512_or_epi32_dbg(__m512i a, __m512i b)
+{
+  int32_t a_vec[16];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int32_t b_vec[16];
+  _mm512_storeu_si512((void*)b_vec, b);
+  int32_t dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    dst_vec[j] = a_vec[j] | b_vec[j];
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_or_epi32
+#define _mm512_or_epi32 _mm512_or_epi32_dbg
+
+/*
+ Compute the bitwise OR of 512 bits (representing integer data) in "a" and "b", and store the result in "dst".
+*/
+static inline __m512i _mm512_or_si512_dbg(__m512i a, __m512i b)
+{
+  return _mm512_or_epi32(a, b);
+}
+
+#undef _mm512_or_si512
+#define _mm512_or_si512 _mm512_or_si512_dbg
+
+/*
+ Compute the bitwise OR of packed 64-bit integers in "a" and "b", and store the resut in "dst".
+
+*/
+static inline __m512i _mm512_or_epi64_dbg(__m512i a, __m512i b)
+{
+  int64_t a_vec[8];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int64_t b_vec[8];
+  _mm512_storeu_si512((void*)b_vec, b);
+  int64_t dst_vec[8];
+  for (int j = 0; j <= 7; j++) {
+    dst_vec[j] = a_vec[j] | b_vec[j];
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_or_epi64
+#define _mm512_or_epi64 _mm512_or_epi64_dbg
+
+/*
  Compute the bitwise OR of packed double-precision (64-bit) floating-point elements in "a" and "b", and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
 */
 static inline __m128d _mm_mask_or_pd_dbg(__m128d src, __mmask8 k, __m128d a, __m128d b)
@@ -50757,6 +50807,131 @@ static inline __m512i _mm512_sllv_epi16_dbg(__m512i a, __m512i count)
 #undef _mm512_sllv_epi16
 #define _mm512_sllv_epi16 _mm512_sllv_epi16_dbg
 
+/*
+ Shift packed 32-bit integers in "a" left by "imm8" while shifting in zeros, and store the results in "dst".
+*/
+static inline __m512i _mm512_slli_epi32_dbg(__m512i a, unsigned int imm8)
+{
+  int32_t a_vec[16];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int32_t dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    if ((imm8 & 0xff) > 31) {
+      dst_vec[j] = 0;
+    } else {
+      dst_vec[j] = ZeroExtend(a_vec[j] << (imm8 & 0xff));
+    }
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_slli_epi32
+#define _mm512_slli_epi32 _mm512_slli_epi32_dbg
+
+/*
+ Shift packed 64-bit integers in "a" left by "imm8" while shifting in zeros, and store the results in "dst".
+*/
+static inline __m512i _mm512_slli_epi64_dbg(__m512i a, unsigned int imm8)
+{
+  int64_t a_vec[8];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int64_t dst_vec[8];
+  for (int j = 0; j <= 7; j++) {
+    if ((imm8 & 0xff)> 63) {
+      dst_vec[j] = 0;
+    } else {
+      dst_vec[j] = ZeroExtend(a_vec[j] << (imm8 & 0xff));
+    }
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_slli_epi64
+#define _mm512_slli_epi64 _mm512_slli_epi64_dbg
+
+/*
+ Shift packed 16-bit integers in "a" left by "imm8" while shifting in zeros, and store the results in "dst".
+*/
+static inline __m512i _mm512_slli_epi16_dbg(__m512i a, unsigned int imm8)
+{
+  int16_t a_vec[32];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int16_t dst_vec[32];
+  for (int j = 0; j <= 31; j++) {
+    if ((imm8 & 0xff)> 15) {
+      dst_vec[j] = 0;
+    } else {
+      dst_vec[j] = ZeroExtend(a_vec[j] << (imm8 & 0xff));
+    }
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_slli_epi16
+#define _mm512_slli_epi16 _mm512_slli_epi16_dbg
+
+/*
+ Shift packed 32-bit integers in "a" right by "imm8" while shifting in zeros, and store the results in "dst".
+*/
+static inline __m512i _mm512_srli_epi32_dbg(__m512i a, unsigned int imm8)
+{
+  int32_t a_vec[16];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int32_t dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    if ((imm8 & 0xff)> 31) {
+      dst_vec[j] = 0;
+    } else {
+      dst_vec[j] = ZeroExtend(a_vec[j] >> (imm8 & 0xff));
+    }
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_srli_epi32
+#define _mm512_srli_epi32 _mm512_srli_epi32_dbg
+
+/*
+ Shift packed 64-bit integers in "a" right by "imm8" while shifting in zeros, and store the results in "dst".
+*/
+static inline __m512i _mm512_srli_epi64_dbg(__m512i a, unsigned int imm8)
+{
+  int64_t a_vec[8];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int64_t dst_vec[8];
+  for (int j = 0; j <= 7; j++) {
+    if ((imm8 & 0xff) > 63) {
+      dst_vec[j] = 0;
+    } else {
+      dst_vec[j] = ZeroExtend(a_vec[j] >> (imm8 & 0xff));
+    }
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_srli_epi64
+#define _mm512_srli_epi64 _mm512_srli_epi64_dbg
+
+/*
+ Shift packed 16-bit integers in "a" right by "imm8" while shifting in zeros, and store the results in "dst".
+*/
+static inline __m512i _mm512_srli_epi16_dbg(__m512i a, unsigned int imm8)
+{
+  int16_t a_vec[32];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int16_t dst_vec[32];
+  for (int j = 0; j <= 31; j++) {
+    if ((imm8 & 0xff) > 15) {
+      dst_vec[j] = 0;
+    } else {
+      dst_vec[j] = ZeroExtend(a_vec[j] >> (imm8 & 0xff));
+    }
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_srli_epi16
+#define _mm512_srli_epi16 _mm512_srli_epi16_dbg
 
 /*
  Shift packed 16-bit integers in "a" left by the amount specified by the corresponding element in "count" while shifting in zeros, and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -56256,6 +56431,55 @@ static inline __m512d _mm512_xor_pd_dbg(__m512d a, __m512d b)
 #undef _mm512_xor_pd
 #define _mm512_xor_pd _mm512_xor_pd_dbg
 
+/*
+ Compute the bitwise XOR of packed 32-bit integers in "a" and "b", and store the results in "dst".
+*/
+static inline __m512i _mm512_xor_epi32_dbg(__m512i a, __m512i b)
+{
+  int32_t a_vec[16];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int32_t b_vec[16];
+  _mm512_storeu_si512((void*)b_vec, b);
+  int32_t dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    dst_vec[j] = a_vec[j] ^ b_vec[j];
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_xor_epi32
+#define _mm512_xor_epi32 _mm512_xor_epi32_dbg
+
+/*
+ Compute the bitwise XOR of 512 bits (representing integer data) in "a" and "b", and store the result in "dst".
+*/
+static inline __m512i _mm512_xor_si512_dbg(__m512i a, __m512i b)
+{
+  return _mm512_xor_epi32(a, b);
+}
+
+#undef _mm512_xor_si512
+#define _mm512_xor_si512 _mm512_xor_si512_dbg
+
+/*
+ Compute the bitwise XOR of packed 64-bit integers in "a" and "b", and store the results in "dst".
+
+*/
+static inline __m512i _mm512_xor_epi64_dbg(__m512i a, __m512i b)
+{
+  int64_t a_vec[8];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int64_t b_vec[8];
+  _mm512_storeu_si512((void*)b_vec, b);
+  int64_t dst_vec[8];
+  for (int j = 0; j <= 7; j++) {
+    dst_vec[j] = a_vec[j] ^ b_vec[j];
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_xor_epi64
+#define _mm512_xor_epi64 _mm512_xor_epi64_dbg
 
 /*
  Compute the bitwise XOR of packed double-precision (64-bit) floating-point elements in "a" and "b", and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -62844,6 +63068,66 @@ static inline __m512i _mm512_mask_mov_epi64_dbg(__m512i src, __mmask8 k, __m512i
 #undef _mm512_mask_mov_epi64
 #define _mm512_mask_mov_epi64 _mm512_mask_mov_epi64_dbg
 
+/*
+Create mask from the most significant bit of each 8-bit element in "a", and store the result in "dst".
+*/
+static inline int _mm256_movemask_epi8_dbg(__m256i a)
+{
+  uint32_t a_vec[32];
+  _mm256_storeu_si256((void*)a_vec, a);
+  int dst;
+  for (int j = 0; j <= 31; j++) {
+    dst |= (a_vec[j] & 0x80) ? (1 << j) : 0;
+  }
+return dst;
+}
+
+#undef _mm256_movemask_epi8
+#define _mm256_movemask_epi8 _mm256_movemask_epi8_dbg
+
+/*
+ Set each bit of mask "dst" based on the most significant bit of the corresponding packed double-precision (64-bit) floating-point element in "a".
+*/
+static inline int _mm256_movemask_pd_dbg(__m256d a)
+{
+  uint64_t a_vec[4];
+  _mm256_storeu_pd((void*)a_vec, a);
+  int dst;
+  for (int j = 0; j <= 3; j++) {
+    dst |= (a_vec[j] & 0x8000000000000000ULL) ? (1 << j) : 0;
+  }
+  return dst;
+}
+
+#undef _mm256_movemask_pd
+#define _mm256_movemask_pd _mm256_movemask_pd_dbg
+
+/*
+ Set each bit of mask "dst" based on the most significant bit of the corresponding packed single-precision (32-bit) floating-point element in "a".
+*/
+static inline int _mm256_movemask_ps_dbg(__m256 a)
+{
+  int32_t a_vec[8];
+  _mm256_storeu_ps((void*)a_vec, a);
+  int dst;
+  for (int j = 0; j <= 7; j++) {
+    dst |= (a_vec[j] & 0x80000000ULL) ? (1 << j) : 0;
+  }
+  return dst;
+}
+
+#undef _mm256_movemask_ps
+#define _mm256_movemask_ps _mm256_movemask_ps_dbg
+
+/*
+ Return vector of type __m512i with undefined elements.
+*/
+static inline __m512i _mm512_undefined_epi32()
+{
+  __m512i undefined; /*copy garbage from stack*/
+  return undefined;
+}
+        
 /*
  Load packed single-precision (32-bit) floating-point elements from memory into "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). "mem_addr" does not need to be aligned on any particular boundary.
 */
