@@ -561,7 +561,7 @@ static inline double RANGE(double src1, double src2, int opCtl, int signSelCtl)
 {
   double tmp;
   double dst;
-  uint64_t *ptmp = &tmp, *psrc1 = &src1, *psrc2 = &src2, *pdst = &dst;
+  uint64_t *ptmp = (uint64_t*)&tmp, *psrc1 = (uint64_t*)&src1, *psrc2 = (uint64_t*)&src2, *pdst = (uint64_t*)&dst;
   switch (opCtl) {
     case 0:
       tmp = (src1 <= src2) ? src1 : src2; break;
@@ -587,7 +587,7 @@ static inline double RANGE32(float src1, float src2, int opCtl, int signSelCtl)
 {
   float tmp;
   float dst;
-  uint32_t *ptmp = &tmp, *psrc1 = &src1, *psrc2 = &src2, *pdst = &dst;
+  uint32_t *ptmp = (uint32_t*)&tmp, *psrc1 = (uint32_t*)&src1, *psrc2 = (uint32_t*)&src2, *pdst = (uint32_t*)&dst;
   switch (opCtl) {
     case 0: 
       tmp = (src1 <= src2) ? src1 : src2; break;
@@ -63136,7 +63136,7 @@ Create mask from the most significant bit of each 8-bit element in "a", and stor
 static inline int _mm256_movemask_epi8_dbg(__m256i a)
 {
   uint32_t a_vec[32];
-  _mm256_storeu_si256((void*)a_vec, a);
+  _mm256_storeu_si256((__m256i*)a_vec, a);
   int dst;
   for (int j = 0; j <= 31; j++) {
     dst |= (a_vec[j] & 0x80) ? (1 << j) : 0;
@@ -63153,7 +63153,7 @@ return dst;
 static inline int _mm256_movemask_pd_dbg(__m256d a)
 {
   uint64_t a_vec[4];
-  _mm256_storeu_pd((void*)a_vec, a);
+  _mm256_storeu_pd((double*)a_vec, a);
   int dst;
   for (int j = 0; j <= 3; j++) {
     dst |= (a_vec[j] & 0x8000000000000000ULL) ? (1 << j) : 0;
@@ -63170,7 +63170,7 @@ static inline int _mm256_movemask_pd_dbg(__m256d a)
 static inline int _mm256_movemask_ps_dbg(__m256 a)
 {
   int32_t a_vec[8];
-  _mm256_storeu_ps((void*)a_vec, a);
+  _mm256_storeu_ps((float*)a_vec, a);
   int dst;
   for (int j = 0; j <= 7; j++) {
     dst |= (a_vec[j] & 0x80000000ULL) ? (1 << j) : 0;
@@ -63184,11 +63184,12 @@ static inline int _mm256_movemask_ps_dbg(__m256 a)
 /*
  Return vector of type __m512i with undefined elements.
 */
-static inline __m512i _mm512_undefined_epi32()
+static inline __m512i _mm512_undefined_epi32_dbg()
 {
   __m512i undefined; /*copy garbage from stack*/
   return undefined;
 }
+#define _mm512_undefined_epi32 _mm512_undefined_epi32_dbg
         
 /*
  Load packed single-precision (32-bit) floating-point elements from memory into "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set). "mem_addr" does not need to be aligned on any particular boundary.
