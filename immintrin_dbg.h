@@ -18256,6 +18256,68 @@ static inline __m128 _mm_sqrt_round_ss_dbg(__m128 a, __m128 b, int rounding)
 #undef _mm_sqrt_round_ss
 #define _mm_sqrt_round_ss _mm_sqrt_round_ss_dbg
 
+/*
+Compute the absolute differences of packed unsigned 8-bit integers in a and b,
+then horizontally sum each consecutive 8 differences to produce four unsigned 16-bit integers,
+and pack these unsigned 16-bit integers in the low 16 bits of 64-bit elements in dst.
+*/
+__m256i _mm256_sad_epu8_dbg(__m256i a, __m256i b)
+{
+    uint8_t a_vec[32];
+    _mm256_storeu_si256((__m256i*)a_vec, a);
+    uint8_t b_vec[32];
+    _mm256_storeu_si256((__m256i*)b_vec, b);
+    uint8_t tmp_vec[32];
+    uint16_t dst_vec[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    uint16_t tmp_sum16 = 0;
+    for (int j = 0, j16 = 0; j <= 31; j++) {
+        tmp_vec[j] = abs(a_vec[j] - b_vec[j]);
+        tmp_sum16 += tmp_vec[j];
+        if ((j % 8) == 7) { // (j == 7) || (j == 15) || (j == 23) || (j == 31)
+            dst_vec[j16] = tmp_sum16;
+            j16 += 4;
+            tmp_sum16 = 0;
+        }
+    }
+    return _mm256_loadu_si256((__m256i*)dst_vec);
+}
+#undef _mm256_sad_epu8
+#define _mm256_sad_epu8 _mm_sad_epu8_dbg
+
+/*
+Compute the sum of absolute differences (SADs) of quadruplets of unsigned 8-bit integers in a compared to those in b,
+and store the 16-bit results in dst. Eight SADs are performed using one quadruplet from b and eight quadruplets from a.
+One quadruplet is selected from b starting at on the offset specified in imm8.
+Eight quadruplets are formed from sequential 8-bit integers selected from a starting at the offset specified in imm8.
+*/
+static inline __m256i _mm256_mpsadbw_epu8_dbg(__m256i a, __m256i b, const int imm8)
+{
+    uint8_t a_vec[32];
+    _mm256_storeu_si256((__m256i*)a_vec, a);
+    uint8_t b_vec[32];
+    _mm256_storeu_si256((__m256i*)b_vec, b);
+    uint16_t dst_vec[16];
+    int a_offset = (imm8 & 0x4);
+    int b_offset = (imm8 & 0x3) << 2;
+    for (int j = 0; j <= 7; j++) {
+        dst_vec[j] = abs(a_vec[j + a_offset] - b_vec[b_offset]) +
+            abs(a_vec[j + a_offset + 1] - b_vec[b_offset + 1]) +
+            abs(a_vec[j + a_offset + 2] - b_vec[b_offset + 2]) +
+            abs(a_vec[j + a_offset + 3] - b_vec[b_offset + 3]);
+    }
+    a_offset = (imm8 & 0x20) >> 3;
+    b_offset = (imm8 & 0x18) >> 1;
+    for (int j = 8; j <= 15; j++) {
+        dst_vec[j] = abs(a_vec[j + a_offset + 8] - b_vec[b_offset + 16]) +
+            abs(a_vec[j + a_offset + 8 + 1] - b_vec[b_offset + 16 + 1]) +
+            abs(a_vec[j + a_offset + 8 + 2] - b_vec[b_offset + 16 + 2]) +
+            abs(a_vec[j + a_offset + 8 + 3] - b_vec[b_offset + 16 + 3]);
+    }
+    return _mm256_loadu_si256((__m256i*)dst_vec);
+}
+#undef _mm_mpsadbw_epu8
+#define _mm_mpsadbw_epu8 _mm_mpsadbw_epu8_dbg
+
 
 /*
  Subtract packed double-precision (64-bit) floating-point elements in "b" from packed double-precision (64-bit) floating-point elements in "a", and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
