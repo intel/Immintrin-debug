@@ -15,3 +15,4 @@ _reduce_pd
 rsqrt accuracy
 rsqrt14 accuracy
 assume -ffast-math
+won't compile with high warnings levels
