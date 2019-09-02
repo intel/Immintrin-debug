@@ -124,7 +124,7 @@ return control;
 }
 static inline int16_t Saturate_To_Int16(int32_t control)
 {
-if (control > INT16_MAX) return INT8_MAX;
+if (control > INT16_MAX) return INT16_MAX;
 if (control < INT16_MIN) return INT16_MIN;
 return control;
 }
