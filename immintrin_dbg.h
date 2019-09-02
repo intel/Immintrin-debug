@@ -1051,7 +1051,7 @@ static inline __m512i _mm512_maskz_loadu_epi32_dbg (__mmask16 k, void const* mem
   int32_t *a_vec = (int32_t*)mem_addr;
   int32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
-    if (k & ((1 << j) & 0xff)) {
+    if (k & ((1 << j) & 0xffff)) {
       dst_vec[j] = a_vec[j];
     } else {
       dst_vec[j] = 0;
@@ -1127,7 +1127,7 @@ static inline __m256i _mm256_maskz_loadu_epi16_dbg (__mmask16 k, void const* mem
   int16_t *a_vec = (int16_t*)mem_addr;
   int16_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
-    if (k & ((1 << j) & 0xff)) {
+    if (k & ((1 << j) & 0xffff)) {
       dst_vec[j] = a_vec[j];
     } else {
       dst_vec[j] = 0;
@@ -61814,7 +61814,7 @@ static inline __m256i _mm256_srai_epi16_dbg(__m256i a, int imm8)
   _mm256_storeu_si256((__m256i*)a_vec, a);
   int16_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
-    if (imm8 & 0xff > 15) {
+    if ((imm8 & 0xff) > 15) {
       dst_vec[j] = (a_vec[j] < 0) ? 0xFFFF : 0;
     } else {
       dst_vec[j] = (a_vec[j] >> (imm8 & 0xff)) | ((a_vec[j] < 0) ? (0xFFFF << (16 - (imm8 & 0xff))) : 0);
@@ -61873,7 +61873,7 @@ static inline __m512i _mm512_srai_epi16_dbg(__m512i a, int imm8)
   _mm512_storeu_si512((void*)a_vec, a);
   int16_t dst_vec[32];
   for (int j = 0; j <= 31; j++) {
-    if (imm8 & 0xff > 15) {
+    if ((imm8 & 0xff) > 15) {
       dst_vec[j] = (a_vec[j] < 0) ? 0xFFFF : 0;
     } else {
       dst_vec[j] = (a_vec[j] >> (imm8 & 0xff)) | ((a_vec[j] < 0) ? (0xFFFF << (16 - (imm8 & 0xff))) : 0);
