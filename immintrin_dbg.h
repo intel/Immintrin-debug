@@ -59879,7 +59879,7 @@ static inline __m512i _mm512_permutexvar_epi32_dbg(__m512i idx, __m512i a)
   int32_t dst_vec[16];
   for (int j = 0; j <= 15; j++) {
     int id = idx_vec[j] & 0xf;
-    dst_vec[j] = a[id];
+    dst_vec[j] = a_vec[id];
   }
   
   return _mm512_loadu_si512((void*)dst_vec);
