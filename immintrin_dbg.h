@@ -20643,6 +20643,24 @@ static inline __m512d _mm512_and_pd_dbg(__m512d a, __m512d b)
 #undef _mm512_and_pd
 #define _mm512_and_pd _mm512_and_pd_dbg
 
+/*
+ Compute the bitwise AND of packed 32-bit integers in "a" and "b", and store the results in "dst".
+*/
+static inline __m512i _mm512_and_epi32_dbg(__m512i a, __m512i b)
+{
+  int32_t a_vec[16];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int32_t b_vec[16];
+  _mm512_storeu_si512((void*)b_vec, b);
+  int32_t dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    dst_vec[j] = a_vec[j] & b_vec[j];
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_and_epi32
+#define _mm512_and_epi32 _mm512_and_epi32_dbg
 
 /*
  Compute the bitwise AND of packed double-precision (64-bit) floating-point elements in "a" and "b", and store the results in "dst" using writemask "k" (elements are copied from "src" when the corresponding mask bit is not set). 
@@ -34003,6 +34021,121 @@ static inline __m512i _mm512_mask_blend_epi8_dbg(__mmask64 k, __m512i a, __m512i
 #define _mm512_mask_blend_epi8 _mm512_mask_blend_epi8_dbg
 
 /*
+ Blend packed 16-bit integers from "a" and "b" using control mask "k", and store the results in "dst".
+*/
+static inline __m512i _mm512_mask_blend_epi16_dbg(__mmask32 k, __m512i a, __m512i b)
+{
+  int16_t a_vec[32];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int16_t b_vec[32];
+  _mm512_storeu_si512((void*)b_vec, b);
+  int16_t dst_vec[32];
+  for (int j = 0; j <= 31; j++) {
+    if (k & ((1 << j) & 0xffffffffULL)) {
+      dst_vec[j] = b_vec[j];
+    } else {
+      dst_vec[j] = a_vec[j];
+    }
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_mask_blend_epi16
+#define _mm512_mask_blend_epi16 _mm512_mask_blend_epi16_dbg
+
+/*
+ Blend packed 32-bit integers from "a" and "b" using control mask "k", and store the results in "dst".
+*/
+static inline __m512i _mm512_mask_blend_epi32_dbg(__mmask16 k, __m512i a, __m512i b)
+{
+  int32_t a_vec[16];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int32_t b_vec[16];
+  _mm512_storeu_si512((void*)b_vec, b);
+  int32_t dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[j] = b_vec[j];
+    } else {
+      dst_vec[j] = a_vec[j];
+    }
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_mask_blend_epi32
+#define _mm512_mask_blend_epi32 _mm512_mask_blend_epi32_dbg
+
+/*
+ Blend packed 64-bit integers from "a" and "b" using control mask "k", and store the results in "dst".
+*/
+static inline __m512i _mm512_mask_blend_epi64_dbg(__mmask8 k, __m512i a, __m512i b)
+{
+  int64_t a_vec[8];
+  _mm512_storeu_si512((void*)a_vec, a);
+  int64_t b_vec[8];
+  _mm512_storeu_si512((void*)b_vec, b);
+  int64_t dst_vec[8];
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[j] = b_vec[j];
+    } else {
+      dst_vec[j] = a_vec[j];
+    }
+  }
+  return _mm512_loadu_si512((void*)dst_vec);
+}
+
+#undef _mm512_mask_blend_epi64
+#define _mm512_mask_blend_epi64 _mm512_mask_blend_epi64_dbg
+
+/*
+ Blend packed single-precision (32-bit) floating-point elements from "a" and "b" using control mask "k", and store the results in "dst".
+*/
+static inline __m512 _mm512_mask_blend_ps_dbg(__mmask16 k, __m512 a, __m512 b)
+{
+  float a_vec[16];
+  _mm512_storeu_ps((void*)a_vec, a);
+  float b_vec[16];
+  _mm512_storeu_ps((void*)b_vec, b);
+  float dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
+    if (k & ((1 << j) & 0xffff)) {
+      dst_vec[j] = b_vec[j];
+    } else {
+      dst_vec[j] = a_vec[j];
+    }
+  }
+  return _mm512_loadu_ps((void*)dst_vec);
+}
+
+#undef _mm512_mask_blend_ps
+#define _mm512_mask_blend_ps _mm512_mask_blend_ps_dbg
+
+/*
+ Blend packed double-precision (64-bit) floating-point elements from "a" and "b" using control mask "k", and store the results in "dst".
+*/
+static inline __m512d _mm512_mask_blend_pd_dbg(__mmask8 k, __m512d a, __m512d b)
+{
+  double a_vec[8];
+  _mm512_storeu_pd((void*)a_vec, a);
+  double b_vec[8];
+  _mm512_storeu_pd((void*)b_vec, b);
+  double dst_vec[8];
+  for (int j = 0; j <= 7; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[j] = b_vec[j];
+    } else {
+      dst_vec[j] = a_vec[j];
+    }
+  }
+  return _mm512_loadu_pd((void*)dst_vec);
+}
+
+#undef _mm512_mask_blend_pd
+#define _mm512_mask_blend_pd _mm512_mask_blend_pd_dbg
+
+/*
  Blend packed 8-bit integers from "a" and "b" using control mask "k", and store the results in "dst".
 */
 static inline __m128i _mm_mask_blend_epi8_dbg(__mmask16 k, __m128i a, __m128i b)
@@ -34144,31 +34277,6 @@ static inline __m256i _mm256_mask_blend_epi16_dbg(__mmask16 k, __m256i a, __m256
 
 #undef _mm256_mask_blend_epi16
 #define _mm256_mask_blend_epi16 _mm256_mask_blend_epi16_dbg
-
-
-/*
- Blend packed 16-bit integers from "a" and "b" using control mask "k", and store the results in "dst".
-*/
-static inline __m512i _mm512_mask_blend_epi16_dbg(__mmask32 k, __m512i a, __m512i b)
-{
-  int16_t a_vec[32];
-  _mm512_storeu_si512((void*)a_vec, a);
-  int16_t b_vec[32];
-  _mm512_storeu_si512((void*)b_vec, b);
-  int16_t dst_vec[32];
-  for (int j = 0; j <= 31; j++) {
-    if (k & ((1 << j) & 0xffffffff)) {
-      dst_vec[j] = b_vec[j];
-    } else {
-      dst_vec[j] = a_vec[j];
-    }
-  }
-  return _mm512_loadu_si512((void*)dst_vec);
-}
-
-#undef _mm512_mask_blend_epi16
-#define _mm512_mask_blend_epi16 _mm512_mask_blend_epi16_dbg
-
 
 /*
  Blend packed 16-bit integers from "a" and "b" using control mask "k", and store the results in "dst".
