@@ -1221,6 +1221,16 @@ static inline __m512i _mm512_setzero_epi32_dbg()
 #define _mm512_setzero_epi32 _mm512_setzero_epi32_dbg
 
 /*
+ Return vector of type __m512i with all elements set to zero.
+*/
+static inline __m512i _mm512_setzero_si512_dbg()
+{
+  return _mm512_set1_epi32(0);
+}
+#undef _mm512_setzero_si512
+#define _mm512_setzero_si512 _mm512_setzero_si512_dbg
+
+/*
  Horizontally compute the minimum amongst the packed unsigned 16-bit integers in "a", store the minimum and index in "dst", and zero the remaining bits in "dst".
 */
 static inline __m128i _mm_minpos_epu16_dbg(__m128i a)
