@@ -846,6 +846,31 @@ static inline void _mm512_storeu_si512_dbg(void *mem_addr, __m512i A)
 #define _mm512_storeu_si512 _mm512_storeu_si512_dbg
 
 /*
+ Load packed 32-bit integers from memory into dst using writemask k (elements are copied from src when the corresponding mask bit is not set). mem_addr does not need to be aligned on any particular boundary.
+*/
+static inline __m512i _mm512_mask_loadu_epi32_dbg(__m512i src, __mmask16 k, void const* mem_addr)
+{
+  int32_t dst_vec[16];
+  _mm512_storeu_si512(dst_vec, _mm512_loadu_si512(mem_addr));
+  int32_t src_vec[16];
+  _mm512_storeu_si512(src_vec, src);
+  union simd
+  {
+  __m512i dst512;
+  int32_t dst32[16];
+  } dst;
+  for (int i = 0; i < 15; i++)
+      if (k & ((1 << j) & 0xffff)) {
+        dst.dst32[i] = dst_vec[i];
+      } else {
+        dst.dst32[i] = src_vec[i];
+      }
+  return dst.dst512;
+}
+#undef _mm512_mask_loadu_epi32
+#define _mm512_mask_loadu_epi32 _mm512_mask_loadu_epi32_dbg
+
+/*
  Store packed 32-bit integers from a into memory using writemask k. mem_addr does not need to be aligned on any particular boundary.
 */
 static inline void _mm512_mask_storeu_epi32_dbg (void* mem_addr, __mmask16 k, __m512i a)
@@ -18271,7 +18296,7 @@ Compute the absolute differences of packed unsigned 8-bit integers in a and b,
 then horizontally sum each consecutive 8 differences to produce four unsigned 16-bit integers,
 and pack these unsigned 16-bit integers in the low 16 bits of 64-bit elements in dst.
 */
-__m256i _mm256_sad_epu8_dbg(__m256i a, __m256i b)
+static inline __m256i _mm256_sad_epu8_dbg(__m256i a, __m256i b)
 {
     uint8_t a_vec[32];
     _mm256_storeu_si256((__m256i*)a_vec, a);
@@ -18328,7 +18353,6 @@ static inline __m256i _mm256_mpsadbw_epu8_dbg(__m256i a, __m256i b, const int im
 #undef _mm_mpsadbw_epu8
 #define _mm_mpsadbw_epu8 _mm_mpsadbw_epu8_dbg
 
-
 /*
  Subtract packed double-precision (64-bit) floating-point elements in "b" from packed double-precision (64-bit) floating-point elements in "a", and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
 */
@@ -18351,7 +18375,6 @@ static inline __m512d _mm512_maskz_sub_pd_dbg(__mmask8 k, __m512d a, __m512d b)
 
 #undef _mm512_maskz_sub_pd
 #define _mm512_maskz_sub_pd _mm512_maskz_sub_pd_dbg
-
 
 /*
  Subtract packed double-precision (64-bit) floating-point elements in "b" from packed double-precision (64-bit) floating-point elements in "a", and store the results in "dst" using zeromask "k" (elements are zeroed out when the corresponding mask bit is not set).
