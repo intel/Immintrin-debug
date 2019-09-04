@@ -860,7 +860,7 @@ static inline __m512i _mm512_mask_loadu_epi32_dbg(__m512i src, __mmask16 k, void
   int32_t dst32[16];
   } dst;
   for (int i = 0; i < 15; i++)
-      if (k & ((1 << j) & 0xffff)) {
+      if (k & ((1 << i) & 0xffff)) {
         dst.dst32[i] = dst_vec[i];
       } else {
         dst.dst32[i] = src_vec[i];
