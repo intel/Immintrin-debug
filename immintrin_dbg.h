@@ -850,20 +850,17 @@ static inline void _mm512_storeu_si512_dbg(void *mem_addr, __m512i A)
 */
 static inline __m512i _mm512_mask_loadu_epi32_dbg(__m512i src, __mmask16 k, void const* mem_addr)
 {
-  int32_t dst_vec[16];
-  _mm512_storeu_si512(dst_vec, _mm512_loadu_si512(mem_addr));
+  int32_t *dst_vec = (int32_t*)mem_addr;
   int32_t src_vec[16];
-  _mm512_storeu_si512(src_vec, src);
   union simd
   {
   __m512i dst512;
   int32_t dst32[16];
   } dst;
+  dst.dst512 = src;
   for (int i = 0; i < 15; i++)
       if (k & ((1 << i) & 0xffff)) {
         dst.dst32[i] = dst_vec[i];
-      } else {
-        dst.dst32[i] = src_vec[i];
       }
   return dst.dst512;
 }
