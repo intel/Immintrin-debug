@@ -62028,10 +62028,10 @@ static inline __m512i _mm512_srai_epi16_dbg(__m512i a, int imm8)
 */
 static inline __m512i _mm512_maskz_srai_epi32_dbg (__mmask16 k, __m512i a, unsigned int imm8)
 {
-  int32_t a_vec[8];
+  int32_t a_vec[16];
   _mm512_storeu_si512((void*)a_vec, a);
-  int32_t dst_vec[8];
-  for (int j = 0; j <= 7; j++) {
+  int32_t dst_vec[16];
+  for (int j = 0; j <= 15; j++) {
     if (k & ((1 << j) & 0xffff)) {
       if ((imm8 & 0xff) > 31) {
         dst_vec[j] = (a_vec[j] < 0) ? 0xFFFFFFFFL : 0;
