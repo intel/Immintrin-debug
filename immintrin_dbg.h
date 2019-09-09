@@ -63344,7 +63344,16 @@ static inline __m512 _mm512_maskz_loadu_ps_dbg (__mmask16 k, void const* mem_add
 */
 static inline __m128i _mm_maskz_loadu_epi16_dbg (__mmask8 k, void const* mem_addr)
 {
-  return (__m128i)_mm_maskz_mov_ps(k, _mm_loadu_ps((float*)mem_addr));
+  int16_t *a_vec = (int16_t*)mem_addr;
+  int16_t dst_vec[8];
+  for (int j = 0; j < 8; j++) {
+    if (k & ((1 << j) & 0xff)) {
+      dst_vec[j] = a_vec[j];
+    } else {
+      dst_vec[j] = 0;
+    }
+  }
+  return _mm_loadu_si128((__m128i*)dst_vec);
 }
 #undef _mm_maskz_loadu_epi16
 #define _mm_maskz_loadu_epi16 _mm_maskz_loadu_epi16_dbg
