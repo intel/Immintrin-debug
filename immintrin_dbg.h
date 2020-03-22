@@ -4976,8 +4976,6 @@ static inline __m128d _mm_cvt_roundss_sd_dbg(__m128d a, __m128 b, int rounding)
   double dst_vec[2];
   dst_vec[0] = Convert_FP32_To_FP64_rounding(b_vec[0], rounding);
   dst_vec[1] = a_vec[1];
-  dst_vec[2] = a_vec[2];
-  dst_vec[3] = a_vec[3];
   return _mm_loadu_pd((double*)dst_vec);
 }
 
@@ -5009,8 +5007,6 @@ static inline __m128d _mm_mask_cvt_roundss_sd_dbg(__m128d src, __mmask8 k, __m12
     dst_vec[0] = src_vec[0];
   }
   dst_vec[1] = a_vec[1];
-  dst_vec[2] = a_vec[2];
-  dst_vec[3] = a_vec[3];
   return _mm_loadu_pd((double*)dst_vec);
 }
 
@@ -5036,8 +5032,6 @@ static inline __m128d _mm_mask_cvtss_sd_dbg(__m128d src, __mmask8 k, __m128d a, 
     dst_vec[0] = src_vec[0];
   }
   dst_vec[1] = a_vec[1];
-  dst_vec[2] = a_vec[2];
-  dst_vec[3] = a_vec[3];
   return _mm_loadu_pd((double*)dst_vec);
 }
 
@@ -5067,8 +5061,6 @@ static inline __m128d _mm_maskz_cvt_roundss_sd_dbg(__mmask8 k, __m128d a, __m128
     dst_vec[0] = 0;
   }
   dst_vec[1] = a_vec[1];
-  dst_vec[2] = a_vec[2];
-  dst_vec[3] = a_vec[3];
   return _mm_loadu_pd((double*)dst_vec);
 }
 
@@ -5092,8 +5084,6 @@ static inline __m128d _mm_maskz_cvtss_sd_dbg(__mmask8 k, __m128d a, __m128 b)
     dst_vec[0] = 0;
   }
   dst_vec[1] = a_vec[1];
-  dst_vec[2] = a_vec[2];
-  dst_vec[3] = a_vec[3];
   return _mm_loadu_pd((double*)dst_vec);
 }
 
