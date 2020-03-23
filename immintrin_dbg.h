@@ -63254,9 +63254,9 @@ Create mask from the most significant bit of each 8-bit element in "a", and stor
 */
 static inline int _mm256_movemask_epi8_dbg(__m256i a)
 {
-  uint32_t a_vec[32];
+  uint8_t a_vec[32];
   _mm256_storeu_si256((__m256i*)a_vec, a);
-  int dst;
+  int dst = 0;
   for (int j = 0; j <= 31; j++) {
     dst |= (a_vec[j] & 0x80) ? (1 << j) : 0;
   }
@@ -63273,7 +63273,7 @@ static inline int _mm256_movemask_pd_dbg(__m256d a)
 {
   uint64_t a_vec[4];
   _mm256_storeu_pd((double*)a_vec, a);
-  int dst;
+  int dst = 0;
   for (int j = 0; j <= 3; j++) {
     dst |= (a_vec[j] & 0x8000000000000000ULL) ? (1 << j) : 0;
   }
@@ -63290,7 +63290,7 @@ static inline int _mm256_movemask_ps_dbg(__m256 a)
 {
   int32_t a_vec[8];
   _mm256_storeu_ps((float*)a_vec, a);
-  int dst;
+  int dst = 0;
   for (int j = 0; j <= 7; j++) {
     dst |= (a_vec[j] & 0x80000000ULL) ? (1 << j) : 0;
   }
