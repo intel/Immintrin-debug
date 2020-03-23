@@ -114,7 +114,7 @@ return control;
 }
 static inline uint16_t Saturate_To_UnsignedInt16(int32_t control)
 {
-if (control > UINT16_MAX) return UINT16_MAX;
+if (control > INT16_MAX) return INT16_MAX;
 return control;
 }
 static inline uint8_t Saturate_To_UnsignedInt8(int16_t control)
@@ -204,12 +204,12 @@ return control;
 }
 static inline int8_t Saturate_UnsignedInt16_To_Int8(uint16_t control)
 {
-if (control > UINT8_MAX) return UINT8_MAX;
+if (control > INT8_MAX) return INT8_MAX;
 return control;
 }
 static inline int16_t Saturate_UnsignedInt64_To_Int16(uint64_t control)
 {
-if (control > UINT16_MAX) return UINT16_MAX;
+if (control > INT16_MAX) return INT16_MAX;
 return control;
 }
 static inline int8_t Saturate_Int16_To_Int8(int16_t control)
@@ -220,12 +220,12 @@ return control;
 }
 static inline int8_t Saturate_UnsignedInt32_To_Int8(uint32_t control)
 {
-if (control > UINT8_MAX) return UINT8_MAX;
+if (control > INT8_MAX) return INT8_MAX;
 return control;
 }
 static inline int8_t Saturate_UnsignedInt64_To_Int8(uint64_t control)
 {
-if (control > UINT8_MAX) return UINT8_MAX;
+if (control > INT8_MAX) return INT8_MAX;
 return control;
 }
 static inline int32_t Convert_FP64_To_IntegerTruncate(double control)
@@ -246,12 +246,12 @@ return (uint32_t)control;
 }
 static inline int16_t Saturate_UnsignedInt32_To_Int16(uint32_t control)
 {
-if (control > UINT16_MAX) return UINT16_MAX;
+if (control > INT16_MAX) return INT16_MAX;
 return control;
 }
 static inline int32_t Saturate_UnsignedInt64_To_Int32(uint64_t control)
 {
-if (control > UINT32_MAX) return UINT32_MAX;
+if (control > INT32_MAX) return INT32_MAX;
 return control;
 }
 static inline double ConvertUnsignedIntegerTo_FP64(uint32_t control)
@@ -568,9 +568,9 @@ static inline double RANGE(double src1, double src2, int opCtl, int signSelCtl)
     case 1:
       tmp = (src1 <= src2) ? src2 : src1; break;
     case 2:
-      tmp = (abs(src1) <= abs(src2)) ? src1 : src2; break;
+      tmp = (abs(src1) <= fabs(src2)) ? src1 : src2; break;
     case 3:
-      tmp = (abs(src1) <= abs(src2)) ? src2 : src1; break;
+      tmp = (abs(src1) <= fabs(src2)) ? src2 : src1; break;
   }
 
   switch (signSelCtl) {
@@ -594,9 +594,9 @@ static inline double RANGE32(float src1, float src2, int opCtl, int signSelCtl)
     case 1: 
       tmp = (src1 <= src2) ? src2 : src1; break;
 	  case 2: 
-      tmp = (abs(src1) <= abs(src2)) ? src1 : src2; break;
+      tmp = (abs(src1) <= fabsf(src2)) ? src1 : src2; break;
 	  case 3: 
-      tmp = (abs(src1) <= abs(src2)) ? src2 : src1; break;
+      tmp = (abs(src1) <= fabsf(src2)) ? src2 : src1; break;
   }
 	
   switch (signSelCtl) {
@@ -1390,16 +1390,7 @@ static inline int _mm_extract_epi32_dbg(__m128i a, const int imm8)
 {
   int32_t a_vec[4];
   _mm_storeu_ps((float*)a_vec, (__m128)a);
-  switch (imm8 & 0x3) {
-     case 0:
-       return a_vec[0];
-     case 1:
-       return a_vec[1];
-     case 2:
-       return a_vec[2];
-     case 3:
-       return a_vec[3];
-  }
+  return a_vec[imm8 & 0x3];
 }
 #undef _mm_extract_epi32
 #define _mm_extract_epi32 _mm_extract_epi32_dbg
