@@ -114,7 +114,7 @@ return control;
 }
 static inline uint16_t Saturate_To_UnsignedInt16(int32_t control)
 {
-if (control > INT16_MAX) return UINT16_MAX;
+if (control > UINT16_MAX) return UINT16_MAX;
 return control;
 }
 static inline uint8_t Saturate_To_UnsignedInt8(int16_t control)
