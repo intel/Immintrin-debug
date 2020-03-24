@@ -114,7 +114,7 @@ return control;
 }
 static inline uint16_t Saturate_To_UnsignedInt16(int32_t control)
 {
-if (control > INT16_MAX) return INT16_MAX;
+if (control > INT16_MAX) return UINT16_MAX;
 return control;
 }
 static inline uint8_t Saturate_To_UnsignedInt8(int16_t control)
@@ -568,9 +568,9 @@ static inline double RANGE(double src1, double src2, int opCtl, int signSelCtl)
     case 1:
       tmp = (src1 <= src2) ? src2 : src1; break;
     case 2:
-      tmp = (abs(src1) <= fabs(src2)) ? src1 : src2; break;
+      tmp = (fabs(src1) <= fabs(src2)) ? src1 : src2; break;
     case 3:
-      tmp = (abs(src1) <= fabs(src2)) ? src2 : src1; break;
+      tmp = (fabs(src1) <= fabs(src2)) ? src2 : src1; break;
   }
 
   switch (signSelCtl) {
@@ -594,9 +594,9 @@ static inline double RANGE32(float src1, float src2, int opCtl, int signSelCtl)
     case 1: 
       tmp = (src1 <= src2) ? src2 : src1; break;
 	  case 2: 
-      tmp = (abs(src1) <= fabsf(src2)) ? src1 : src2; break;
+      tmp = (fabsf(src1) <= fabsf(src2)) ? src1 : src2; break;
 	  case 3: 
-      tmp = (abs(src1) <= fabsf(src2)) ? src2 : src1; break;
+      tmp = (fabsf(src1) <= fabsf(src2)) ? src2 : src1; break;
   }
 	
   switch (signSelCtl) {
