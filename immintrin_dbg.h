@@ -59967,16 +59967,16 @@ static inline __m128d _mm_permute_pd_dbg(__m128d a, int imm8)
   double a_vec[2];
   _mm_storeu_pd((double*)a_vec, a);
   double dst_vec[2];
-  if ((imm8 & ((1 << 0) & 0xffffffff)) == 0) {
+  if ((imm8 & 1) == 0) {
     dst_vec[0] = a_vec[0];
   }
-  if ((imm8 & ((1 << 0) & 0xffffffff)) == 1) {
+  if ((imm8 & 1) == 1) {
     dst_vec[0] = a_vec[1];
   }
-  if ((imm8 & ((1 << 1) & 0xffffffff)) == 0) {
+  if ((imm8 & 2) == 0) {
     dst_vec[1] = a_vec[0];
   }
-  if ((imm8 & ((1 << 1) & 0xffffffff)) == 1) {
+  if ((imm8 & 2) == 2) {
     dst_vec[1] = a_vec[1];
   }
   return _mm_loadu_pd((double*)dst_vec);
